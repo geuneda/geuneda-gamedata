@@ -2,7 +2,7 @@
 
 // ReSharper disable once CheckNamespace
 
-namespace GameLovers
+namespace Geuneda
 {
 	/// <summary>
 	/// Math calculation for the deterministic floating point <see cref="floatP"/>

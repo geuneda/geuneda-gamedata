@@ -1,9 +1,9 @@
-using GameLovers;
+using Geuneda;
 using System;
 
 // ReSharper disable once CheckNamespace
 
-namespace GameLovers.Samples
+namespace Geuneda.Samples
 {
 	public enum EnumExample
 	{

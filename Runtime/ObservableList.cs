@@ -6,7 +6,7 @@ using System.Reflection;
 
 // ReSharper disable once CheckNamespace
 
-namespace GameLovers
+namespace Geuneda
 {
 	/// <summary>
 	/// A list with the possibility to observe changes to it's elements defined <see cref="ObservableUpdateType"/> rules

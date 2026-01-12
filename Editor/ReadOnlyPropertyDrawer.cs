@@ -1,10 +1,10 @@
 using UnityEditor;
 using UnityEngine;
-using GameLovers;
+using Geuneda;
 
 // ReSharper disable once CheckNamespace
 
-namespace GameLoversEditor
+namespace GeunedalEditor
 {
 	/// <summary>
 	/// This class contain custom drawer for ReadOnly attribute.

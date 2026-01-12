@@ -6,7 +6,7 @@ using System.Linq;
 
 // ReSharper disable once CheckNamespace
 
-namespace GameLovers
+namespace Geuneda
 {
 	/// <summary>
 	/// A simple dictionary with the possibility to observe changes to it's elements defined <see cref="ObservableUpdateType"/> rules

@@ -3,7 +3,7 @@ using UnityEngine;
 
 // ReSharper disable once CheckNamespace
 
-namespace GameLovers
+namespace Geuneda
 {
 	/// <summary>
 	/// This object contains a pair of data.

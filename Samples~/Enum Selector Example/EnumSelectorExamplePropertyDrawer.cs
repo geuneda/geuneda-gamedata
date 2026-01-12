@@ -1,9 +1,9 @@
-using GameLoversEditor.ConfigsContainer;
+using GeunedalEditor.ConfigsContainer;
 using UnityEditor;
 
 // ReSharper disable once CheckNamespace
 
-namespace GameLovers.Samples
+namespace Geuneda.Samples
 {
 	/// <summary>
 	/// Property Drawer for the enum <seealso cref="EnumExample"/> implementation example.

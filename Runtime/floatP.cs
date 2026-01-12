@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 
 // ReSharper disable once CheckNamespace
 
-namespace GameLovers
+namespace Geuneda
 {
 	/// <summary>
 	/// Floating Point representation is identical to IEEE binary32 floatingpoints.

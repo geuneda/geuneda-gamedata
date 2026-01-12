@@ -1,6 +1,6 @@
 // ReSharper disable once CheckNamespace
 
-namespace GameLovers
+namespace Geuneda
 {
 	public enum ObservableUpdateType
 	{

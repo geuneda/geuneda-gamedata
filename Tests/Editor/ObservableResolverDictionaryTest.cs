@@ -3,14 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Reflection;
-using GameLovers;
+using Geuneda;
 using NSubstitute;
 using NUnit.Framework;
 using UnityEngine;
 
 // ReSharper disable once CheckNamespace
 
-namespace GameLoversEditor.DataExtensions.Tests
+namespace GeunedalEditor.DataExtensions.Tests
 {
 	[TestFixture]
 	public class ObservableResolverDictionaryTest

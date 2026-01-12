@@ -6,7 +6,7 @@ using UnityEngine;
 
 // ReSharper disable once CheckNamespace
 
-namespace GameLoversEditor
+namespace GeunedalEditor
 {
 	/// <summary>
 	/// Implement this property drawer with your own custom EnumSelectorPropertyDrawer implementation for the given

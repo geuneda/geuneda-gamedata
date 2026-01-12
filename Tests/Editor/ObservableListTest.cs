@@ -1,11 +1,11 @@
 using System.Collections.Generic;
-using GameLovers;
+using Geuneda;
 using NSubstitute;
 using NUnit.Framework;
 
 // ReSharper disable once CheckNamespace
 
-namespace GameLoversEditor.DataExtensions.Tests
+namespace GeunedalEditor.DataExtensions.Tests
 {
 	[TestFixture]
 	public class ObservableListTest

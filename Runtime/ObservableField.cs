@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 // ReSharper disable once CheckNamespace
 
-namespace GameLovers
+namespace Geuneda
 {
 	/// <summary>
 	/// A field with the possibility to observe changes to it's elements defined <see cref="ObservableUpdateType"/> rules

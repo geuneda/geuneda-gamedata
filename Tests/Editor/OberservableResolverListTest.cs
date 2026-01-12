@@ -3,13 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
-using GameLovers;
+using Geuneda;
 using NSubstitute;
 using NUnit.Framework;
 
 // ReSharper disable once CheckNamespace
 
-namespace GameLoversEditor.DataExtensions.Tests
+namespace GeunedalEditor.DataExtensions.Tests
 {
 	[TestFixture]
 	public class ObservableResolverListTest

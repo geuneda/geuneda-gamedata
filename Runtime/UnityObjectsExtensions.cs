@@ -6,7 +6,7 @@ using UnityEngine.UI;
 #nullable enable
 // ReSharper disable once CheckNamespace
 
-namespace GameLovers
+namespace Geuneda
 {
 	/// <summary>
 	/// Extension methods for Unity objects.

@@ -1,9 +1,9 @@
 {
-    "name": "GameLovers.DataExtensions.Editor.Tests",
+    "name": "Geuneda.DataExtensions.Editor.Tests",
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
-        "GameLovers.DataExtensions"
+        "Geuneda.DataExtensions"
     ],
     "includePlatforms": [
         "Editor"

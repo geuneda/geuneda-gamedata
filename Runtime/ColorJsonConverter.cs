@@ -4,7 +4,7 @@ using System;
 
 // ReSharper disable once CheckNamespace
 
-namespace GameLovers
+namespace Geuneda
 {
     /// <summary>
     /// JSON converter for Unity's Color struct that handles serialization to/from:

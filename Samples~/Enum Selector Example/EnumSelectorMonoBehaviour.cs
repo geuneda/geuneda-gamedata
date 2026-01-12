@@ -2,7 +2,7 @@ using UnityEngine;
 
 // ReSharper disable once CheckNamespace
 
-namespace GameLovers.Samples
+namespace Geuneda.Samples
 {
 	/// <summary>
 	/// Simple MonoBehaviour with an enum selector implementation example

@@ -11,7 +11,7 @@ using Object = UnityEngine.Object;
 #nullable enable
 // ReSharper disable once CheckNamespace
 
-namespace GameLovers
+namespace Geuneda
 {
 	/// <summary>
 	/// Utility methods for both Unity <see cref="Object"/> and C# <see cref="object"/> types.

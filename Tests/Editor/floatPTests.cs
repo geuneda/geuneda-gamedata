@@ -1,9 +1,9 @@
 ﻿using NUnit.Framework;
-using GameLovers;
+using Geuneda;
 
 // ReSharper disable once CheckNamespace
 
-namespace GameLoversEditor.DataExtensions.Tests
+namespace GeunedalEditor.DataExtensions.Tests
 {
 	[TestFixture]
 	public class floatPTests
