@@ -1,24 +1,22 @@
 {
     "name": "Geuneda.DataExtensions.Editor.Tests",
+    "rootNamespace": "",
     "references": [
-        "UnityEngine.TestRunner",
-        "UnityEditor.TestRunner",
-        "Geuneda.DataExtensions"
+        "Geuneda.DataExtensions",
+        "Geuneda.DataExtensions.Editor",
+        "Unity.PerformanceTesting"
     ],
-    "includePlatforms": [
-        "Editor"
-    ],
+    "includePlatforms": ["Editor"],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": true,
     "precompiledReferences": [
         "nunit.framework.dll",
+        "Newtonsoft.Json.dll",
         "NSubstitute.dll"
     ],
     "autoReferenced": false,
-    "defineConstraints": [
-        "UNITY_INCLUDE_TESTS"
-    ],
+    "defineConstraints": ["UNITY_INCLUDE_TESTS"],
     "versionDefines": [],
     "noEngineReferences": false
 }

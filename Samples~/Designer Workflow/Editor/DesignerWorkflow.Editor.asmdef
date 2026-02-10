@@ -1,0 +1,21 @@
+{
+  "name": "Geuneda.DataExtensions.Samples.DesignerWorkflow.Editor",
+  "rootNamespace": "",
+  "references": [
+    "Geuneda.DataExtensions",
+    "Geuneda.DataExtensions.Editor",
+    "Geuneda.DataExtensions.Samples.DesignerWorkflow"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}
+

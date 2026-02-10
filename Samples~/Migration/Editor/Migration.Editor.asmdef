@@ -1,0 +1,22 @@
+{
+  "name": "Geuneda.DataExtensions.Samples.Migration.Editor",
+  "rootNamespace": "Geuneda.DataExtensions.Samples.Migration",
+  "references": [
+    "Geuneda.DataExtensions",
+    "Geuneda.DataExtensions.Editor",
+    "Migration"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": true,
+  "precompiledReferences": [
+    "Newtonsoft.Json.dll"
+  ],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

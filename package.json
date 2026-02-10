@@ -1,18 +1,38 @@
 {
   "name": "com.geuneda.dataextensions",
-  "displayName": "Geuneda Data Type Extensions",
+  "displayName": "Geuneda 게임 데이터 확장",
   "author": "geuneda",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "unity": "6000.0",
   "license": "MIT",
-  "description": "다양한 데이터 타입 확장을 제공하는 패키지입니다. Observable 컬렉션, 고정소수점 연산, 직렬화 가능한 타입 등을 포함합니다.",
+  "description": "Unity 게임을 위한 핵심 데이터 유틸리티 및 설정 관리 패키지입니다. Observable 데이터 타입(필드, 리스트, 딕셔너리), 결정론적 부동소수점(floatP), 직렬화 헬퍼, 타입 안전 설정 저장소, 버저닝, 백엔드 동기화 지원을 포함합니다.",
   "type": "library",
   "hideInEditor": false,
+  "dependencies": {
+    "com.unity.nuget.newtonsoft-json": "3.2.1",
+    "com.cysharp.unitask": "2.5.10",
+    "com.unity.textmeshpro": "3.0.6"
+  },
   "samples": [
     {
-      "displayName": "Enum Selector Example",
-      "description": "EnumSelector와 프로퍼티 드로어 사용 예제",
-      "path": "Samples~/Enum Selector Example"
+      "displayName": "반응형 UI 데모 (uGUI)",
+      "description": "ObservableField + ObservableList + ComputedField와 uGUI 바인딩",
+      "path": "Samples~/Reactive UI Demo (uGUI)"
+    },
+    {
+      "displayName": "반응형 UI 데모 (UI Toolkit)",
+      "description": "ObservableField + ObservableList + ComputedField와 UI Toolkit 바인딩",
+      "path": "Samples~/Reactive UI Demo (UI Toolkit)"
+    },
+    {
+      "displayName": "디자이너 워크플로우",
+      "description": "ConfigsScriptableObject, UnitySerializedDictionary, EnumSelector를 사용한 ScriptableObject 편집 워크플로우",
+      "path": "Samples~/Designer Workflow"
+    },
+    {
+      "displayName": "마이그레이션",
+      "description": "Config Browser와 MigrationRunner를 사용한 에디터 전용 스키마 마이그레이션 데모",
+      "path": "Samples~/Migration"
     }
   ]
 }

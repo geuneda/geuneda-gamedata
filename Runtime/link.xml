@@ -1,0 +1,3 @@
+<linker>
+    <assembly fullname="Geuneda.DataExtensions" preserve="all"/>
+</linker>
