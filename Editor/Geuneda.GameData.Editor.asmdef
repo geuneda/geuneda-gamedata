@@ -1,8 +1,8 @@
 {
-    "name": "Geuneda.DataExtensions.Editor",
+    "name": "Geuneda.GameData.Editor",
     "rootNamespace": "",
     "references": [
-        "Geuneda.DataExtensions"
+        "Geuneda.GameData"
     ],
     "includePlatforms": ["Editor"],
     "excludePlatforms": [],

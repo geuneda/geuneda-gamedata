@@ -1,10 +1,10 @@
 {
-  "name": "Geuneda.DataExtensions.Samples.DesignerWorkflow.Editor",
+  "name": "Geuneda.GameData.Samples.DesignerWorkflow.Editor",
   "rootNamespace": "",
   "references": [
-    "Geuneda.DataExtensions",
-    "Geuneda.DataExtensions.Editor",
-    "Geuneda.DataExtensions.Samples.DesignerWorkflow"
+    "Geuneda.GameData",
+    "Geuneda.GameData.Editor",
+    "Geuneda.GameData.Samples.DesignerWorkflow"
   ],
   "includePlatforms": [
     "Editor"

@@ -1,8 +1,8 @@
 {
-  "name": "Geuneda.DataExtensions.Samples.ReactiveToolkitDemo",
+  "name": "Geuneda.GameData.Samples.ReactiveToolkitDemo",
   "rootNamespace": "",
   "references": [
-    "Geuneda.DataExtensions"
+    "Geuneda.GameData"
   ],
   "includePlatforms": [],
   "excludePlatforms": [],

@@ -1,5 +1,5 @@
 {
-    "name": "Geuneda.DataExtensions",
+    "name": "Geuneda.GameData",
     "rootNamespace": "",
     "references": [
         "UniTask"

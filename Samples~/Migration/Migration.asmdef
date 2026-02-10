@@ -1,8 +1,8 @@
 {
     "name": "Migration",
-    "rootNamespace": "Geuneda.DataExtensions.Samples.Migration",
+    "rootNamespace": "Geuneda.GameData.Samples.Migration",
     "references": [
-        "Geuneda.DataExtensions",
+        "Geuneda.GameData",
         "Unity.TextMeshPro",
         "UniTask"
     ],

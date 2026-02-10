@@ -1,8 +1,8 @@
 {
-  "name": "Geuneda.DataExtensions.Samples.DesignerWorkflow",
+  "name": "Geuneda.GameData.Samples.DesignerWorkflow",
   "rootNamespace": "",
   "references": [
-    "Geuneda.DataExtensions",
+    "Geuneda.GameData",
     "Unity.TextMeshPro"
   ],
   "includePlatforms": [],

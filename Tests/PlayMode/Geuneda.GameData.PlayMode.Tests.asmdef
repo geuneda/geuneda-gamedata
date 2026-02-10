@@ -1,22 +1,23 @@
 {
-    "name": "Geuneda.DataExtensions.Editor.Tests",
+    "name": "Geuneda.GameData.PlayMode.Tests",
     "rootNamespace": "",
     "references": [
-        "Geuneda.DataExtensions",
-        "Geuneda.DataExtensions.Editor",
+        "Geuneda.GameData",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner",
         "Unity.PerformanceTesting"
     ],
-    "includePlatforms": ["Editor"],
+    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": true,
     "precompiledReferences": [
-        "nunit.framework.dll",
-        "Newtonsoft.Json.dll",
-        "NSubstitute.dll"
+        "nunit.framework.dll"
     ],
     "autoReferenced": false,
-    "defineConstraints": ["UNITY_INCLUDE_TESTS"],
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
     "versionDefines": [],
     "noEngineReferences": false
 }

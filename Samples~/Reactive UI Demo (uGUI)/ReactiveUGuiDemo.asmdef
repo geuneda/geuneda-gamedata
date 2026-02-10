@@ -1,8 +1,8 @@
 {
-  "name": "Geuneda.DataExtensions.Samples.ReactiveUGuiDemo",
+  "name": "Geuneda.GameData.Samples.ReactiveUGuiDemo",
   "rootNamespace": "",
   "references": [
-    "Geuneda.DataExtensions",
+    "Geuneda.GameData",
     "Unity.TextMeshPro"
   ],
   "includePlatforms": [],

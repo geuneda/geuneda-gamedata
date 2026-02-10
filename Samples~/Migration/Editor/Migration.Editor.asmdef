@@ -1,9 +1,9 @@
 {
-  "name": "Geuneda.DataExtensions.Samples.Migration.Editor",
-  "rootNamespace": "Geuneda.DataExtensions.Samples.Migration",
+  "name": "Geuneda.GameData.Samples.Migration.Editor",
+  "rootNamespace": "Geuneda.GameData.Samples.Migration",
   "references": [
-    "Geuneda.DataExtensions",
-    "Geuneda.DataExtensions.Editor",
+    "Geuneda.GameData",
+    "Geuneda.GameData.Editor",
     "Migration"
   ],
   "includePlatforms": [
