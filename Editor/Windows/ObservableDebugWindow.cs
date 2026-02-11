@@ -11,13 +11,13 @@ using UnityEngine.UIElements;
 namespace Geuneda.DataExtensions.Editor
 {
 	/// <summary>
-	/// Editor window that displays all active observable instances tracked by <see cref="ObservableDebugRegistry"/>.
-	/// Access via <c>Tools/Game Data/Observable Debugger</c>.
+	/// <see cref="ObservableDebugRegistry"/>에서 추적하는 모든 활성 Observable 인스턴스를 표시하는 에디터 창입니다.
+	/// <c>Tools/Game Data/Observable Debugger</c>를 통해 접근합니다.
 	/// </summary>
 	/// <remarks>
-	/// <para>Observables automatically register themselves when constructed in the editor via the self-registration pattern.</para>
-	/// <para>Features filtering by name, type (Field/Computed/List/etc.), and subscriber activity.</para>
-	/// <para>Selecting a Computed observable shows its dependency graph in the bottom panel.</para>
+	/// <para>Observable은 자체 등록 패턴을 통해 에디터에서 생성될 때 자동으로 등록됩니다.</para>
+	/// <para>이름, 타입(Field/Computed/List/등), 구독자 활동별 필터링을 지원합니다.</para>
+	/// <para>Computed Observable을 선택하면 하단 패널에 의존성 그래프를 표시합니다.</para>
 	/// </remarks>
 	public sealed class ObservableDebugWindow : EditorWindow
 	{
@@ -41,7 +41,7 @@ namespace Geuneda.DataExtensions.Editor
 		private DependencyGraphElement _dependencyGraph;
 
 		/// <summary>
-		/// Opens the Observable Debugger window.
+		/// Observable Debugger 창을 엽니다.
 		/// </summary>
 		[MenuItem("Tools/Game Data/Observable Debugger")]
 		public static void ShowWindow()
@@ -52,7 +52,7 @@ namespace Geuneda.DataExtensions.Editor
 		}
 
 		/// <summary>
-		/// Creates the UI Toolkit GUI when the window is opened or reloaded.
+		/// 창이 열리거나 리로드될 때 UI Toolkit GUI를 생성합니다.
 		/// </summary>
 		public void CreateGUI()
 		{
@@ -70,7 +70,7 @@ namespace Geuneda.DataExtensions.Editor
 
 			rootVisualElement.Add(split);
 
-			// Poll periodically while window is open (editor-only registry, no playmode requirement).
+			// 창이 열려 있는 동안 주기적으로 폴링합니다(에디터 전용 레지스트리, 플레이모드 불필요).
 			rootVisualElement.schedule.Execute(RefreshData).Every(250);
 			RefreshData();
 		}
@@ -85,37 +85,37 @@ namespace Geuneda.DataExtensions.Editor
 				return;
 			}
 
-			// Use Unity's internal utility to open the file at the specific line
-			// This works like clicking on a console log entry
+			// Unity 내부 유틸리티를 사용하여 특정 라인에서 파일을 엽니다
+			// 콘솔 로그 항목 클릭과 동일하게 작동합니다
 			InternalEditorUtility.OpenFileAtLineExternal(filePath, lineNumber);
 		}
 
 		private static string FormatName(ObservableDebugRegistry.EntrySnapshot s)
 		{
-			// Strip backtick-number patterns (e.g., `1, `2) from generic names
+			// 제네릭 이름에서 백틱-숫자 패턴(예: `1, `2)을 제거합니다
 			var formattedName = Regex.Replace(s.Name ?? string.Empty, @"`\d+", "");
 
-			// Append source location if available
+			// 소스 위치가 있으면 추가합니다
 			var sourceLocation = s.SourceLocation;
 			if (!string.IsNullOrEmpty(sourceLocation))
 			{
 				return $"{formattedName} ({sourceLocation})";
 			}
 
-			// Fallback to ID if no source location
+			// 소스 위치가 없으면 ID로 대체합니다
 			return $"{formattedName}#{s.Id}";
 		}
 
 		private VisualElement BuildToolbar()
 		{
 			var toolbar = new Toolbar();
-			toolbar.style.flexWrap = Wrap.Wrap; // Allow wrapping on small screens
-			toolbar.style.alignItems = Align.Center; // Vertically center all items
+			toolbar.style.flexWrap = Wrap.Wrap; // 작은 화면에서 줄바꿈 허용
+			toolbar.style.alignItems = Align.Center; // 모든 항목 세로 중앙 정렬
 
 			_headerLabel = new Label("Observables");
 			_headerLabel.style.unityFontStyleAndWeight = FontStyle.Bold;
 			_headerLabel.style.marginRight = 8;
-			_headerLabel.style.flexShrink = 0; // Don't shrink the count label
+			_headerLabel.style.flexShrink = 0; // 카운트 레이블 축소 방지
 
 			_filterField = new ToolbarSearchField();
 			_filterField.style.flexGrow = 1;
@@ -123,7 +123,7 @@ namespace Geuneda.DataExtensions.Editor
 			_filterField.style.minWidth = 120;
 			_filterField.RegisterValueChangedCallback(_ => RefreshData());
 
-			// Use ToolbarMenu for compact dropdown (no label gap)
+			// 컴팩트한 드롭다운을 위해 ToolbarMenu를 사용합니다(레이블 간격 없음)
 			_kindMenu = new ToolbarMenu { text = "All" };
 			foreach (var kind in _kinds)
 			{
@@ -135,9 +135,9 @@ namespace Geuneda.DataExtensions.Editor
 			}
 
 			_activeOnlyToggle = new Toggle("Active only");
-			_activeOnlyToggle.labelElement.style.minWidth = 0; // Remove fixed label width
+			_activeOnlyToggle.labelElement.style.minWidth = 0; // 고정 레이블 너비 제거
 			_activeOnlyToggle.style.marginLeft = 4;
-			_activeOnlyToggle.style.alignSelf = Align.Center; // Ensure toggle is centered
+			_activeOnlyToggle.style.alignSelf = Align.Center; // 토글 중앙 정렬 보장
 			_activeOnlyToggle.RegisterValueChangedCallback(_ => RefreshData());
 
 			_refreshButton = new ToolbarButton(RefreshData)
@@ -207,7 +207,7 @@ namespace Geuneda.DataExtensions.Editor
 
 			_listView.itemsSource = _rows;
 			_listView.selectionChanged += OnSelectionChanged;
-			_listView.itemsChosen += OnItemsChosen; // Double-click to open source
+			_listView.itemsChosen += OnItemsChosen; // 더블클릭으로 소스 열기
 			_listView.columnSortingChanged += () => RefreshData();
 
 			return _listView;
@@ -224,8 +224,8 @@ namespace Geuneda.DataExtensions.Editor
 
 		private void ApplyRowStyle(VisualElement element, ObservableDebugRegistry.EntrySnapshot snapshot)
 		{
-			// MultiColumnListView cells are wrapped in a row container.
-			// We can style the parent row based on activity.
+			// MultiColumnListView 셀은 행 컨테이너로 래핑됩니다.
+			// 활동에 따라 부모 행의 스타일을 지정할 수 있습니다.
 			var row = element.parent;
 			if (row != null)
 			{

@@ -3,9 +3,9 @@ using System;
 namespace GeunedaEditor.GameData
 {
 	/// <summary>
-	/// Attribute to mark a class as a config migration handler for a specific config type.
-	/// Migrations are discovered and run in the Editor when config schemas change.
-	/// Version information is obtained from the <see cref="IConfigMigration"/> interface implementation.
+	/// 특정 설정 타입의 설정 마이그레이션 핸들러로 클래스를 표시하는 어트리뷰트입니다.
+	/// 설정 스키마가 변경될 때 에디터에서 마이그레이션이 검색되고 실행됩니다.
+	/// 버전 정보는 <see cref="IConfigMigration"/> 인터페이스 구현에서 얻습니다.
 	/// 
 	/// <example>
 	/// <code>
@@ -17,7 +17,7 @@ namespace GeunedaEditor.GameData
 	///     
 	///     public void Migrate(JObject configJson)
 	///     {
-	///         configJson["Armor"] = 10; // Add new field
+	///         configJson["Armor"] = 10; // 새 필드 추가
 	///     }
 	/// }
 	/// </code>
@@ -27,14 +27,14 @@ namespace GeunedaEditor.GameData
 	public class ConfigMigrationAttribute : Attribute
 	{
 		/// <summary>
-		/// The config type this migration applies to.
+		/// 이 마이그레이션이 적용되는 설정 타입입니다.
 		/// </summary>
 		public Type ConfigType { get; }
 
 		/// <summary>
-		/// Creates a new migration attribute for the specified config type.
+		/// 지정된 설정 타입에 대한 새 마이그레이션 어트리뷰트를 생성합니다.
 		/// </summary>
-		/// <param name="configType">The config type this migration handles.</param>
+		/// <param name="configType">이 마이그레이션이 처리하는 설정 타입입니다.</param>
 		public ConfigMigrationAttribute(Type configType)
 		{
 			ConfigType = configType;

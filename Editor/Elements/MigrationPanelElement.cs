@@ -4,8 +4,8 @@ using UnityEngine.UIElements;
 namespace Geuneda.DataExtensions.Editor
 {
 	/// <summary>
-	/// UI Toolkit panel that lists migrations discovered by the editor migration system and provides
-	/// an in-memory migration preview ("Migration Preview") for a selected row.
+	/// 에디터 마이그레이션 시스템에서 검색된 마이그레이션을 나열하고
+	/// 선택된 행에 대한 인메모리 마이그레이션 미리보기("Migration Preview")를 제공하는 UI Toolkit 패널입니다.
 	/// </summary>
 	public sealed class MigrationPanelElement : VisualElement
 	{
@@ -21,7 +21,7 @@ namespace Geuneda.DataExtensions.Editor
 		}
 
 		/// <summary>
-		/// Sets the config provider to inspect for migrations.
+		/// 마이그레이션을 검사할 설정 프로바이더를 설정합니다.
 		/// </summary>
 		public void SetProvider(IConfigsProvider provider)
 		{
@@ -29,7 +29,7 @@ namespace Geuneda.DataExtensions.Editor
 		}
 
 		/// <summary>
-		/// Rebuilds the migration list and preview panels based on the current provider.
+		/// 현재 프로바이더를 기반으로 마이그레이션 목록 및 미리보기 패널을 다시 빌드합니다.
 		/// </summary>
 		public void Rebuild()
 		{

@@ -5,8 +5,8 @@ using UnityEngine;
 namespace Geuneda.DataExtensions.Tests
 {
 	/// <summary>
-	/// Builder pattern for creating test ConfigsProvider instances with common setups.
-	/// Reduces boilerplate in test files and ensures consistent test data.
+	/// 공통 설정으로 테스트 ConfigsProvider 인스턴스를 생성하기 위한 빌더 패턴입니다.
+	/// 테스트 파일의 상용구를 줄이고 일관된 테스트 데이터를 보장합니다.
 	/// </summary>
 	public class ConfigsProviderBuilder
 	{
@@ -39,7 +39,7 @@ namespace Geuneda.DataExtensions.Tests
 		public ConfigsProvider Build() => _provider;
 
 		/// <summary>
-		/// Creates a default provider with common test configs pre-populated.
+		/// 공통 테스트 설정이 미리 채워진 기본 프로바이더를 생성합니다.
 		/// </summary>
 		public static ConfigsProviderBuilder Default()
 		{
@@ -52,7 +52,7 @@ namespace Geuneda.DataExtensions.Tests
 	}
 
 	/// <summary>
-	/// Builder for creating mock configs with validation attributes.
+	/// 유효성 검사 어트리뷰트를 가진 모크 설정을 생성하기 위한 빌더입니다.
 	/// </summary>
 	public class MockValidatableConfigBuilder
 	{
@@ -81,8 +81,8 @@ namespace Geuneda.DataExtensions.Tests
 		public MockValidatableConfigBuilder Invalid()
 		{
 			_name = "";
-			_health = 150; // Out of range 0-100
-			_tag = "A";    // Too short, min 3
+			_health = 150; // 범위 0-100 초과
+			_tag = "A";    // 너무 짧음, 최소 3
 			return this;
 		}
 
@@ -95,7 +95,7 @@ namespace Geuneda.DataExtensions.Tests
 	}
 
 	/// <summary>
-	/// Builder for Unity types config with sensible defaults.
+	/// 합리적인 기본값을 가진 Unity 타입 설정 빌더입니다.
 	/// </summary>
 	public class UnityTypesConfigBuilder
 	{
@@ -156,11 +156,11 @@ namespace Geuneda.DataExtensions.Tests
 	}
 
 	// ════════════════════════════════════════════════════════════════════════
-	// Common Test Config Types
+	// 공통 테스트 설정 타입
 	// ════════════════════════════════════════════════════════════════════════
 
 	/// <summary>
-	/// Simple singleton config for general testing.
+	/// 일반 테스트를 위한 간단한 싱글톤 설정입니다.
 	/// </summary>
 	[Serializable]
 	public struct MockSingletonConfig
@@ -169,7 +169,7 @@ namespace Geuneda.DataExtensions.Tests
 	}
 
 	/// <summary>
-	/// Simple collection config with Id for testing keyed collections.
+	/// 키 기반 컬렉션 테스트를 위한 ID를 가진 간단한 컬렉션 설정입니다.
 	/// </summary>
 	[Serializable]
 	public struct MockCollectionConfig
@@ -179,7 +179,7 @@ namespace Geuneda.DataExtensions.Tests
 	}
 
 	/// <summary>
-	/// Config with validation attributes for testing EditorConfigValidator.
+	/// EditorConfigValidator 테스트를 위한 유효성 검사 어트리뷰트를 가진 설정입니다.
 	/// </summary>
 	[Serializable]
 	public class MockValidatableConfig
@@ -193,7 +193,7 @@ namespace Geuneda.DataExtensions.Tests
 	}
 
 	/// <summary>
-	/// Config with Unity types for serialization testing.
+	/// 직렬화 테스트를 위한 Unity 타입을 가진 설정입니다.
 	/// </summary>
 	[Serializable]
 	public struct MockUnityTypesConfig
@@ -206,7 +206,7 @@ namespace Geuneda.DataExtensions.Tests
 	}
 
 	/// <summary>
-	/// Config marked to be ignored during server serialization.
+	/// 서버 직렬화 중 무시되도록 표시된 설정입니다.
 	/// </summary>
 	[Serializable]
 	[IgnoreServerSerialization]
@@ -216,7 +216,7 @@ namespace Geuneda.DataExtensions.Tests
 	}
 
 	/// <summary>
-	/// Non-serializable config (missing [Serializable]) for error testing.
+	/// 오류 테스트를 위한 직렬화 불가 설정([Serializable] 누락)입니다.
 	/// </summary>
 	public struct MockNonSerializableConfig
 	{

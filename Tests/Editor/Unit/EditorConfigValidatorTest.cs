@@ -68,7 +68,7 @@ namespace Geuneda.DataExtensions.Tests
 		[Test]
 		public void Validate_UsingBuilder_DefaultValues_PassValidation()
 		{
-			// Default builder creates valid config
+			// 기본 빌더는 유효한 설정을 생성합니다
 			var provider = new ConfigsProviderBuilder()
 				.WithSingleton(new MockValidatableConfigBuilder().Build())
 				.Build();

@@ -55,7 +55,7 @@ namespace Geuneda.DataExtensions.Tests
 		[Test]
 		public void Dispose_NotificationsInAddOrder()
 		{
-			// Received calls are tracked in order in NSubstitute, but we can also use a list
+			// 수신된 호출은 NSubstitute에서 순서대로 추적되지만, 목록도 사용할 수 있습니다
 			var callOrder = new List<int>();
 			_mockBatchable1.When(x => x.ResumeNotifications()).Do(_ => callOrder.Add(1));
 			_mockBatchable2.When(x => x.ResumeNotifications()).Do(_ => callOrder.Add(2));

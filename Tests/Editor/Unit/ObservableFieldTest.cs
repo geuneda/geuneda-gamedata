@@ -8,7 +8,7 @@ namespace Geuneda.DataExtensions.Tests
 	public class ObservableFieldTest
 	{
 		/// <summary>
-		/// Mocking interface to check method calls received
+		/// 메서드 호출 수신을 확인하기 위한 모킹 인터페이스
 		/// </summary>
 		public interface IMockCaller<in T>
 		{
@@ -190,27 +190,27 @@ namespace Geuneda.DataExtensions.Tests
 			const int valueCheck = 10;
 			var newMockInt = 5;
 
-			// Setup observer
+			// 옵저버 설정
 			_observableResolverField.Observe(_caller.UpdateCall);
 			_caller.ClearReceivedCalls();
 
-			// Rebind to a new field
+			// 새 필드에 리바인딩
 			_observableResolverField.Rebind(() => newMockInt, i => newMockInt = i);
 
-			// Verify rebind worked
+			// 리바인딩이 작동하는지 확인
 			Assert.AreEqual(newMockInt, _observableResolverField.Value);
 
-			// Set value through the rebinded field
+			// 리바인딩된 필드를 통해 값 설정
 			_observableResolverField.Value = valueCheck;
 
-			// Verify the new field was updated
+			// 새 필드가 업데이트되었는지 확인
 			Assert.AreEqual(valueCheck, newMockInt);
 			Assert.AreEqual(valueCheck, _observableResolverField.Value);
 
-			// Verify old field was not updated
+			// 이전 필드가 업데이트되지 않았는지 확인
 			Assert.AreNotEqual(valueCheck, _mockInt);
 
-			// Verify observers still work after rebind
+			// 리바인딩 후 옵저버가 여전히 작동하는지 확인
 			_caller.Received(1).UpdateCall(5, valueCheck);
 		}
 
@@ -220,18 +220,18 @@ namespace Geuneda.DataExtensions.Tests
 			const int valueCheck = 15;
 			var newMockInt = 0;
 
-			// Setup multiple observers before rebind
+			// 리바인딩 전 여러 옵저버 설정
 			_observableResolverField.Observe(_caller.UpdateCall);
 			_observableResolverField.Observe(_caller.UpdateCall);
 
-			// Rebind to a new field
+			// 새 필드에 리바인딩
 			_observableResolverField.Rebind(() => newMockInt, i => newMockInt = i);
 			_caller.ClearReceivedCalls();
 
-			// Trigger update
+			// 업데이트 트리거
 			_observableResolverField.Value = valueCheck;
 
-			// Verify both observers were notified
+			// 두 옵저버 모두 알림을 받았는지 확인
 			_caller.Received(2).UpdateCall(0, valueCheck);
 		}
 
@@ -241,16 +241,16 @@ namespace Geuneda.DataExtensions.Tests
 			const int initialValue = 5;
 			const int newValue = 10;
 
-			// Setup observer on base class
+			// 기본 클래스에 옵저버 설정
 			_observableField.Observe(_caller.UpdateCall);
 
-			// Rebind to a new value
+			// 새 값에 리바인딩
 			_observableField.Rebind(initialValue);
 
-			// Verify new value is set
+			// 새 값이 설정되었는지 확인
 			Assert.AreEqual(initialValue, _observableField.Value);
 
-			// Trigger update and verify observer still works
+			// 업데이트 트리거 및 옵저버 작동 확인
 			_observableField.Value = newValue;
 			_caller.Received(1).UpdateCall(initialValue, newValue);
 		}
@@ -285,7 +285,7 @@ namespace Geuneda.DataExtensions.Tests
 			Assert.AreEqual(_observableField.Value, val);
 
 			_observableField.Value = 10;
-			// ComputedField should be dirty now and recompute on next access
+			// ComputedField는 이제 더티 상태이며 다음 접근 시 재계산해야 합니다
 			Assert.AreEqual(10, computed.Value);
 		}
 	}

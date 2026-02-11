@@ -7,18 +7,18 @@ using UnityEngine.UIElements;
 namespace Geuneda.DataExtensions.Editor
 {
 	/// <summary>
-	/// Builds the hierarchical <see cref="TreeViewItemData{T}"/> structure used by the
-	/// Config Browser tree view. Groups configs into "Singletons" and "Collections" headers
-	/// and supports text-based search filtering by type name or entry id.
+	/// Config Browser 트리 뷰에서 사용하는 계층적 <see cref="TreeViewItemData{T}"/> 구조를 빌드합니다.
+	/// 설정을 "Singletons"과 "Collections" 헤더로 그룹화하고
+	/// 타입 이름 또는 항목 ID로 텍스트 기반 검색 필터링을 지원합니다.
 	/// </summary>
 	internal static class ConfigTreeBuilder
 	{
 		private const int SingleConfigId = 0;
 
 		/// <summary>
-		/// Builds a list of root <see cref="TreeViewItemData{T}"/> items from the given
-		/// <paramref name="provider"/>. When <paramref name="search"/> is non-empty, only entries
-		/// whose type name or id matches the search term are included.
+		/// 주어진 <paramref name="provider"/>에서 루트 <see cref="TreeViewItemData{T}"/> 항목 목록을 빌드합니다.
+		/// <paramref name="search"/>가 비어 있지 않으면, 타입 이름이나 ID가
+		/// 검색어와 일치하는 항목만 포함됩니다.
 		/// </summary>
 		public static IList<TreeViewItemData<ConfigNode>> BuildTreeItems(IConfigsProvider provider, string search)
 		{
@@ -60,7 +60,7 @@ namespace Geuneda.DataExtensions.Editor
 
 					if (!typeMatches && hasSearch)
 					{
-						// Allow searching by id.
+						// ID로 검색을 허용합니다.
 						if (!idStr.Contains(searchLower))
 						{
 							continue;
@@ -93,9 +93,9 @@ namespace Geuneda.DataExtensions.Editor
 		}
 
 		/// <summary>
-		/// Searches the given <paramref name="roots"/> tree for an entry node matching the specified
-		/// config <paramref name="type"/> and <paramref name="id"/>. Returns the tree item id
-		/// if found, or null if no matching entry exists.
+		/// 주어진 <paramref name="roots"/> 트리에서 지정된
+		/// 설정 <paramref name="type"/>과 <paramref name="id"/>에 일치하는 항목 노드를 검색합니다. 찾으면 트리 항목 ID를 반환하고,
+		/// 일치하는 항목이 없으면 null을 반환합니다.
 		/// </summary>
 		public static int? FindTreeItemIdForEntry(IList<TreeViewItemData<ConfigNode>> roots, Type type, int id)
 		{

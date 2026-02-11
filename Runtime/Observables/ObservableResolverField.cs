@@ -4,15 +4,15 @@ namespace Geuneda.DataExtensions
 {
 	/// <inheritdoc />
 	/// <remarks>
-	/// A resolver field with the possibility to rebind to new resolver functions
+	/// 새 리졸버 함수에 리바인딩할 수 있는 리졸버 필드입니다
 	/// </remarks>
 	public interface IObservableResolverField<T> : IObservableField<T>
 	{
 		/// <summary>
-		/// Rebinds this field to new resolver functions without losing existing observers
+		/// 기존 옵저버를 잃지 않고 이 필드를 새 리졸버 함수에 리바인딩합니다
 		/// </summary>
-		/// <param name="fieldResolver">The new getter function for the field</param>
-		/// <param name="fieldSetter">The new setter function for the field</param>
+		/// <param name="fieldResolver">필드의 새 게터 함수입니다</param>
+		/// <param name="fieldSetter">필드의 새 세터 함수입니다</param>
 		void Rebind(Func<T> fieldResolver, Action<T> fieldSetter);
 	}
 
@@ -49,12 +49,12 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Implicit operator to convert the field to its value
+		/// 필드를 값으로 변환하는 암시적 연산자입니다
 		/// </summary>
 		public static implicit operator T(ObservableResolverField<T> value) => value.Value;
 
 		/// <summary>
-		/// Rebinds this field to new resolver functions without losing existing observers
+		/// 기존 옵저버를 잃지 않고 이 필드를 새 리졸버 함수에 리바인딩합니다
 		/// </summary>
 		public void Rebind(Func<T> fieldResolver, Action<T> fieldSetter)
 		{

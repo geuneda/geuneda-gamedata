@@ -7,9 +7,9 @@ using UnityEngine.UIElements;
 namespace Geuneda.DataExtensions.Editor
 {
 	/// <summary>
-	/// UI Toolkit view that renders the migration panel layout: a list of migration rows,
-	/// a preview section with before/after JSON viewers, and controls for previewing and applying migrations.
-	/// This view is purely presentational; logic lives in <see cref="MigrationPanelController"/>.
+	/// 마이그레이션 패널 레이아웃을 렌더링하는 UI Toolkit 뷰입니다: 마이그레이션 행 목록,
+	/// 전/후 JSON 뷰어가 있는 미리보기 섹션, 그리고 미리보기 및 적용 컨트롤을 포함합니다.
+	/// 이 뷰는 순수하게 표현 계층이며, 로직은 <see cref="MigrationPanelController"/>에 있습니다.
 	/// </summary>
 	internal sealed class MigrationPanelView : VisualElement
 	{
@@ -45,7 +45,7 @@ namespace Geuneda.DataExtensions.Editor
 			_emptyState = new HelpBox("No migrations available in this project.", HelpBoxMessageType.Info);
 			_emptyState.style.display = DisplayStyle.None;
 
-			// Vertical split: migrations list (top) + preview section (bottom)
+			// 세로 분할: 마이그레이션 목록 (상단) + 미리보기 섹션 (하단)
 			var verticalSplit = new TwoPaneSplitView(1, 220, TwoPaneSplitViewOrientation.Vertical);
 			verticalSplit.viewDataKey = "ConfigBrowser_MigrationVerticalSplit";
 			verticalSplit.style.flexGrow = 1;
@@ -62,7 +62,7 @@ namespace Geuneda.DataExtensions.Editor
 		}
 
 		/// <summary>
-		/// Gets the trimmed custom JSON input provided by the user, or null when empty.
+		/// 사용자가 입력한 트리밍된 사용자 정의 JSON을 반환하거나, 비어 있으면 null을 반환합니다.
 		/// </summary>
 		public string CustomJson
 		{
@@ -74,12 +74,12 @@ namespace Geuneda.DataExtensions.Editor
 		}
 
 		/// <summary>
-		/// Gets the currently selected migration dropdown index, or -1 if nothing is selected.
+		/// 현재 선택된 마이그레이션 드롭다운 인덱스를 반환하거나, 선택되지 않았으면 -1을 반환합니다.
 		/// </summary>
 		public int SelectedIndex => _migrationDropdown?.index ?? -1;
 
 		/// <summary>
-		/// Updates the header label text.
+		/// 헤더 레이블 텍스트를 업데이트합니다.
 		/// </summary>
 		public void SetHeader(string text)
 		{
@@ -87,7 +87,7 @@ namespace Geuneda.DataExtensions.Editor
 		}
 
 		/// <summary>
-		/// Toggles between the empty-state help box and the content container.
+		/// 빈 상태 도움 상자와 콘텐츠 컨테이너 사이를 전환합니다.
 		/// </summary>
 		public void SetEmptyStateVisible(bool visible)
 		{
@@ -96,7 +96,7 @@ namespace Geuneda.DataExtensions.Editor
 		}
 
 		/// <summary>
-		/// Replaces the displayed migration rows and refreshes the dropdown choices.
+		/// 표시된 마이그레이션 행을 교체하고 드롭다운 선택지를 새로고침합니다.
 		/// </summary>
 		public void SetRows(List<MigrationRow> rows)
 		{
@@ -116,7 +116,7 @@ namespace Geuneda.DataExtensions.Editor
 		}
 
 		/// <summary>
-		/// Enables or disables the preview and apply buttons.
+		/// 미리보기 및 적용 버튼을 활성화하거나 비활성화합니다.
 		/// </summary>
 		public void SetButtonsEnabled(bool hasChoices, bool canApply)
 		{
@@ -125,7 +125,7 @@ namespace Geuneda.DataExtensions.Editor
 		}
 
 		/// <summary>
-		/// Displays the given JSON string in the input (before) viewer.
+		/// 입력(이전) 뷰어에 주어진 JSON 문자열을 표시합니다.
 		/// </summary>
 		public void SetInputJson(string json)
 		{
@@ -133,7 +133,7 @@ namespace Geuneda.DataExtensions.Editor
 		}
 
 		/// <summary>
-		/// Displays the given JSON string in the output (after) viewer.
+		/// 출력(이후) 뷰어에 주어진 JSON 문자열을 표시합니다.
 		/// </summary>
 		public void SetOutputJson(string json)
 		{
@@ -141,7 +141,7 @@ namespace Geuneda.DataExtensions.Editor
 		}
 
 		/// <summary>
-		/// Sets the migration log message displayed below the preview.
+		/// 미리보기 아래에 표시되는 마이그레이션 로그 메시지를 설정합니다.
 		/// </summary>
 		public void SetLog(string message)
 		{
@@ -185,7 +185,7 @@ namespace Geuneda.DataExtensions.Editor
 			title.style.unityFontStyleAndWeight = FontStyle.Bold;
 			title.style.marginBottom = 4;
 
-			// Custom JSON input section
+			// 사용자 정의 JSON 입력 섹션
 			var customInputSection = new VisualElement { style = { marginBottom = 6 } };
 			var customInputLabel = new Label("Custom Input JSON (paste legacy-schema JSON here):");
 			customInputLabel.style.marginBottom = 2;
@@ -201,7 +201,7 @@ namespace Geuneda.DataExtensions.Editor
 			};
 			_customJsonInput.AddToClassList("unity-text-field__input");
 
-			// Migration selection and preview button row
+			// 마이그레이션 선택 및 미리보기 버튼 행
 			var previewControlsRow = new VisualElement
 			{
 				style =

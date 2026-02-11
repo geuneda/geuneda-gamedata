@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Geuneda.DataExtensions.Samples.ReactiveUiDemo
 {
 	/// <summary>
-	/// Simple uGUI inventory view bound to an <see cref="ObservableList{T}"/>.
+	/// <see cref="ObservableList{T}"/>에 바인딩된 간단한 uGUI 인벤토리 뷰입니다.
 	/// </summary>
 	public sealed class ReactiveInventoryList : MonoBehaviour
 	{
@@ -66,7 +66,7 @@ namespace Geuneda.DataExtensions.Samples.ReactiveUiDemo
 
 		private void OnItemUpdated(int index, string value)
 		{
-			// Handle batch notifications for newly added items (batch fires Updated for all indices)
+			// 새로 추가된 항목에 대한 배치 알림을 처리합니다(배치는 모든 인덱스에 대해 Updated를 발생시킵니다)
 			if (index >= _spawned.Count)
 			{
 				OnItemAdded(index, value);

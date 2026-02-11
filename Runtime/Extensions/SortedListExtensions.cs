@@ -7,33 +7,33 @@ using System.Collections.Generic;
 namespace Geuneda.DataExtensions
 {
 	/// <summary>
-	/// Container for extension functions for the System.Collections.Generic.IList{T} and System.Collections.IList
-	/// interfaces that inserts elements lists that are presumed to be already sorted such that sort ordering is preserved
+	/// 정렬 순서가 유지되도록 이미 정렬된 것으로 간주되는 리스트에 요소를 삽입하는
+	/// System.Collections.Generic.IList{T} 및 System.Collections.IList 인터페이스용 확장 함수 컨테이너입니다
 	/// </summary>
 	/// <author>Jackson Dunstan, http://JacksonDunstan.com/articles/3189</author>
 	/// <license>MIT</license>
 	public static class SortedListExtensions
 	{
 		/// <summary>
-		/// Insert a value into an IList{T} that is presumed to be already sorted such that sort
-		/// ordering is preserved
+		/// 정렬 순서가 유지되도록 이미 정렬된 것으로 간주되는 IList{T}에
+		/// 값을 삽입합니다
 		/// </summary>
-		/// <param name="list">List to insert into</param>
-		/// <param name="value">Value to insert</param>
-		/// <typeparam name="T">Type of element to insert and type of elements in the list</typeparam>
+		/// <param name="list">삽입할 목록입니다</param>
+		/// <param name="value">삽입할 값입니다</param>
+		/// <typeparam name="T">삽입할 요소의 타입이자 목록 내 요소의 타입입니다</typeparam>
 		public static void InsertIntoSortedList<T>(this IList<T> list, T value) where T : IComparable<T>
 		{
 			InsertIntoSortedList(list, value, (a, b) => a.CompareTo(b));
 		}
 
 		/// <summary>
-		/// Insert a value into an IList{T} that is presumed to be already sorted such that sort
-		/// ordering is preserved
+		/// 정렬 순서가 유지되도록 이미 정렬된 것으로 간주되는 IList{T}에
+		/// 값을 삽입합니다
 		/// </summary>
-		/// <param name="list">List to insert into</param>
-		/// <param name="value">Value to insert</param>
-		/// <param name="comparison">Comparison to determine sort order with</param>
-		/// <typeparam name="T">Type of element to insert and type of elements in the list</typeparam>
+		/// <param name="list">삽입할 목록입니다</param>
+		/// <param name="value">삽입할 값입니다</param>
+		/// <param name="comparison">정렬 순서를 결정할 비교입니다</param>
+		/// <typeparam name="T">삽입할 요소의 타입이자 목록 내 요소의 타입입니다</typeparam>
 		public static void InsertIntoSortedList<T>(this IList<T> list, T value, Comparison<T> comparison)
 		{
 			var startIndex = 0;
@@ -66,13 +66,13 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Insert a value into an IList{T} that is presumed to be already sorted such that sort
-		/// ordering is preserved
+		/// 정렬 순서가 유지되도록 이미 정렬된 것으로 간주되는 IList{T}에
+		/// 값을 삽입합니다
 		/// </summary>
-		/// <param name="list">List to insert into</param>
-		/// <param name="value">Value to insert</param>
-		/// <param name="comparer">Comparer to determine sort order with</param>
-		/// <typeparam name="T">Type of element to insert and type of elements in the list</typeparam>
+		/// <param name="list">삽입할 목록입니다</param>
+		/// <param name="value">삽입할 값입니다</param>
+		/// <param name="comparer">정렬 순서를 결정할 비교자입니다</param>
+		/// <typeparam name="T">삽입할 요소의 타입이자 목록 내 요소의 타입입니다</typeparam>
 		public static void InsertIntoSortedList<T>(this IList<T> list, T value, IComparer<T> comparer)
 		{
 			var startIndex = 0;
@@ -105,21 +105,21 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Insert a value into an IList that is presumed to be already sorted such that sort ordering is preserved
+		/// 정렬 순서가 유지되도록 이미 정렬된 것으로 간주되는 IList에 값을 삽입합니다
 		/// </summary>
-		/// <param name="list">List to insert into</param>
-		/// <param name="value">Value to insert</param>
+		/// <param name="list">삽입할 목록입니다</param>
+		/// <param name="value">삽입할 값입니다</param>
 		public static void InsertIntoSortedList(this IList list, IComparable value)
 		{
 			InsertIntoSortedList(list, value, (a, b) => a.CompareTo(b));
 		}
 
 		/// <summary>
-		/// Insert a value into an IList that is presumed to be already sorted such that sort ordering is preserved
+		/// 정렬 순서가 유지되도록 이미 정렬된 것으로 간주되는 IList에 값을 삽입합니다
 		/// </summary>
-		/// <param name="list">List to insert into</param>
-		/// <param name="value">Value to insert</param>
-		/// <param name="comparison">Comparison to determine sort order with</param>
+		/// <param name="list">삽입할 목록입니다</param>
+		/// <param name="value">삽입할 값입니다</param>
+		/// <param name="comparison">정렬 순서를 결정할 비교입니다</param>
 		public static void InsertIntoSortedList(this IList list, IComparable value, Comparison<IComparable> comparison)
 		{
 			var startIndex = 0;

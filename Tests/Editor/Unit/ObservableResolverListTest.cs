@@ -68,25 +68,25 @@ namespace Geuneda.DataExtensions.Tests
 		[Test]
 		public void Rebind_ChangesOriginList()
 		{
-			// Add initial data
+			// 초기 데이터 추가
 			_list.AddOrigin("1");
 			_list.AddOrigin("2");
 
-			// Create new origin list and rebind
+			// 새 원본 리스트 생성 및 리바인딩
 			var newOriginList = new List<string> { "10", "20", "30", "40" };
 			_list.Rebind(
 				newOriginList,
 				origin => int.Parse(origin),
 				value => value.ToString());
 
-			// Verify new list is being used
+			// 새 리스트가 사용되는지 확인
 			Assert.AreEqual(4, _list.Count);
 			Assert.AreEqual(10, _list[0]);
 			Assert.AreEqual(20, _list[1]);
 			Assert.AreEqual(30, _list[2]);
 			Assert.AreEqual(40, _list[3]);
 
-			// Verify add operation uses new origin list
+			// 추가 작업이 새 원본 리스트를 사용하는지 확인
 			_list.Add(50);
 			Assert.AreEqual("50", newOriginList[4]);
 		}
@@ -94,18 +94,18 @@ namespace Geuneda.DataExtensions.Tests
 		[Test]
 		public void Rebind_KeepsObservers()
 		{
-			// Setup observer
+			// 옵저버 설정
 			var observerCalls = 0;
 			_list.Observe((index, prev, curr, type) => observerCalls++);
 
-			// Create new origin list and rebind
+			// 새 원본 리스트 생성 및 리바인딩
 			var newOriginList = new List<string> { "100", "200" };
 			_list.Rebind(
 				newOriginList,
 				origin => int.Parse(origin),
 				value => value.ToString());
 
-			// Trigger update and verify observer is still active
+			// 업데이트 트리거 및 옵저버 활성 상태 확인
 			_list.Add(300);
 			Assert.AreEqual(1, observerCalls);
 		}
@@ -126,8 +126,8 @@ namespace Geuneda.DataExtensions.Tests
 		[Test]
 		public void Add_InvalidFormat_ThrowsException()
 		{
-			// The resolver 'origin => int.Parse(origin)' will throw if origin is not a valid number
-			// AddOrigin parses the origin value immediately, so it throws on add
+			// 리졸버 'origin => int.Parse(origin)'은 origin이 유효한 숫자가 아니면 예외를 발생시킵니다
+			// AddOrigin은 원본 값을 즉시 파싱하므로, 추가 시 예외가 발생합니다
 			Assert.Throws<FormatException>(() => _list.AddOrigin("invalid"));
 		}
 	}

@@ -8,27 +8,27 @@ using System.Text.RegularExpressions;
 namespace Geuneda.DataExtensions
 {
 	// ═══════════════════════════════════════════════════════════════════════════
-	// EDITOR-ONLY: Observable Debug Window Support
+	// 에디터 전용: Observable 디버그 창 지원
 	// ═══════════════════════════════════════════════════════════════════════════
-	// This file implements an internal registry used by the Observable Debugger
-	// window to discover and inspect observable instances without requiring any
-	// manual registration calls in user code.
+	// 이 파일은 Observable Debugger 창에서 사용하는 내부 레지스트리를 구현하며,
+	// 사용자 코드에서 수동 등록 호출 없이 Observable 인스턴스를
+	// 검색하고 검사할 수 있습니다.
 	//
-	// Design notes:
-	// - Uses weak references so tracked observables do not leak memory.
-	// - Stores value/subscriber getters as delegates so the debug window can poll
-	//   live data without reflection.
-	// - Compiled out in player builds.
+	// 설계 참고:
+	// - 추적된 Observable이 메모리를 누수하지 않도록 약한 참조를 사용합니다.
+	// - 디버그 창이 리플렉션 없이 라이브 데이터를 폴링할 수 있도록
+	//   값/구독자 게터를 대리자로 저장합니다.
+	// - 플레이어 빌드에서 컴파일 제외됩니다.
 	// ═══════════════════════════════════════════════════════════════════════════
 
 	/// <summary>
-	/// Static registry used by the Observable Debugger window to discover and inspect observable instances.
-	/// Observables automatically register themselves via the self-registration pattern implemented in each
-	/// observable class's editor-only code block.
+	/// Observable Debugger 창이 Observable 인스턴스를 검색하고 검사하는 데 사용하는 정적 레지스트리입니다.
+	/// Observable은 각 Observable 클래스의 에디터 전용 코드 블록에 구현된
+	/// 자체 등록 패턴을 통해 자동으로 등록됩니다.
 	/// </summary>
 	/// <remarks>
-	/// <para>Uses weak references so tracked observables do not prevent garbage collection.</para>
-	/// <para>All members are compiled out in player builds via <c>#if UNITY_EDITOR</c>.</para>
+	/// <para>추적된 Observable이 가비지 컬렉션을 방해하지 않도록 약한 참조를 사용합니다.</para>
+	/// <para>모든 멤버는 <c>#if UNITY_EDITOR</c>를 통해 플레이어 빌드에서 컴파일 제외됩니다.</para>
 	/// </remarks>
 	public static class ObservableDebugRegistry
 	{
@@ -62,13 +62,13 @@ namespace Geuneda.DataExtensions
 		private static readonly List<WeakReference<object>> _refs = new List<WeakReference<object>>();
 
 		/// <summary>
-		/// Registers an observable instance with the debug registry.
-		/// Called automatically by observable constructors in editor builds.
+		/// 디버그 레지스트리에 Observable 인스턴스를 등록합니다.
+		/// 에디터 빌드에서 Observable 생성자에 의해 자동으로 호출됩니다.
 		/// </summary>
-		/// <param name="instance">The observable instance to register.</param>
-		/// <param name="kind">The observable type category (Field, Computed, List, Dictionary, HashSet).</param>
-		/// <param name="valueGetter">Delegate to get the current value as a string.</param>
-		/// <param name="subscriberCountGetter">Delegate to get the current subscriber count.</param>
+		/// <param name="instance">등록할 Observable 인스턴스입니다.</param>
+		/// <param name="kind">Observable 타입 카테고리입니다(Field, Computed, List, Dictionary, HashSet).</param>
+		/// <param name="valueGetter">현재 값을 문자열로 가져오는 대리자입니다.</param>
+		/// <param name="subscriberCountGetter">현재 구독자 수를 가져오는 대리자입니다.</param>
 		internal static void Register(
 			object instance,
 			string kind,
@@ -89,8 +89,8 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Enumerates snapshots of all currently tracked observable instances.
-		/// Automatically cleans up entries for garbage-collected instances.
+		/// 현재 추적 중인 모든 Observable 인스턴스의 스냅샷을 열거합니다.
+		/// 가비지 컬렉션된 인스턴스의 항목을 자동으로 정리합니다.
 		/// </summary>
 		public static IEnumerable<EntrySnapshot> EnumerateSnapshots()
 		{
@@ -108,7 +108,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Finds a snapshot for a specific observable instance if it is currently tracked.
+		/// 현재 추적 중인 특정 Observable 인스턴스의 스냅샷을 찾습니다.
 		/// </summary>
 		public static EntrySnapshot? FindByInstance(object instance)
 		{
@@ -129,7 +129,7 @@ namespace Geuneda.DataExtensions
 
 			try
 			{
-				// Enable file info to capture source location
+				// 소스 위치를 캡처하기 위해 파일 정보를 활성화합니다
 				var stack = new StackTrace(4, true);
 				var frame = stack.GetFrame(0);
 				var method = frame?.GetMethod();
@@ -137,7 +137,7 @@ namespace Geuneda.DataExtensions
 				filePath = frame?.GetFileName();
 				lineNumber = frame?.GetFileLineNumber() ?? 0;
 
-				// Try to extract field/property name from source line
+				// 소스 라인에서 필드/프로퍼티 이름을 추출하려고 시도합니다
 				if (!string.IsNullOrEmpty(filePath) && lineNumber > 0)
 				{
 					var extractedName = TryExtractMemberName(filePath, lineNumber);
@@ -149,7 +149,7 @@ namespace Geuneda.DataExtensions
 			}
 			catch
 			{
-				// Fallback to basic name on any error
+				// 오류 발생 시 기본 이름으로 대체합니다
 			}
 
 			var name = $"{typeName}.{memberName}<{instanceType.Name}>";
@@ -157,7 +157,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Attempts to extract the field or property name from source code at the given location.
+		/// 주어진 위치의 소스 코드에서 필드 또는 프로퍼티 이름을 추출하려고 시도합니다.
 		/// </summary>
 		private static string TryExtractMemberName(string filePath, int lineNumber)
 		{
@@ -170,25 +170,25 @@ namespace Geuneda.DataExtensions
 
 				var line = lines[lineNumber - 1];
 
-				// Pattern for property: "public ObservableField<int> Health { get; }"
-				// Pattern for field: "private ObservableField<int> _health ="
-				// Pattern for assignment: "Health = new ObservableField<int>()"
+				// 프로퍼티 패턴: "public ObservableField<int> Health { get; }"
+				// 필드 패턴: "private ObservableField<int> _health ="
+				// 할당 패턴: "Health = new ObservableField<int>()"
 
-				// Try to match property declaration pattern
+				// 프로퍼티 선언 패턴 매칭 시도
 				var propertyMatch = Regex.Match(line, @"\b(\w+)\s*\{\s*get\s*;");
 				if (propertyMatch.Success)
 				{
 					return propertyMatch.Groups[1].Value;
 				}
 
-				// Try to match field assignment pattern (name before = new)
+				// 필드 할당 패턴 매칭 시도 (= new 앞의 이름)
 				var assignmentMatch = Regex.Match(line, @"\b(\w+)\s*=\s*new\s+(?:Observable|Computed)");
 				if (assignmentMatch.Success)
 				{
 					return assignmentMatch.Groups[1].Value;
 				}
 
-				// Try to match field declaration pattern (type followed by name)
+				// 필드 선언 패턴 매칭 시도 (타입 뒤에 이름)
 				var fieldMatch = Regex.Match(line, @"(?:Observable|Computed)\w*<[^>]+>\s+(\w+)\s*[;=]");
 				if (fieldMatch.Success)
 				{
@@ -197,14 +197,14 @@ namespace Geuneda.DataExtensions
 			}
 			catch
 			{
-				// Silently fail - this is just for better naming, not critical
+				// 조용히 실패 - 이것은 더 나은 명명을 위한 것일 뿐, 치명적이지 않음
 			}
 
 			return null;
 		}
 
 		/// <summary>
-		/// A point-in-time snapshot of an observable instance's debug information.
+		/// Observable 인스턴스의 디버그 정보에 대한 시점 스냅샷입니다.
 		/// </summary>
 		public readonly struct EntrySnapshot
 		{
@@ -248,7 +248,7 @@ namespace Geuneda.DataExtensions
 			}
 
 			/// <summary>
-			/// Creates a snapshot from this entry with current live data.
+			/// 현재 라이브 데이터로 이 항목에서 스냅샷을 생성합니다.
 			/// </summary>
 			public EntrySnapshot ToSnapshot(object instance)
 			{

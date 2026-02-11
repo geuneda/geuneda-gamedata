@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Geuneda.DataExtensions
 {
 	/// <summary>
-	/// JSON converter for Unity's Vector2 struct.
+	/// Unity의 Vector2 구조체를 위한 JSON 변환기입니다.
 	/// </summary>
 	public class Vector2JsonConverter : JsonConverter<Vector2>
 	{
@@ -27,7 +27,7 @@ namespace Geuneda.DataExtensions
 	}
 
 	/// <summary>
-	/// JSON converter for Unity's Vector3 struct.
+	/// Unity의 Vector3 구조체를 위한 JSON 변환기입니다.
 	/// </summary>
 	public class Vector3JsonConverter : JsonConverter<Vector3>
 	{
@@ -51,7 +51,7 @@ namespace Geuneda.DataExtensions
 	}
 
 	/// <summary>
-	/// JSON converter for Unity's Vector4 struct.
+	/// Unity의 Vector4 구조체를 위한 JSON 변환기입니다.
 	/// </summary>
 	public class Vector4JsonConverter : JsonConverter<Vector4>
 	{
@@ -77,7 +77,7 @@ namespace Geuneda.DataExtensions
 	}
 
 	/// <summary>
-	/// JSON converter for Unity's Quaternion struct.
+	/// Unity의 Quaternion 구조체를 위한 JSON 변환기입니다.
 	/// </summary>
 	public class QuaternionJsonConverter : JsonConverter<Quaternion>
 	{

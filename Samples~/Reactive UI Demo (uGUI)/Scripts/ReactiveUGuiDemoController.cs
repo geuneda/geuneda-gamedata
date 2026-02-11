@@ -5,7 +5,7 @@ using UnityEngine.UI;
 namespace Geuneda.DataExtensions.Samples.ReactiveUiDemo
 {
 	/// <summary>
-	/// Entry point MonoBehaviour for the Reactive UI Demo (uGUI) sample.
+	/// Reactive UI Demo (uGUI) 샘플의 진입점 MonoBehaviour입니다.
 	/// </summary>
 	[DisallowMultipleComponent]
 	public sealed class ReactiveUGuiDemoController : MonoBehaviour
@@ -111,7 +111,7 @@ namespace Geuneda.DataExtensions.Samples.ReactiveUiDemo
 
 		private void ApplyBatchUpdate()
 		{
-			// Batch multiple changes so observers get a consolidated update.
+			// 옵저버가 통합 업데이트를 받을 수 있도록 여러 변경을 일괄 처리합니다.
 			using var batch = new ObservableBatch();
 			batch.Add(_data.Health);
 			batch.Add(_data.BaseDamage);

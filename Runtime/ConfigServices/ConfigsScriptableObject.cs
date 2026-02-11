@@ -5,11 +5,11 @@ using UnityEngine;
 namespace Geuneda.DataExtensions
 {
 	/// <summary>
-	/// Abstract base class for configuration scriptable objects that store key-value pairs.
+	/// 키-값 쌍을 저장하는 설정 스크립터블 오브젝트의 추상 기본 클래스입니다.
 	/// Provides a foundation for config containers with serializable dictionary collections using Unity's serialization workaround pattern.
 	/// </summary>
-	/// <typeparam name="TId">The type of the identifier/key.</typeparam>
-	/// <typeparam name="TAsset">The type of the asset/value.</typeparam>
+	/// <typeparam name="TId">식별자/키의 타입입니다.</typeparam>
+	/// <typeparam name="TAsset">에셋/값의 타입입니다.</typeparam>
 	public abstract class ConfigsScriptableObject<TId, TAsset> : 
 		ScriptableObject, IPairConfigsContainer<TId, TAsset>, ISerializationCallbackReceiver
 	{
@@ -23,21 +23,21 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Provides the configs as a read-only dictionary for efficient lookup operations.
+		/// 효율적인 조회 작업을 위해 설정을 읽기 전용 딕셔너리로 제공합니다.
 		/// </summary>
 		public IReadOnlyDictionary<TId, TAsset> ConfigsDictionary { get; private set; }
 
 		/// <inheritdoc />
 		public void OnBeforeSerialize()
 		{
-			// Unity serialization handles the list format automatically
-			// No conversion needed before serialization
+			// Unity 직렬화가 리스트 형식을 자동으로 처리합니다
+			// 직렬화 전 변환이 필요하지 않습니다
 		}
 
 		/// <inheritdoc />
 		public virtual void OnAfterDeserialize()
 		{
-			// Convert the serialized list to a dictionary for efficient lookups
+			// 효율적인 조회를 위해 직렬화된 리스트를 딕셔너리로 변환합니다
 			var dictionary = new Dictionary<TId, TAsset>();
 
 			foreach (var config in Configs)

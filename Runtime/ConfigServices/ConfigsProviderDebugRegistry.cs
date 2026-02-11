@@ -8,12 +8,12 @@ using System.Runtime.CompilerServices;
 namespace Geuneda.DataExtensions
 {
 	/// <summary>
-	/// Static registry used by the Config Browser window to discover and inspect <see cref="IConfigsProvider"/> instances.
-	/// Providers automatically register themselves via the self-registration pattern implemented in the constructor.
+	/// Config Browser 창이 <see cref="IConfigsProvider"/> 인스턴스를 검색하고 검사하는 데 사용하는 정적 레지스트리입니다.
+	/// 프로바이더는 생성자에 구현된 자체 등록 패턴을 통해 자동으로 등록됩니다.
 	/// </summary>
 	/// <remarks>
-	/// <para>Uses weak references so tracked providers do not prevent garbage collection.</para>
-	/// <para>All members are compiled out in player builds via <c>#if UNITY_EDITOR</c>.</para>
+	/// <para>추적된 프로바이더가 가비지 컬렉션을 방해하지 않도록 약한 참조를 사용합니다.</para>
+	/// <para>모든 멤버는 <c>#if UNITY_EDITOR</c>를 통해 플레이어 빌드에서 컴파일 제외됩니다.</para>
 	/// </remarks>
 	public static class ConfigsProviderDebugRegistry
 	{
@@ -44,8 +44,8 @@ namespace Geuneda.DataExtensions
 		private static readonly List<WeakReference<IConfigsProvider>> _refs = new List<WeakReference<IConfigsProvider>>();
 
 		/// <summary>
-		/// Registers a provider instance with the debug registry.
-		/// Called automatically by <see cref="ConfigsProvider"/> constructor in editor builds.
+		/// 디버그 레지스트리에 프로바이더 인스턴스를 등록합니다.
+		/// 에디터 빌드에서 <see cref="ConfigsProvider"/> 생성자에 의해 자동으로 호출됩니다.
 		/// </summary>
 		internal static void Register(IConfigsProvider instance)
 		{
@@ -64,8 +64,8 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Enumerates snapshots of all currently tracked provider instances.
-		/// Automatically cleans up entries for garbage-collected instances.
+		/// 현재 추적 중인 모든 프로바이더 인스턴스의 스냅샷을 열거합니다.
+		/// 가비지 컬렉션된 인스턴스의 항목을 자동으로 정리합니다.
 		/// </summary>
 		public static IEnumerable<ProviderSnapshot> EnumerateSnapshots()
 		{
@@ -90,10 +90,10 @@ namespace Geuneda.DataExtensions
 
 			try
 			{
-				// Frame 0: GetAutoName
-				// Frame 1: Register
-				// Frame 2: ConfigsProvider constructor
-				// Frame 3: Caller of the constructor
+				// 프레임 0: GetAutoName
+				// 프레임 1: Register
+				// 프레임 2: ConfigsProvider 생성자
+				// 프레임 3: 생성자 호출자
 				var stack = new StackTrace(3, true);
 				var frame = stack.GetFrame(0);
 				var method = frame?.GetMethod();
@@ -103,7 +103,7 @@ namespace Geuneda.DataExtensions
 			}
 			catch
 			{
-				// Fallback
+				// 대체
 			}
 
 			var name = string.IsNullOrEmpty(filePath) ? $"ConfigsProvider#{_nextId}" : $"{typeName}";
@@ -111,7 +111,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// A point-in-time snapshot of a provider instance's debug information.
+		/// 프로바이더 인스턴스의 디버그 정보에 대한 시점 스냅샷입니다.
 		/// </summary>
 		public readonly struct ProviderSnapshot
 		{

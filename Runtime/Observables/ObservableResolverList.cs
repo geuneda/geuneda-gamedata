@@ -5,62 +5,62 @@ namespace Geuneda.DataExtensions
 {
 	/// <inheritdoc />
 	/// <remarks>
-	/// This interface resolves between 2 lists with different types of values
+	/// 이 인터페이스는 다른 타입의 값을 가진 2개의 리스트 사이를 해석합니다
 	/// </remarks>
 	public interface IObservableResolverListReader<T, out TOrigin> : IObservableListReader<T>
 	{
 		/// <summary>
-		/// The Original List that is being resolved across the entire interface
+		/// 전체 인터페이스에서 해석되는 원본 리스트입니다
 		/// </summary>
 		IReadOnlyList<TOrigin> OriginList { get; }
 	}
 
 	/// <inheritdoc />
 	/// <remarks>
-	/// This interface resolves between 2 lists with different types of values
+	/// 이 인터페이스는 다른 타입의 값을 가진 2개의 리스트 사이를 해석합니다
 	/// </remarks>
 	public interface IObservableResolverList<T, TOrigin> :
 		IObservableResolverListReader<T, TOrigin>,
 		IObservableList<T>
 	{
 		/// <summary>
-		/// Updates the value in the origin list corresponding to the specified index.
+		/// 지정된 인덱스에 해당하는 원본 리스트의 값을 업데이트합니다.
 		/// </summary>
-		/// <param name="index">The index of the value to update in the origin list.</param>
-		/// <param name="value">The new value to set in the origin list.</param>
+		/// <param name="index">원본 리스트에서 업데이트할 값의 인덱스입니다.</param>
+		/// <param name="value">원본 리스트에 설정할 새 값입니다.</param>
 		void UpdateOrigin(TOrigin value, int index);
 
 		/// <inheritdoc cref="List{T}.Add"/>
 		/// <remarks>
-		/// Add's the value to the origin list
+		/// 원본 리스트에 값을 추가합니다
 		/// </remarks>
 		void AddOrigin(TOrigin value);
 
 		/// <inheritdoc cref="List{T}.Remove"/>
 		/// <remarks>
-		/// Remove's the value to the origin list
+		/// 원본 리스트에서 값을 제거합니다
 		/// </remarks>
 		bool RemoveOrigin(TOrigin value);
 
 		/// <inheritdoc cref="List{T}.Clear"/>
 		/// <remarks>
-		/// Clear's to the origin list
+		/// 원본 리스트를 비웁니다
 		/// </remarks>
 		void ClearOrigin();
 
 		/// <summary>
-		/// Rebinds this list to a new origin list and resolver functions without losing existing observers.
-		/// The internal list will be rebuilt from the new origin list using the new resolvers.
+		/// 기존 옵저버를 잃지 않고 이 리스트를 새 원본 리스트와 리졸버 함수에 리바인딩합니다.
+		/// 내부 리스트는 새 리졸버를 사용하여 새 원본 리스트에서 다시 빌드됩니다.
 		/// </summary>
-		/// <param name="originList">The new origin list to bind to</param>
-		/// <param name="fromOrignResolver">The new function to convert from origin type to this list's type</param>
-		/// <param name="toOrignResolver">The new function to convert from this list's type to origin type</param>
+		/// <param name="originList">바인딩할 새 원본 리스트입니다</param>
+		/// <param name="fromOrignResolver">원본 타입에서 이 리스트 타입으로 변환하는 새 함수입니다</param>
+		/// <param name="toOrignResolver">이 리스트 타입에서 원본 타입으로 변환하는 새 함수입니다</param>
 		void Rebind(IList<TOrigin> originList, Func<TOrigin, T> fromOrignResolver, Func<T, TOrigin> toOrignResolver);
 	}
 
 	/// <inheritdoc cref="IObservableResolverList{T, TOrigin}"/>
 	/// <remarks>
-	/// This class resolves between 2 lists with different types of values
+	/// 이 클래스는 다른 타입의 값을 가진 2개의 리스트 사이를 해석합니다
 	/// </remarks>
 	public class ObservableResolverList<T, TOrigin> : ObservableList<T>, IObservableResolverList<T, TOrigin>
 	{
@@ -95,7 +95,7 @@ namespace Geuneda.DataExtensions
 			_fromOrignResolver = fromOrignResolver;
 			_toOrignResolver = toOrignResolver;
 
-			// Rebuild the internal list from the new origin list
+			// 새 원본 리스트에서 내부 리스트를 다시 빌드합니다
 			List.Clear();
 			for (var i = 0; i < originList.Count; i++)
 			{

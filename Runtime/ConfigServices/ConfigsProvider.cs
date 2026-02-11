@@ -134,8 +134,8 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Sets the current version number for the current configuration.
-		/// Internal to ensure version is only updated through <see cref="UpdateTo"/> for atomicity.
+		/// 현재 설정의 현재 버전 번호를 설정합니다.
+		/// 원자성을 위해 <see cref="UpdateTo"/>를 통해서만 버전이 업데이트되도록 internal로 제한합니다.
 		/// </summary>
 		internal void SetVersion(ulong version)
 		{

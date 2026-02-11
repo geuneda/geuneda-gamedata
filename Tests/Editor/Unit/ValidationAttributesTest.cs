@@ -9,7 +9,7 @@ namespace Geuneda.DataExtensions.Tests
 	[TestFixture]
 	public class ValidationAttributesTest
 	{
-		#region RequiredAttribute Tests
+		#region RequiredAttribute 테스트
 
 		[TestCase(null, false, Description = "Null value fails")]
 		[TestCase("", false, Description = "Empty string fails")]
@@ -40,7 +40,7 @@ namespace Geuneda.DataExtensions.Tests
 
 		#endregion
 
-		#region RangeAttribute Tests
+		#region RangeAttribute 테스트
 
 		[TestCase(0, 10, 5, true, Description = "Middle value passes")]
 		[TestCase(0, 10, 0, true, Description = "Min boundary passes")]
@@ -77,7 +77,7 @@ namespace Geuneda.DataExtensions.Tests
 
 		#endregion
 
-		#region MinLengthAttribute Tests
+		#region MinLengthAttribute 테스트
 
 		[TestCase(3, "abc", true, Description = "Exact length passes")]
 		[TestCase(3, "abcd", true, Description = "Longer string passes")]
@@ -132,7 +132,7 @@ namespace Geuneda.DataExtensions.Tests
 
 		#endregion
 
-		#region ValidationAttribute Base Tests
+		#region ValidationAttribute 기본 테스트
 
 		[Test]
 		public void ValidationAttribute_IsValid_ReturnsCorrectMessage()

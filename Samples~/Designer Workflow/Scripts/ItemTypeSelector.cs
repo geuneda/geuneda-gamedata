@@ -3,8 +3,8 @@ using System;
 namespace Geuneda.DataExtensions.Samples.DesignerWorkflow
 {
 	/// <summary>
-	/// Concrete <see cref="EnumSelector{T}"/> for <see cref="ItemType"/>.
-	/// Uses name-based persistence for stability when enum values are reordered.
+	/// <see cref="ItemType"/>에 대한 구체적인 <see cref="EnumSelector{T}"/>입니다.
+	/// 열거형 값이 재정렬될 때 안정성을 위해 이름 기반 지속성을 사용합니다.
 	/// </summary>
 	[Serializable]
 	public sealed class ItemTypeSelector : EnumSelector<ItemType>, IEquatable<ItemTypeSelector>

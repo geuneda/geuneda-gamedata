@@ -5,8 +5,8 @@ using UnityEngine.UIElements;
 namespace Geuneda.DataExtensions.Editor
 {
 	/// <summary>
-	/// UI Toolkit element to display a single validation error row.
-	/// Intended for use in the Config Browser validation results panel.
+	/// 단일 유효성 검사 오류 행을 표시하기 위한 UI Toolkit 요소입니다.
+	/// Config Browser 유효성 검사 결과 패널에서 사용하기 위한 것입니다.
 	/// </summary>
 	public sealed class ValidationErrorElement : VisualElement
 	{
@@ -52,7 +52,7 @@ namespace Geuneda.DataExtensions.Editor
 		}
 
 		/// <summary>
-		/// Binds the element to a specific validation error.
+		/// 요소를 특정 유효성 검사 오류에 바인딩합니다.
 		/// </summary>
 		public void Bind(string configType, int? configId, string fieldName, string message)
 		{

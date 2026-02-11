@@ -7,8 +7,8 @@ namespace Geuneda.DataExtensions.Tests.Regression
 	[TestFixture]
 	public class RegressionTests
 	{
-		// This file is a placeholder for documenting and preventing regression bugs.
-		// Add tests here as bugs are discovered and fixed.
+		// 이 파일은 회귀 버그를 문서화하고 방지하기 위한 플레이스홀더입니다.
+		// 버그가 발견되고 수정될 때 여기에 테스트를 추가하세요.
 		
 		/*
 		[Test]

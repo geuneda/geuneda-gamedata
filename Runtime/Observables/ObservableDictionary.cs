@@ -7,40 +7,40 @@ using System.Linq;
 namespace Geuneda.DataExtensions
 {
 	/// <summary>
-	/// A simple dictionary with the possibility to observe changes to it's elements defined <see cref="ObservableUpdateType"/> rules
+	/// <see cref="ObservableUpdateType"/> 규칙에 정의된 요소 변경을 관찰할 수 있는 간단한 딕셔너리입니다
 	/// </summary>
 	public interface IObservableDictionary : IEnumerable
 	{
 		/// <summary>
-		/// Requests the element count of this dictionary
+		/// 이 딕셔너리의 요소 수를 요청합니다
 		/// </summary>
 		int Count { get; }
 
 		/// <summary>
-		/// Defines the configuration for the observable update done when updating elements in this dictionary
+		/// 이 딕셔너리에서 요소를 업데이트할 때 수행되는 Observable 업데이트 구성을 정의합니다
 		/// </summary>
 		ObservableUpdateFlag ObservableUpdateFlag { get; set; }
 
 		/// <summary>
-		/// Starts a batch update for this dictionary.
-		/// Notifications will be suppressed until the returned object is disposed.
+		/// 이 딕셔너리의 배치 업데이트를 시작합니다.
+		/// 반환된 객체가 해제될 때까지 알림이 억제됩니다.
 		/// </summary>
 		IDisposable BeginBatch();
 	}
 
 	/// <inheritdoc cref="IObservableDictionary"/>
 	/// <remarks>
-	/// This dictionary only allows to read the elements in it and not to modify it
+	/// 이 딕셔너리는 요소 읽기만 허용하고 수정은 허용하지 않습니다
 	/// </remarks>
 	public interface IObservableDictionaryReader<TKey, TValue> : IObservableDictionary, IEnumerable<KeyValuePair<TKey, TValue>>
 	{
 		/// <summary>
-		/// Looks up and return the data that is associated with the given <paramref name="key"/>
+		/// 주어진 <paramref name="key"/>에 연결된 데이터를 조회하고 반환합니다
 		/// </summary>
 		TValue this[TKey key] { get; }
 
 		/// <summary>
-		/// Requests this dictionary as a <see cref="IReadOnlyDictionary{TKey,TValue}"/>
+		/// 이 딕셔너리를 <see cref="IReadOnlyDictionary{TKey,TValue}"/>로 요청합니다
 		/// </summary>
 		ReadOnlyDictionary<TKey, TValue> ReadOnlyDictionary { get; }
 
@@ -51,47 +51,47 @@ namespace Geuneda.DataExtensions
 		bool ContainsKey(TKey key);
 
 		/// <summary>
-		/// Observes to this dictionary changes with the given <paramref name="onUpdate"/>
+		/// 주어진 <paramref name="onUpdate"/>로 이 딕셔너리의 변경을 관찰합니다
 		/// </summary>
 		/// <remarks>
-		/// It needs the <see cref="this.ObservableUpdateFlag"/> to NOT be set as <see cref="ObservableUpdateFlag.KeyUpdateOnly"/>
+		/// <see cref="this.ObservableUpdateFlag"/>가 <see cref="ObservableUpdateFlag.KeyUpdateOnly"/>로 설정되지 않아야 합니다
 		/// </remarks>
 		void Observe(Action<TKey, TValue, TValue, ObservableUpdateType> onUpdate);
 
 		/// <summary>
-		/// Observes to this dictionary changes with the given <paramref name="onUpdate"/> when the given <paramref name="key"/>
-		/// data changes
+		/// 주어진 <paramref name="key"/>의 데이터가 변경될 때
+		/// 주어진 <paramref name="onUpdate"/>로 이 딕셔너리의 변경을 관찰합니다
 		/// </summary>
 		/// <remarks>
-		/// It needs the <see cref="this.ObservableUpdateFlag"/> to NOT be set as <see cref="ObservableUpdateFlag.UpdateOnly"/>
+		/// <see cref="this.ObservableUpdateFlag"/>가 <see cref="ObservableUpdateFlag.UpdateOnly"/>로 설정되지 않아야 합니다
 		/// </remarks>
 		void Observe(TKey key, Action<TKey, TValue, TValue, ObservableUpdateType> onUpdate);
 
 		/// <inheritdoc cref="Observe(TKey,System.Action{TKey,TValue,TValue,Geuneda.Observables.ObservableUpdateType})" />
 		/// <remarks>
-		/// It invokes the given <paramref name="onUpdate"/> method before starting to observe to this dictionary
+		/// 이 딕셔너리를 관찰하기 시작하기 전에 주어진 <paramref name="onUpdate"/> 메서드를 호출합니다
 		/// </remarks>
 		/// <remarks>
-		/// It needs the <see cref="this.ObservableUpdateFlag"/> to NOT be set as <see cref="ObservableUpdateFlag.UpdateOnly"/>
+		/// <see cref="this.ObservableUpdateFlag"/>가 <see cref="ObservableUpdateFlag.UpdateOnly"/>로 설정되지 않아야 합니다
 		/// </remarks>
 		void InvokeObserve(TKey key, Action<TKey, TValue, TValue, ObservableUpdateType> onUpdate);
 
 		/// <summary>
-		/// Stops observing this dictionary with the given <paramref name="onUpdate"/> of any data changes
+		/// 주어진 <paramref name="onUpdate"/>로 이 딕셔너리의 모든 데이터 변경 관찰을 중지합니다
 		/// </summary>
 		/// <remarks>
-		/// It needs the <see cref="this.ObservableUpdateFlag"/> to NOT be set as <see cref="ObservableUpdateFlag.KeyUpdateOnly"/>
+		/// <see cref="this.ObservableUpdateFlag"/>가 <see cref="ObservableUpdateFlag.KeyUpdateOnly"/>로 설정되지 않아야 합니다
 		/// </remarks>
 		void StopObserving(Action<TKey, TValue, TValue, ObservableUpdateType> onUpdate);
 
 		/// <summary>
-		/// Stops observing this dictionary updates for the given <paramref name="key"/>
+		/// 주어진 <paramref name="key"/>에 대한 이 딕셔너리 업데이트 관찰을 중지합니다
 		/// </summary>
 		void StopObserving(TKey key);
 
 		/// <summary>
-		/// Stops observing this dictionary changes from all the given <paramref name="subscriber"/> calls.
-		/// If the given <paramref name="subscriber"/> is null then will stop observing from everything.
+		/// 주어진 <paramref name="subscriber"/> 호출의 모든 딕셔너리 변경 관찰을 중지합니다.
+		/// 주어진 <paramref name="subscriber"/>가 null이면 모든 관찰을 중지합니다.
 		/// </summary>
 		void StopObservingAll(object subscriber = null);
 	}
@@ -100,8 +100,8 @@ namespace Geuneda.DataExtensions
 	public interface IObservableDictionary<TKey, TValue> : IObservableDictionaryReader<TKey, TValue>
 	{
 		/// <summary>
-		/// Changes the given <paramref name="key"/> in the dictionary.
-		/// It will notify any observer listing to its data
+		/// 딕셔너리에서 주어진 <paramref name="key"/>를 변경합니다.
+		/// 데이터를 수신 중인 모든 옵저버에게 알립니다
 		/// </summary>
 		new TValue this[TKey key] { get; set; }
 
@@ -115,7 +115,7 @@ namespace Geuneda.DataExtensions
 		void Clear();
 
 		/// <remarks>
-		/// It invokes any update method that is observing to the given <paramref name="key"/> on this dictionary
+		/// 이 딕셔너리에서 주어진 <paramref name="key"/>를 관찰 중인 모든 업데이트 메서드를 호출합니다
 		/// </remarks>
 		void InvokeUpdate(TKey key);
 	}
@@ -130,7 +130,7 @@ namespace Geuneda.DataExtensions
 		private readonly List<Action> _dependencyActions = new List<Action>();
 		private bool _isBatching;
 
-		// Declared as a partial method so calls are compiled out in player builds.
+		// 플레이어 빌드에서 호출이 컴파일 제외되도록 partial 메서드로 선언됩니다.
 		partial void EditorDebug_Register();
 
 		/// <inheritdoc />
@@ -202,9 +202,9 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Rebinds this dictionary to a new dictionary without losing existing observers.
+		/// 기존 옵저버를 잃지 않고 이 딕셔너리를 새 딕셔너리에 리바인딩합니다.
 		/// </summary>
-		/// <param name="dictionary">The new dictionary to bind to</param>
+		/// <param name="dictionary">바인딩할 새 딕셔너리입니다</param>
 		public void Rebind(IDictionary<TKey, TValue> dictionary)
 		{
 			Dictionary = dictionary;
@@ -307,7 +307,7 @@ namespace Geuneda.DataExtensions
 
 					action(key, value, default, ObservableUpdateType.Removed);
 
-					// Shift the index if an action was unsubscribed
+					// 액션이 구독 해제된 경우 인덱스를 이동합니다
 					i = AdjustIndex(i, action, actions);
 				}
 			}
@@ -319,7 +319,7 @@ namespace Geuneda.DataExtensions
 
 					action(key, value, default, ObservableUpdateType.Removed);
 
-					// Shift the index if an action was unsubscribed
+					// 액션이 구독 해제된 경우 인덱스를 이동합니다
 					i = AdjustIndex(i, action, _updateActions);
 				}
 			}
@@ -339,7 +339,7 @@ namespace Geuneda.DataExtensions
 			{
 				if (ObservableUpdateFlag != ObservableUpdateFlag.UpdateOnly)
 				{
-					// Create a copy in case that one of the callbacks modifies the list (Ex: removing a subscriber)
+					// 콜백 중 하나가 목록을 수정하는 경우에 대비하여 복사본을 생성합니다(예: 구독자 제거)
 					var copy = new Dictionary<TKey, IList<Action<TKey, TValue, TValue, ObservableUpdateType>>>(_keyUpdateActions);
 
 					foreach (var data in copy)
@@ -520,17 +520,17 @@ namespace Geuneda.DataExtensions
 
 
 		// ═══════════════════════════════════════════════════════════════════════════
-		// EDITOR-ONLY: Observable Debug Window Support
+		// 에디터 전용: Observable 디버그 창 지원
 		// ═══════════════════════════════════════════════════════════════════════════
-		// This section provides automatic registration of observable instances for
-		// the Observable Debug Window (Tools > Game Data > Observable Debugger).
+		// 이 섹션은 Observable 디버그 창(Tools > Game Data > Observable Debugger)을 위한
+		// Observable 인스턴스의 자동 등록을 제공합니다.
 		//
-		// Features:
-		// - Zero configuration required from users
-		// - Automatic tracking using weak references (no memory leaks)
-		// - Live value/subscriber inspection via captured getters
+		// 기능:
+		// - 사용자 설정 불필요
+		// - 약한 참조를 사용한 자동 추적 (메모리 누수 없음)
+		// - 캡처된 게터를 통한 실시간 값/구독자 검사
 		//
-		// This code is compiled out in builds via #if UNITY_EDITOR.
+		// 이 코드는 #if UNITY_EDITOR를 통해 빌드에서 컴파일 제외됩니다.
 		// ═══════════════════════════════════════════════════════════════════════════
 #if UNITY_EDITOR
 		partial void EditorDebug_Register()

@@ -9,7 +9,7 @@ namespace Geuneda.DataExtensions.Tests
 	public class ObservableListTest
 	{
 		/// <summary>
-		/// Mocking interface to check method calls received
+		/// 메서드 호출 수신을 확인하기 위한 모킹 인터페이스
 		/// </summary>
 		public interface IMockCaller<in T>
 		{
@@ -230,7 +230,7 @@ namespace Geuneda.DataExtensions.Tests
 				_list[0] = 3;
 			}
 
-			// In current implementation, BeginBatch notifies for ALL items in the list at the end
+			// 현재 구현에서 BeginBatch는 끝에서 목록의 모든 항목에 대해 알림합니다
 			_caller.Received(1).Call(0, 0, 3, ObservableUpdateType.Updated);
 			_caller.Received(1).Call(1, 0, 2, ObservableUpdateType.Updated);
 		}
@@ -238,24 +238,24 @@ namespace Geuneda.DataExtensions.Tests
 		[Test]
 		public void RebindCheck_BaseClass()
 		{
-			// Add initial data
+			// 초기 데이터 추가
 			_list.Add(_previousValue);
 			_list.Add(_newValue);
 
-			// Setup observer
+			// 옵저버 설정
 			_list.Observe(_caller.Call);
 
-			// Create new list and rebind
+			// 새 리스트 생성 및 리바인딩
 			var newList = new List<int> { 100, 200, 300 };
 			_list.Rebind(newList);
 
-			// Verify new list is being used
+			// 새 리스트가 사용되는지 확인
 			Assert.AreEqual(3, _list.Count);
 			Assert.AreEqual(100, _list[0]);
 			Assert.AreEqual(200, _list[1]);
 			Assert.AreEqual(300, _list[2]);
 
-			// Verify observer still works
+			// 옵저버가 여전히 작동하는지 확인
 			_list.Add(400);
 			_caller.Received(1).Call(Arg.Any<int>(), Arg.Is(0), Arg.Is(400), ObservableUpdateType.Added);
 		}

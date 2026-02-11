@@ -9,7 +9,7 @@ using UnityEngine;
 namespace GeunedaEditor.GameData
 {
 	/// <summary>
-	/// Information about an available migration.
+	/// 사용 가능한 마이그레이션에 대한 정보입니다.
 	/// </summary>
 	public readonly struct MigrationInfo
 	{
@@ -30,7 +30,7 @@ namespace GeunedaEditor.GameData
 	}
 
 	/// <summary>
-	/// Result of a migration operation.
+	/// 마이그레이션 작업의 결과입니다.
 	/// </summary>
 	public readonly struct MigrationResult
 	{
@@ -51,12 +51,12 @@ namespace GeunedaEditor.GameData
 	}
 
 	/// <summary>
-	/// Discovers and runs config migrations in the Editor.
-	/// Migrations are used when config schemas change between versions, allowing
-	/// existing config data to be transformed to match the new schema.
+	/// 에디터에서 설정 마이그레이션을 검색하고 실행합니다.
+	/// 마이그레이션은 버전 간 설정 스키마가 변경될 때 사용되며,
+	/// 기존 설정 데이터를 새 스키마에 맞게 변환할 수 있게 합니다.
 	/// 
 	/// <example>
-	/// Creating a migration:
+	/// 마이그레이션 생성:
 	/// <code>
 	/// [ConfigMigration(typeof(EnemyConfig), fromVersion: 1, toVersion: 2)]
 	/// public class EnemyConfigMigration_v1_v2 : IConfigMigration
@@ -66,22 +66,22 @@ namespace GeunedaEditor.GameData
 	///     
 	///     public void Migrate(JObject configJson)
 	///     {
-	///         // Add new field with default
+	///         // 기본값으로 새 필드 추가
 	///         configJson["Armor"] = 10;
 	///     }
 	/// }
 	/// </code>
 	/// 
-	/// Running migrations:
+	/// 마이그레이션 실행:
 	/// <code>
-	/// // Query available migrations
+	/// // 사용 가능한 마이그레이션 조회
 	/// var migrations = MigrationRunner.GetAvailableMigrations&lt;EnemyConfig&gt;();
 	/// 
-	/// // Migrate JSON data
+	/// // JSON 데이터 마이그레이션
 	/// var json = JObject.Parse(jsonString);
 	/// MigrationRunner.Migrate(typeof(EnemyConfig), json, currentVersion: 1, targetVersion: 2);
 	/// 
-	/// // Or migrate a ScriptableObject
+	/// // 또는 ScriptableObject 마이그레이션
 	/// var result = MigrationRunner.MigrateScriptableObject(myConfigSO, fromVersion: 1, toVersion: 2);
 	/// </code>
 	/// </example>
@@ -94,8 +94,8 @@ namespace GeunedaEditor.GameData
 		private static bool _initialized;
 
 		/// <summary>
-		/// Ensures migrations are discovered. Called automatically on first use.
-		/// Can be called explicitly to force re-discovery (e.g., after domain reload).
+		/// 마이그레이션이 검색되었는지 확인합니다. 첫 사용 시 자동으로 호출됩니다.
+		/// 강제 재검색을 위해 명시적으로 호출할 수 있습니다(예: 도메인 리로드 후).
 		/// </summary>
 		public static void Initialize(bool force = false)
 		{
@@ -131,7 +131,7 @@ namespace GeunedaEditor.GameData
 		}
 
 		/// <summary>
-		/// Gets all config types that have registered migrations.
+		/// 등록된 마이그레이션이 있는 모든 설정 타입을 가져옵니다.
 		/// </summary>
 		public static IReadOnlyCollection<Type> GetConfigTypesWithMigrations()
 		{
@@ -140,7 +140,7 @@ namespace GeunedaEditor.GameData
 		}
 
 		/// <summary>
-		/// Gets information about all available migrations for a config type.
+		/// 설정 타입에 대해 사용 가능한 모든 마이그레이션 정보를 가져옵니다.
 		/// </summary>
 		public static IReadOnlyList<MigrationInfo> GetAvailableMigrations<T>()
 		{
@@ -148,7 +148,7 @@ namespace GeunedaEditor.GameData
 		}
 
 		/// <summary>
-		/// Gets information about all available migrations for a config type.
+		/// 설정 타입에 대해 사용 가능한 모든 마이그레이션 정보를 가져옵니다.
 		/// </summary>
 		public static IReadOnlyList<MigrationInfo> GetAvailableMigrations(Type configType)
 		{
@@ -166,7 +166,7 @@ namespace GeunedaEditor.GameData
 		}
 
 		/// <summary>
-		/// Gets the latest target version available for a config type.
+		/// 설정 타입에 대해 사용 가능한 최신 대상 버전을 가져옵니다.
 		/// </summary>
 		public static ulong GetLatestVersion(Type configType)
 		{
@@ -181,8 +181,8 @@ namespace GeunedaEditor.GameData
 		}
 
 		/// <summary>
-		/// Migrates a config JSON object from one version to another.
-		/// Applies all applicable migrations in order.
+		/// 설정 JSON 객체를 한 버전에서 다른 버전으로 마이그레이션합니다.
+		/// 적용 가능한 모든 마이그레이션을 순서대로 적용합니다.
 		/// </summary>
 		public static int Migrate(Type configType, JObject configJson, ulong currentVersion, ulong targetVersion)
 		{
@@ -207,8 +207,8 @@ namespace GeunedaEditor.GameData
 		}
 
 		/// <summary>
-		/// Migrates a ScriptableObject's serialized data.
-		/// Converts to JSON, applies migrations, and updates the object.
+		/// ScriptableObject의 직렬화된 데이터를 마이그레이션합니다.
+		/// JSON으로 변환하고, 마이그레이션을 적용하고, 객체를 업데이트합니다.
 		/// </summary>
 		public static MigrationResult MigrateScriptableObject<T>(
 			T scriptableObject, 
@@ -230,11 +230,11 @@ namespace GeunedaEditor.GameData
 
 			try
 			{
-				// Serialize to JSON
+				// JSON으로 직렬화
 				var json = JsonConvert.SerializeObject(scriptableObject);
 				var jObject = JObject.Parse(json);
 
-				// Apply migrations
+				// 마이그레이션 적용
 				var count = Migrate(configType, jObject, fromVersion, toVersion);
 
 				if (count == 0)
@@ -242,7 +242,7 @@ namespace GeunedaEditor.GameData
 					return MigrationResult.NoMigrations();
 				}
 
-				// Deserialize back
+				// 다시 역직렬화
 				JsonConvert.PopulateObject(jObject.ToString(), scriptableObject);
 
 				return MigrationResult.Ok(count);

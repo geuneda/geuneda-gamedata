@@ -135,7 +135,7 @@ namespace Geuneda.DataExtensions.Tests
 			computed.Dispose();
 
 			_field1.Value = 20;
-			// Should not trigger recompute or notification if it were observed
+			// 관찰되었더라도 재계산이나 알림을 트리거하지 않아야 합니다
 			Assert.AreEqual(1, callCount); 
 		}
 
@@ -222,8 +222,8 @@ namespace Geuneda.DataExtensions.Tests
 				return _field1.Value + _field2.Value;
 			});
 
-			computed.Observe((p, c) => { }); // Need to observe to trigger InvokeUpdate logic
-			var initial = computed.Value; // initial compute
+			computed.Observe((p, c) => { }); // InvokeUpdate 로직을 트리거하기 위해 관찰이 필요합니다
+			var initial = computed.Value; // 초기 계산
 			callCount = 0;
 
 			using (computed.BeginBatch())
@@ -232,7 +232,7 @@ namespace Geuneda.DataExtensions.Tests
 				_field2.Value = 200;
 			}
 
-			Assert.AreEqual(1, callCount); // Recomputed once at end of batch
+			Assert.AreEqual(1, callCount); // 배치 끝에서 한 번 재계산됩니다
 			Assert.AreEqual(300, computed.Value);
 		}
 
@@ -280,12 +280,12 @@ namespace Geuneda.DataExtensions.Tests
 			var count1 = 0;
 			var count2 = 0;
 
-			// NSubstitute can't easily provide Target, so using manual target actions
+			// NSubstitute는 Target을 쉽게 제공할 수 없으므로, 수동 대상 액션을 사용합니다
 			Action<int, int> action1 = (p, c) => count1++;
 			Action<int, int> action2 = (p, c) => count2++;
 
-			// Wrapping in a way that we can set Target if we wanted, but List<Action>.Target is the object the method belongs to.
-			// Let's use a helper class.
+			// 원하는 경우 Target을 설정할 수 있는 방식으로 래핑하지만, List<Action>.Target은 메서드가 속한 객체입니다.
+			// 헬퍼 클래스를 사용합니다.
 			var s1 = new TestSubscriber(() => count1++);
 			var s2 = new TestSubscriber(() => count2++);
 
@@ -333,8 +333,8 @@ namespace Geuneda.DataExtensions.Tests
 			var x = computed.Value; // 1
 			callCount = 0;
 
-			_field1.Value = 20; // triggers InvokeUpdate -> Recompute
-			_field1.Value = 30; // triggers InvokeUpdate -> Recompute
+			_field1.Value = 20; // InvokeUpdate -> 재계산을 트리거합니다
+			_field1.Value = 30; // InvokeUpdate -> 재계산을 트리거합니다
 
 			Assert.AreEqual(2, callCount);
 		}

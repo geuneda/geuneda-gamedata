@@ -8,9 +8,9 @@ using UnityEngine.UIElements;
 namespace Geuneda.DataExtensions.Editor
 {
 	/// <summary>
-	/// Manages the provider selection dropdown in the Config Browser toolbar.
-	/// Periodically refreshes the list of available <see cref="ConfigsProviderDebugRegistry.ProviderSnapshot"/>
-	/// instances and raises <see cref="ProviderChanged"/> when the active provider changes.
+	/// Config Browser 도구 모음의 프로바이더 선택 드롭다운을 관리합니다.
+	/// 사용 가능한 <see cref="ConfigsProviderDebugRegistry.ProviderSnapshot"/> 인스턴스 목록을 주기적으로 새로고침하고
+	/// 활성 프로바이더가 변경될 때 <see cref="ProviderChanged"/>를 발생시킵니다.
 	/// </summary>
 	internal sealed class ProviderMenuController
 	{
@@ -25,11 +25,11 @@ namespace Geuneda.DataExtensions.Editor
 
 		public event Action ProviderChanged;
 
-		/// <summary>The currently selected provider, or null when nothing is selected.</summary>
+		/// <summary>현재 선택된 프로바이더, 선택된 것이 없으면 null입니다.</summary>
 		public IConfigsProvider Provider => _provider;
-		/// <summary>The id of the currently selected provider snapshot, or -1.</summary>
+		/// <summary>현재 선택된 프로바이더 스냅샷의 ID, 없으면 -1입니다.</summary>
 		public int SelectedProviderId => _selectedProviderId;
-		/// <summary>All known provider snapshots, ordered by id.</summary>
+		/// <summary>ID 순으로 정렬된 모든 알려진 프로바이더 스냅샷입니다.</summary>
 		public IReadOnlyList<ConfigsProviderDebugRegistry.ProviderSnapshot> Snapshots => _snapshots;
 
 		public ProviderMenuController(ConfigBrowserView view)
@@ -38,8 +38,8 @@ namespace Geuneda.DataExtensions.Editor
 		}
 
 		/// <summary>
-		/// Re-reads the <see cref="ConfigsProviderDebugRegistry"/>, auto-selects the first provider
-		/// when none is selected or the current provider is gone, and rebuilds the toolbar menu.
+		/// <see cref="ConfigsProviderDebugRegistry"/>를 다시 읽고, 선택된 것이 없거나
+		/// 현재 프로바이더가 사라졌을 때 첫 번째 프로바이더를 자동 선택하고, 도구 모음 메뉴를 다시 빌드합니다.
 		/// </summary>
 		public void RefreshSnapshots()
 		{
@@ -64,7 +64,7 @@ namespace Geuneda.DataExtensions.Editor
 		}
 
 		/// <summary>
-		/// Clears the current provider selection and refreshes the toolbar menu.
+		/// 현재 프로바이더 선택을 지우고 도구 모음 메뉴를 새로고침합니다.
 		/// </summary>
 		public void ClearSelection()
 		{
@@ -105,7 +105,7 @@ namespace Geuneda.DataExtensions.Editor
 			var newMenu = new ToolbarMenu { text = menuText };
 			newMenu.style.minWidth = 280;
 
-			// Add "None" option to clear the selection
+			// 선택을 지우기 위한 "None" 옵션 추가
 			newMenu.menu.AppendAction("None", a =>
 			{
 				SetProviderInternal(null, -1, fireEvent: true);

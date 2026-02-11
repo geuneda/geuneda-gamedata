@@ -79,7 +79,7 @@ namespace Geuneda.DataExtensions.Tests
 			Assert.AreEqual(3, (int)MigrationRunner.GetLatestVersion(typeof(MockConfig)));
 		}
 
-		#region Complex Migration Tests
+		#region 복합 마이그레이션 테스트
 
 		[Serializable]
 		public class MockComplexConfig
@@ -108,11 +108,11 @@ namespace Geuneda.DataExtensions.Tests
 			public ulong ToVersion => 2;
 			public void Migrate(JObject configJson)
 			{
-				// Rename Damage -> AttackDamage
+				// Damage를 AttackDamage로 이름 변경
 				configJson["AttackDamage"] = configJson["Damage"];
 				configJson.Remove("Damage");
 
-				// Add ArmorType based on Health
+				// Health 기반으로 ArmorType 추가
 				int health = (int)configJson["Health"];
 				configJson["ArmorType"] = health >= 100 ? "Heavy" : "Light";
 			}
@@ -125,20 +125,20 @@ namespace Geuneda.DataExtensions.Tests
 			public ulong ToVersion => 3;
 			public void Migrate(JObject configJson)
 			{
-				// Split Health -> Base + Bonus
+				// Health를 Base + Bonus로 분할
 				int totalHealth = (int)configJson["Health"];
 				configJson["BaseHealth"] = (int)(totalHealth * 0.8f);
 				configJson["BonusHealth"] = totalHealth - (int)configJson["BaseHealth"];
 				configJson.Remove("Health");
 
-				// Add Stats object
+				// Stats 객체 추가
 				configJson["Stats"] = new JObject
 				{
 					["DamageReduction"] = (string)configJson["ArmorType"] == "Heavy" ? 40 : 10,
 					["CritChance"] = 5
 				};
 
-				// Add empty array
+				// 빈 배열 추가
 				configJson["Abilities"] = new JArray();
 			}
 		}

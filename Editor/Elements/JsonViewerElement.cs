@@ -4,8 +4,8 @@ using UnityEngine.UIElements;
 namespace Geuneda.DataExtensions.Editor
 {
 	/// <summary>
-	/// Minimal JSON viewer element (read-only) for editor tooling.
-	/// This intentionally starts simple (Label in ScrollView) and can be upgraded later to a tree/diff view.
+	/// 에디터 도구용 최소 JSON 뷰어 요소(읽기 전용)입니다.
+	/// 의도적으로 단순하게 시작(ScrollView 내 Label)하며, 나중에 트리/비교 뷰로 업그레이드할 수 있습니다.
 	/// </summary>
 	public sealed class JsonViewerElement : VisualElement
 	{
@@ -51,7 +51,7 @@ namespace Geuneda.DataExtensions.Editor
 		}
 
 		/// <summary>
-		/// Sets the JSON string to display in the viewer.
+		/// 뷰어에 표시할 JSON 문자열을 설정합니다.
 		/// </summary>
 		public void SetJson(string json)
 		{

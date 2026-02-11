@@ -6,39 +6,39 @@ using System.Linq;
 namespace Geuneda.DataExtensions
 {
 	/// <summary>
-	/// A hash set with the possibility to observe changes to its elements defined <see cref="ObservableUpdateType"/> rules.
+	/// <see cref="ObservableUpdateType"/> 규칙에 정의된 요소 변경을 관찰할 수 있는 해시 셋입니다.
 	/// </summary>
 	public interface IObservableHashSetReader<T> : IEnumerable<T>
 	{
 		/// <summary>
-		/// Requests the hash set element count.
+		/// 해시 셋의 요소 수를 요청합니다.
 		/// </summary>
 		int Count { get; }
 
 		/// <summary>
-		/// Starts a batch update for this hash set.
-		/// Notifications will be suppressed until the returned object is disposed.
+		/// 이 해시 셋의 배치 업데이트를 시작합니다.
+		/// 반환된 객체가 해제될 때까지 알림이 억제됩니다.
 		/// </summary>
 		IDisposable BeginBatch();
 
 		/// <summary>
-		/// Checks if the hash set contains the given <paramref name="item"/>.
+		/// 해시 셋에 주어진 <paramref name="item"/>이 포함되어 있는지 확인합니다.
 		/// </summary>
 		bool Contains(T item);
 
 		/// <summary>
-		/// Observes to this hash set changes with the given <paramref name="onUpdate"/>.
+		/// 주어진 <paramref name="onUpdate"/>로 이 해시 셋의 변경을 관찰합니다.
 		/// </summary>
 		void Observe(Action<T, ObservableUpdateType> onUpdate);
 
 		/// <summary>
-		/// Stops observing this hash set changes with the given <paramref name="onUpdate"/>.
+		/// 주어진 <paramref name="onUpdate"/>로 이 해시 셋의 변경 관찰을 중지합니다.
 		/// </summary>
 		void StopObserving(Action<T, ObservableUpdateType> onUpdate);
 
 		/// <summary>
-		/// Stops observing this hash set changes from all the given <paramref name="subscriber"/> calls.
-		/// If the given <paramref name="subscriber"/> is null then will stop observing from everything.
+		/// 주어진 <paramref name="subscriber"/> 호출의 모든 해시 셋 변경 관찰을 중지합니다.
+		/// 주어진 <paramref name="subscriber"/>가 null이면 모든 관찰을 중지합니다.
 		/// </summary>
 		void StopObservingAll(object subscriber = null);
 	}
@@ -47,19 +47,19 @@ namespace Geuneda.DataExtensions
 	public interface IObservableHashSet<T> : IObservableHashSetReader<T>
 	{
 		/// <summary>
-		/// Adds the given <paramref name="item"/> to the hash set.
-		/// Returns true if the item was added, false if it already exists.
+		/// 주어진 <paramref name="item"/>을 해시 셋에 추가합니다.
+		/// 항목이 추가되면 true, 이미 존재하면 false를 반환합니다.
 		/// </summary>
 		bool Add(T item);
 
 		/// <summary>
-		/// Removes the given <paramref name="item"/> from the hash set.
-		/// Returns true if the item was removed, false if it doesn't exist.
+		/// 해시 셋에서 주어진 <paramref name="item"/>을 제거합니다.
+		/// 항목이 제거되면 true, 존재하지 않으면 false를 반환합니다.
 		/// </summary>
 		bool Remove(T item);
 
 		/// <summary>
-		/// Clears the hash set.
+		/// 해시 셋을 비웁니다.
 		/// </summary>
 		void Clear();
 	}
@@ -72,7 +72,7 @@ namespace Geuneda.DataExtensions
 		private readonly List<Action> _dependencyActions = new List<Action>();
 		private bool _isBatching;
 
-		// Declared as a partial method so calls are compiled out in player builds.
+		// 플레이어 빌드에서 호출이 컴파일 제외되도록 partial 메서드로 선언됩니다.
 		partial void EditorDebug_Register();
 
 		/// <inheritdoc />
@@ -253,17 +253,17 @@ namespace Geuneda.DataExtensions
 
 
 		// ═══════════════════════════════════════════════════════════════════════════
-		// EDITOR-ONLY: Observable Debug Window Support
+		// 에디터 전용: Observable 디버그 창 지원
 		// ═══════════════════════════════════════════════════════════════════════════
-		// This section provides automatic registration of observable instances for
-		// the Observable Debug Window (Tools > Game Data > Observable Debugger).
+		// 이 섹션은 Observable 디버그 창(Tools > Game Data > Observable Debugger)을 위한
+		// Observable 인스턴스의 자동 등록을 제공합니다.
 		//
-		// Features:
-		// - Zero configuration required from users
-		// - Automatic tracking using weak references (no memory leaks)
-		// - Live value/subscriber inspection via captured getters
+		// 기능:
+		// - 사용자 설정 불필요
+		// - 약한 참조를 사용한 자동 추적 (메모리 누수 없음)
+		// - 캡처된 게터를 통한 실시간 값/구독자 검사
 		//
-		// This code is compiled out in builds via #if UNITY_EDITOR.
+		// 이 코드는 #if UNITY_EDITOR를 통해 빌드에서 컴파일 제외됩니다.
 		// ═══════════════════════════════════════════════════════════════════════════
 #if UNITY_EDITOR
 		partial void EditorDebug_Register()

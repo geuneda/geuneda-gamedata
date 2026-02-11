@@ -9,11 +9,11 @@ namespace Geuneda.DataExtensions
 
 	public enum ObservableUpdateFlag
 	{
-		// Updates all subsribers that didn't specify the key index
+		// 키 인덱스를 지정하지 않은 모든 구독자를 업데이트합니다
 		UpdateOnly,
-		// Updates only for subscripers that added their key index
+		// 키 인덱스를 추가한 구독자만 업데이트합니다
 		KeyUpdateOnly,
-		// Updates all types of subscribers [This has a high performance cost]
+		// 모든 유형의 구독자를 업데이트합니다 [높은 성능 비용이 있습니다]
 		Both
 	}
 }

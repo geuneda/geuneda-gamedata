@@ -161,7 +161,7 @@ namespace Geuneda.DataExtensions.Tests
 				_set.Add(1);
 				_set.Add(2);
 			}
-			// In current implementation, ResumeNotifications notifies for ALL current items as Added
+			// 현재 구현에서 ResumeNotifications는 모든 현재 항목에 대해 Added로 알림합니다
 			_mockObserver.Received(1)(1, ObservableUpdateType.Added);
 			_mockObserver.Received(1)(2, ObservableUpdateType.Added);
 		}

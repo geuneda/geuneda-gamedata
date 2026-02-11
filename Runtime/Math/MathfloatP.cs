@@ -3,7 +3,7 @@ using System;
 namespace Geuneda.DataExtensions
 {
 	/// <summary>
-	/// Math calculation for the deterministic floating point <see cref="floatP"/>
+	/// 결정적 부동소수점 <see cref="floatP"/>을 위한 수학 계산입니다
 	/// </summary>
 	/// <author>
 	/// https://github.com/Kimbatt/unity-deterministic-physics/tree/master/Assets/Scripts/SoftFloat/sfloat/libm
@@ -17,7 +17,7 @@ namespace Geuneda.DataExtensions
 		private const uint Raw3PiOver4 = 0x4016cbe4; // 2.3561944901923449288469825374596
 
 		/// <summary>
-		/// Returns the absolute value of the given floatP number
+		/// 주어진 floatP 숫자의 절대값을 반환합니다
 		/// </summary>
 		public static floatP Abs(floatP f)
 		{
@@ -27,13 +27,13 @@ namespace Geuneda.DataExtensions
 			}
 			else
 			{
-				// Leave NaN untouched
+				// NaN은 그대로 둡니다
 				return f;
 			}
 		}
 
 		/// <summary>
-		/// Returns the maximum of the two given floatP values. Returns NaN iff either argument is NaN.
+		/// 두 주어진 floatP 값의 최대값을 반환합니다. 인수 중 하나라도 NaN이면 NaN을 반환합니다.
 		/// </summary>
 		public static floatP Max(floatP val1, floatP val2)
 		{
@@ -52,7 +52,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Returns the minimum of the two given floatP values. Returns NaN iff either argument is NaN.
+		/// 두 주어진 floatP 값의 최소값을 반환합니다. 인수 중 하나라도 NaN이면 NaN을 반환합니다.
 		/// </summary>
 		public static floatP Min(floatP val1, floatP val2)
 		{
@@ -71,10 +71,10 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Clamps the given value between the given minimum and maximum values.
-		/// Returns the given value if it is within the range.
-		/// Returns min if the value is less than min.
-		/// Returns max if the value is greater than max.
+		/// 주어진 값을 주어진 최소값과 최대값 사이로 클램핑합니다.
+		/// 범위 내에 있으면 주어진 값을 반환합니다.
+		/// 값이 min보다 작으면 min을 반환합니다.
+		/// 값이 max보다 크면 max를 반환합니다.
 		/// </summary>
 		public static floatP Clamp(floatP value, floatP min, floatP max)
 		{
@@ -90,7 +90,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Clamps the given value between 0 and 1.
+		/// 주어진 값을 0과 1 사이로 클램핑합니다.
 		/// </summary>
 		public static floatP Clamp01(floatP value)
 		{
@@ -106,8 +106,8 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Linearly interpolates between a and b by t.
-		/// t is clamped to the range [0, 1].
+		/// a와 b 사이를 t로 선형 보간합니다.
+		/// t는 [0, 1] 범위로 클램핑됩니다.
 		/// </summary>
 		public static floatP Lerp(floatP a, floatP b, floatP t)
 		{
@@ -116,8 +116,8 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Linearly interpolates between a and b by t.
-		/// t is not clamped.
+		/// a와 b 사이를 t로 선형 보간합니다.
+		/// t는 클램핑되지 않습니다.
 		/// </summary>
 		public static floatP LerpUnclamped(floatP a, floatP b, floatP t)
 		{
@@ -125,7 +125,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Interpolates between a and b by t with smoothing at the limits.
+		/// 한계에서 스무딩하여 a와 b 사이를 t로 보간합니다.
 		/// </summary>
 		public static floatP SmoothStep(floatP from, floatP to, floatP t)
 		{
@@ -135,7 +135,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Calculates the linear parameter t that produces the interpolant value within the range [a, b].
+		/// [a, b] 범위 내에서 보간값을 생성하는 선형 매개변수 t를 계산합니다.
 		/// </summary>
 		public static floatP InverseLerp(floatP a, floatP b, floatP value)
 		{
@@ -147,7 +147,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Moves a value current towards target.
+		/// current 값을 target 방향으로 이동합니다.
 		/// </summary>
 		public static floatP MoveTowards(floatP current, floatP target, floatP maxDelta)
 		{
@@ -159,8 +159,8 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Returns the sign of f.
-		/// Returns 1 if f is positive or zero, -1 if f is negative.
+		/// f의 부호를 반환합니다.
+		/// f가 양수이거나 0이면 1을, f가 음수이면 -1을 반환합니다.
 		/// </summary>
 		public static int Sign(floatP f)
 		{
@@ -168,7 +168,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Loops the value t, so that it is never larger than length and never smaller than 0.
+		/// 값 t를 루프하여 length보다 크거나 0보다 작지 않게 합니다.
 		/// </summary>
 		public static floatP Repeat(floatP t, floatP length)
 		{
@@ -176,7 +176,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Ping-pongs the value t, so that it is never larger than length and never smaller than 0.
+		/// 값 t를 핑퐁하여 length보다 크거나 0보다 작지 않게 합니다.
 		/// </summary>
 		public static floatP PingPong(floatP t, floatP length)
 		{
@@ -185,7 +185,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Calculates the shortest difference between two given angles given in degrees.
+		/// 도 단위로 주어진 두 각도 사이의 최단 차이를 계산합니다.
 		/// </summary>
 		public static floatP DeltaAngle(floatP current, floatP target)
 		{
@@ -198,7 +198,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Same as Lerp but makes sure the values interpolate correctly when they wrap around 360 degrees.
+		/// Lerp와 동일하지만 값이 360도를 감쌀 때 올바르게 보간되도록 합니다.
 		/// </summary>
 		public static floatP LerpAngle(floatP a, floatP b, floatP t)
 		{
@@ -207,7 +207,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Same as MoveTowards but makes sure the values interpolate correctly when they wrap around 360 degrees.
+		/// MoveTowards와 동일하지만 값이 360도를 감쌀 때 올바르게 보간되도록 합니다.
 		/// </summary>
 		public static floatP MoveTowardsAngle(floatP current, floatP target, floatP maxDelta)
 		{
@@ -221,12 +221,12 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Compares two floating point values and returns true if they are similar.
+		/// 두 부동소수점 값을 비교하고 유사하면 true를 반환합니다.
 		/// </summary>
 		public static bool Approximately(floatP a, floatP b)
 		{
-			// Similar to Unity's implementation:
-			// Returns true if the difference between a and b is less than the larger of
+			// Unity 구현과 유사합니다:
+			// a와 b의 차이가 다음 중 큰 값보다 작으면 true를 반환합니다:
 			// 1E-06 * max(|a|, |b|) or Epsilon * 8
 			floatP diff = Abs(b - a);
 			floatP maxMagnitude = Max(Abs(a), Abs(b));
@@ -235,10 +235,10 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Returns the remainder and the quotient when dividing x by y, so that x == y * quotient + remainder
+		/// x를 y로 나눌 때 나머지와 몫을 반환하며, x == y * quotient + remainder입니다
 		/// </summary>
 		/// <returns>
-		/// The quotient
+		/// 몫
 		/// </returns>
 		public static int DivRem(floatP x, floatP y, out floatP remainder, out int quotient)
 		{
@@ -380,7 +380,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Returns the remainder when dividing x by y
+		/// x를 y로 나눌 때 나머지를 반환합니다
 		/// </summary>
 		public static floatP IEEERemainder(floatP x, floatP y)
 		{
@@ -389,7 +389,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Returns x modulo y
+		/// x 모듈로 y를 반환합니다
 		/// </summary>
 		public static floatP Mod(floatP x, floatP y)
 		{
@@ -505,7 +505,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Rounds x to the nearest integer
+		/// x를 가장 가까운 정수로 반올림합니다
 		/// </summary>
 		public static floatP Round(floatP x)
 		{
@@ -551,7 +551,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Rounds x down to the nearest integer
+		/// x를 가장 가까운 정수로 내림합니다
 		/// </summary>
 		public static floatP Floor(floatP x)
 		{
@@ -592,7 +592,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Rounds x up to the nearest integer
+		/// x를 가장 가까운 정수로 올림합니다
 		/// </summary>
 		public static floatP Ceil(floatP x)
 		{
@@ -633,7 +633,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Truncates x, removing its fractional parts
+		/// x의 소수 부분을 제거하여 절삭합니다
 		/// </summary>
 		public static floatP Truncate(floatP x)
 		{
@@ -662,7 +662,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Returns the square root of x
+		/// x의 제곱근을 반환합니다
 		/// </summary>
 		public static floatP Sqrt(floatP f)
 		{
@@ -763,7 +763,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Returns e raised to the power x (e ~= 2.71828182845904523536)
+		/// e의 x 거듭제곱을 반환합니다 (e ~= 2.71828182845904523536)
 		/// </summary>
 		public static floatP Exp(floatP x)
 		{
@@ -856,7 +856,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Returns x raised to the power y
+		/// x의 y 거듭제곱을 반환합니다
 		/// </summary>
 		public static floatP Pow(floatP x, floatP y)
 		{
@@ -1244,7 +1244,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Returns the power 2 of x
+		/// x의 2의 거듭제곱을 반환합니다
 		/// </summary>
 		public static floatP Pow2(floatP f)
 		{
@@ -1252,7 +1252,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Returns the natural logarithm (base e) of x
+		/// x의 자연 로그(밑 e)를 반환합니다
 		/// </summary>
 		public static floatP Log(floatP x)
 		{
@@ -1318,7 +1318,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Returns the natural logarithm (base e) of x
+		/// x의 자연 로그(밑 e)를 반환합니다
 		/// </summary>
 		public static floatP Log(floatP x, floatP e)
 		{
@@ -1346,7 +1346,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Returns the base 2 logarithm of x
+		/// x의 밑 2 로그를 반환합니다
 		/// </summary>
 		public static floatP Log2(floatP x)
 		{
@@ -1354,7 +1354,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Returns the base 10 logarithm of x
+		/// x의 밑 10 로그를 반환합니다
 		/// </summary>
 		public static floatP Log10(floatP x)
 		{
@@ -1362,7 +1362,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Returns the sine of x
+		/// x의 사인을 반환합니다
 		/// </summary>
 		public static floatP Sin(floatP x)
 		{
@@ -1371,7 +1371,7 @@ namespace Geuneda.DataExtensions
 			// https://en.wikipedia.org/wiki/Bhaskara_I%27s_sine_approximation_formula
 			// sin(x) ~= (16x * (pi - x)) / (5pi^2 - 4x * (pi - x)) if 0 <= x <= pi
 
-			// move x into range
+			// x를 범위 안으로 이동
 			x %= floatP.FromRaw(Raw2Pi);
 			if (x.IsNegative())
 			{
@@ -1381,8 +1381,8 @@ namespace Geuneda.DataExtensions
 			bool negate;
 			if (x > floatP.FromRaw(RawPi))
 			{
-				// pi < x <= 2pi, we need to move x to the 0 <= x <= pi range
-				// also, we need to negate the result before returning it
+				// pi < x <= 2pi, x를 0 <= x <= pi 범위로 이동해야 합니다
+				// 또한 반환하기 전에 결과를 부정해야 합니다
 				x = floatP.FromRaw(Raw2Pi) - x;
 				negate = true;
 			}
@@ -1397,7 +1397,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Returns the cosine of x
+		/// x의 코사인을 반환합니다
 		/// </summary>
 		public static floatP Cos(floatP x)
 		{
@@ -1405,7 +1405,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Returns the tangent of x
+		/// x의 탄젠트를 반환합니다
 		/// </summary>
 		public static floatP Tan(floatP x)
 		{
@@ -1413,7 +1413,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Returns the hypothenuse between x & y -> square root of (x*x + y*y)
+		/// x와 y 사이의 빗변을 반환합니다 -> (x*x + y*y)의 제곱근
 		/// </summary>
 		public static floatP Hypothenuse(floatP x, floatP y)
 		{
@@ -1421,7 +1421,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Returns the arccosine of x
+		/// x의 아크코사인을 반환합니다
 		/// </summary>
 		public static floatP Acos(floatP x)
 		{
@@ -1496,7 +1496,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Returns the arcsine of x
+		/// x의 아크사인을 반환합니다
 		/// </summary>
 		public static floatP Asin(floatP x)
 		{
@@ -1504,7 +1504,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Returns the arctangent of x
+		/// x의 아크탄젠트를 반환합니다
 		/// </summary>
 		public static floatP Atan(floatP x)
 		{
@@ -1593,7 +1593,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Returns the signed angle between the positive x axis, and the direction (x, y)
+		/// 양의 x축과 방향 (x, y) 사이의 부호 있는 각도를 반환합니다
 		/// </summary>
 		public static floatP Atan2(floatP y, floatP x)
 		{
@@ -1700,7 +1700,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Returns x * 2^n computed efficiently.
+		/// 효율적으로 계산된 x * 2^n을 반환합니다.
 		/// </summary>
 		public static floatP ScaleB(floatP x, int n)
 		{
@@ -1741,7 +1741,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// The distance between given points
+		/// 주어진 점 사이의 거리입니다
 		/// </summary>
 		public static long RawDistance(floatP f1, floatP f2)
 		{

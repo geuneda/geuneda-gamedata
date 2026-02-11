@@ -5,13 +5,13 @@ using UnityEngine;
 namespace Geuneda.DataExtensions
 {
 	/// <summary>
-	/// Unity does not support Dictionary serialization out of the box, but by
-	/// exploiting Unity's serialization protocol it can be done.
-	/// By making a new class that inherits both Dictionary and Unity's ISerializationCallbackReceiver interface,
-	/// we can convert the Dictionary data to a format that Unity can serialize.
+	/// Unity는 기본적으로 Dictionary 직렬화를 지원하지 않지만,
+	/// Unity의 직렬화 프로토콜을 활용하면 가능합니다.
+	/// Dictionary와 Unity의 ISerializationCallbackReceiver 인터페이스를 모두 상속하는 새 클래스를 만들면,
+	/// Dictionary 데이터를 Unity가 직렬화할 수 있는 형식으로 변환할 수 있습니다.
 	///
-	/// IMPORTANT: Because Unity does not serialize generic types, it is necessary to make a concrete
-	/// Dictionary type by inheriting from the UnitySerializedDictionary.
+	/// 중요: Unity는 제네릭 타입을 직렬화하지 않으므로, UnitySerializedDictionary를 상속하여
+	/// 구체적인 Dictionary 타입을 만들어야 합니다.
 	/// </summary>
 	[Serializable]
 	public abstract class UnitySerializedDictionary<TKey, TValue> : Dictionary<TKey, TValue>,

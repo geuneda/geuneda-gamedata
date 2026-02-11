@@ -4,36 +4,36 @@ using System.Collections.Generic;
 namespace Geuneda.DataExtensions
 {
 	/// <summary>
-	/// Interface for objects that can notify when they are being read for dependency tracking.
+	/// 의존성 추적을 위해 읽히고 있을 때 알릴 수 있는 객체의 인터페이스입니다.
 	/// </summary>
 	internal interface IComputedDependency
 	{
 		/// <summary>
-		/// Subscribes to be notified when this dependency's value changes.
+		/// 이 의존성의 값이 변경될 때 알림을 받도록 구독합니다.
 		/// </summary>
 		void Subscribe(Action onDependencyChanged);
 
 		/// <summary>
-		/// Unsubscribes from change notifications for this dependency.
+		/// 이 의존성의 변경 알림 구독을 해제합니다.
 		/// </summary>
 		void Unsubscribe(Action onDependencyChanged);
 	}
 
 	/// <summary>
-	/// Internal interface for computed fields to receive dependency tracking without reflection.
+	/// 리플렉션 없이 의존성 추적을 받기 위한 계산 필드의 내부 인터페이스입니다.
 	/// </summary>
 	internal interface IComputedFieldInternal
 	{
 		/// <summary>
-		/// Registers a dependency that this computed field relies on.
-		/// When the dependency changes, this computed field will be marked dirty and recomputed.
+		/// 이 계산 필드가 의존하는 의존성을 등록합니다.
+		/// 의존성이 변경되면, 이 계산 필드는 더티로 표시되고 재계산됩니다.
 		/// </summary>
 		void AddDependency(IComputedDependency dependency);
 	}
 
 	/// <summary>
-	/// A field that is computed from other observable fields.
-	/// It automatically updates when any of its dependencies change.
+	/// 다른 Observable 필드에서 계산되는 필드입니다.
+	/// 의존성 중 하나라도 변경되면 자동으로 업데이트됩니다.
 	/// </summary>
 	public partial class ComputedField<T> : IObservableFieldReader<T>, IDisposable, IBatchable, IComputedDependency, IComputedFieldInternal
 	{
@@ -45,7 +45,7 @@ namespace Geuneda.DataExtensions
 		private bool _isDirty = true;
 		private bool _isBatching;
 
-		// Declared as a partial method so calls are compiled out in player builds.
+		// 플레이어 빌드에서 호출이 컴파일 제외되도록 partial 메서드로 선언됩니다.
 		partial void EditorDebug_Register();
 
 		/// <inheritdoc />
@@ -98,7 +98,7 @@ namespace Geuneda.DataExtensions
 		/// <inheritdoc />
 		public void Observe(Action<T, T> onUpdate)
 		{
-			// Ensure dependencies are tracked before adding observer
+			// 옵저버 추가 전에 의존성이 추적되는지 확인
 			if (_isDirty)
 			{
 				Recompute();
@@ -162,7 +162,7 @@ namespace Geuneda.DataExtensions
 
 		private void Recompute()
 		{
-			// Track dependencies during computation
+			// 계산 중 의존성 추적
 			ComputedTracker.BeginTracking(this);
 			try
 			{
@@ -221,17 +221,17 @@ namespace Geuneda.DataExtensions
 
 
 		// ═══════════════════════════════════════════════════════════════════════════
-		// EDITOR-ONLY: Observable Debug Window Support
+		// 에디터 전용: Observable 디버그 창 지원
 		// ═══════════════════════════════════════════════════════════════════════════
-		// This section provides automatic registration of observable instances for
-		// the Observable Debug Window (Tools > Game Data > Observable Debugger).
+		// 이 섹션은 Observable 디버그 창(Tools > Game Data > Observable Debugger)을 위한
+		// Observable 인스턴스의 자동 등록을 제공합니다.
 		//
-		// Features:
-		// - Zero configuration required from users
-		// - Automatic tracking using weak references (no memory leaks)
-		// - Live value/subscriber inspection via captured getters
+		// 기능:
+		// - 사용자 설정 불필요
+		// - 약한 참조를 사용한 자동 추적 (메모리 누수 없음)
+		// - 캡처된 게터를 통한 실시간 값/구독자 검사
 		//
-		// This code is compiled out in builds via #if UNITY_EDITOR.
+		// 이 코드는 #if UNITY_EDITOR를 통해 빌드에서 컴파일 제외됩니다.
 		// ═══════════════════════════════════════════════════════════════════════════
 #if UNITY_EDITOR
 		partial void EditorDebug_Register()
@@ -250,12 +250,12 @@ namespace Geuneda.DataExtensions
 	}
 
 	/// <summary>
-	/// Static factory for computed fields.
+	/// 계산 필드를 위한 정적 팩토리입니다.
 	/// </summary>
 	public static class ObservableField
 	{
 		/// <summary>
-		/// Creates a new computed field from the given computation function.
+		/// 주어진 계산 함수에서 새 계산 필드를 생성합니다.
 		/// </summary>
 		public static ComputedField<T> Computed<T>(Func<T> computation)
 		{
@@ -263,8 +263,8 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Combines two observable fields into a computed result.
-		/// The computed field automatically updates when any source field changes.
+		/// 두 Observable 필드를 결합하여 계산 결과를 생성합니다.
+		/// 소스 필드 중 하나라도 변경되면 계산 필드가 자동으로 업데이트됩니다.
 		/// </summary>
 		public static ComputedField<TResult> Combine<T1, T2, TResult>(
 			IObservableFieldReader<T1> first,
@@ -275,8 +275,8 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Combines three observable fields into a computed result.
-		/// The computed field automatically updates when any source field changes.
+		/// 세 Observable 필드를 결합하여 계산 결과를 생성합니다.
+		/// 소스 필드 중 하나라도 변경되면 계산 필드가 자동으로 업데이트됩니다.
 		/// </summary>
 		public static ComputedField<TResult> Combine<T1, T2, T3, TResult>(
 			IObservableFieldReader<T1> first,
@@ -288,8 +288,8 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Combines four observable fields into a computed result.
-		/// The computed field automatically updates when any source field changes.
+		/// 네 Observable 필드를 결합하여 계산 결과를 생성합니다.
+		/// 소스 필드 중 하나라도 변경되면 계산 필드가 자동으로 업데이트됩니다.
 		/// </summary>
 		public static ComputedField<TResult> Combine<T1, T2, T3, T4, TResult>(
 			IObservableFieldReader<T1> first,
@@ -320,7 +320,7 @@ namespace Geuneda.DataExtensions
 
 		public static void OnRead(IComputedDependency dependency)
 		{
-			// Fast path: no tracking in progress (most common case)
+			// 빠른 경로: 추적 진행 중 아님 (가장 일반적인 경우)
 			if (_activeComputations == null || _activeComputations.Count == 0)
 			{
 				return;

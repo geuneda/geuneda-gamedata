@@ -6,17 +6,17 @@ using Geuneda.DataExtensions;
 namespace Geuneda.DataExtensions.Editor
 {
 	/// <summary>
-	/// Stateless service that validates config data by inspecting fields and properties decorated
-	/// with <see cref="ValidationAttribute"/> subclasses. Supports both full-provider and
-	/// single-entry validation scopes.
+	/// <see cref="ValidationAttribute"/> 하위 클래스로 장식된 필드와 프로퍼티를 검사하여
+	/// 설정 데이터를 유효성 검사하는 상태 비저장 서비스입니다. 전체 프로바이더 및
+	/// 단일 항목 유효성 검사 범위를 모두 지원합니다.
 	/// </summary>
 	internal static class ConfigValidationService
 	{
 		private const int SingleConfigId = 0;
 
 		/// <summary>
-		/// Validates every config entry in the given <paramref name="provider"/> and returns
-		/// the collected list of <see cref="ValidationErrorInfo"/> errors.
+		/// 주어진 <paramref name="provider"/>의 모든 설정 항목을 유효성 검사하고
+		/// 수집된 <see cref="ValidationErrorInfo"/> 오류 목록을 반환합니다.
 		/// </summary>
 		public static List<ValidationErrorInfo> ValidateAll(IConfigsProvider provider)
 		{
@@ -40,8 +40,8 @@ namespace Geuneda.DataExtensions.Editor
 		}
 
 		/// <summary>
-		/// Validates a single config entry described by <paramref name="selection"/> and returns
-		/// the collected list of <see cref="ValidationErrorInfo"/> errors.
+		/// <paramref name="selection"/>으로 설명된 단일 설정 항목을 유효성 검사하고
+		/// 수집된 <see cref="ValidationErrorInfo"/> 오류 목록을 반환합니다.
 		/// </summary>
 		public static List<ValidationErrorInfo> ValidateSingle(ConfigSelection selection)
 		{

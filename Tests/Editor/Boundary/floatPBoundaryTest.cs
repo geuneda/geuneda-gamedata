@@ -11,8 +11,8 @@ namespace Geuneda.DataExtensions.Tests.Boundary
 		public void MaxValue_Operations()
 		{
 			var max = floatP.MaxValue;
-			// Adding 1 to MaxValue doesn't overflow to infinity due to float precision limits
-			// (the mantissa can't represent the difference). Multiplying by 2 does cause overflow.
+			// float 정밀도 한계로 인해 MaxValue에 1을 더해도 무한대로 오버플로되지 않습니다
+			// (가수부가 차이를 표현할 수 없음). 2를 곱하면 오버플로가 발생합니다.
 			Assert.IsTrue((max * (floatP)2f).IsInfinity());
 			Assert.AreEqual(max, max * floatP.One);
 		}
@@ -21,8 +21,8 @@ namespace Geuneda.DataExtensions.Tests.Boundary
 		public void MinValue_Operations()
 		{
 			var min = floatP.MinValue;
-			// Subtracting 1 from MinValue doesn't overflow to infinity due to float precision limits.
-			// Multiplying by 2 does cause overflow.
+			// float 정밀도 한계로 인해 MinValue에서 1을 빼도 무한대로 오버플로되지 않습니다.
+			// 2를 곱하면 오버플로가 발생합니다.
 			Assert.IsTrue((min * (floatP)2f).IsInfinity());
 			Assert.AreEqual(min, min * floatP.One);
 		}
@@ -42,7 +42,7 @@ namespace Geuneda.DataExtensions.Tests.Boundary
 			var zero = floatP.Zero;
 			var negZero = -floatP.Zero;
 			Assert.IsTrue(zero == negZero);
-			Assert.IsFalse(zero.RawValue == negZero.RawValue); // They differ in sign bit
+			Assert.IsFalse(zero.RawValue == negZero.RawValue); // 부호 비트에서 차이가 있습니다
 		}
 	}
 }

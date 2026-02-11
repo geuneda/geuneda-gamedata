@@ -14,7 +14,7 @@ namespace Geuneda.DataExtensions.Tests.PlayMode.Performance
 		public IEnumerator ObservableField_HighFrequencyUpdates_FrameTimeImpact()
 		{
 			var field = new ObservableField<int>(0);
-			field.Observe((p, c) => { /* some work */ });
+			field.Observe((p, c) => { /* 일부 작업 */ });
 
 			yield return Measure.Frames().Run();
 

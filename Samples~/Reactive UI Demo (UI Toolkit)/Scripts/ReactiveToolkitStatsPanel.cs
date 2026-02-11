@@ -4,7 +4,7 @@ using UnityEngine.UIElements;
 namespace Geuneda.DataExtensions.Samples.ReactiveUiDemo
 {
 	/// <summary>
-	/// UI Toolkit view that displays computed stats (BaseDamage, WeaponBonus, TotalDamage).
+	/// 계산된 스탯(BaseDamage, WeaponBonus, TotalDamage)을 표시하는 UI Toolkit 뷰입니다.
 	/// </summary>
 	public sealed class ReactiveToolkitStatsPanel : IDisposable
 	{

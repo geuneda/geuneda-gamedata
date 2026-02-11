@@ -4,11 +4,11 @@ using Newtonsoft.Json.Linq;
 namespace Geuneda.DataExtensions.Samples.Migration
 {
 	/// <summary>
-	/// Migration from version 1 to version 2 for <see cref="SampleEnemyConfig"/>.
+	/// <see cref="SampleEnemyConfig"/>의 버전 1에서 버전 2로의 마이그레이션입니다.
 	/// 
-	/// Demonstrates:
-	/// - Field renaming (Damage → AttackDamage)
-	/// - Conditional default values based on existing data (ArmorType derived from Health)
+	/// 시연 내용:
+	/// - 필드 이름 변경 (Damage -> AttackDamage)
+	/// - 기존 데이터 기반 조건부 기본값 (Health에서 파생된 ArmorType)
 	/// </summary>
 	[ConfigMigration(typeof(SampleEnemyConfig))]
 	public sealed class SampleEnemyConfigMigration_v1_v2 : IConfigMigration
@@ -19,7 +19,7 @@ namespace Geuneda.DataExtensions.Samples.Migration
 		public void Migrate(JObject configJson)
 		{
 			// ─────────────────────────────────────────────────────────────────
-			// Pattern 1: Field Renaming (Damage → AttackDamage)
+			// 패턴 1: 필드 이름 변경 (Damage -> AttackDamage)
 			// ─────────────────────────────────────────────────────────────────
 			if (configJson["Damage"] != null)
 			{
@@ -28,13 +28,13 @@ namespace Geuneda.DataExtensions.Samples.Migration
 			}
 
 			// ─────────────────────────────────────────────────────────────────
-			// Pattern 2: Conditional Default (ArmorType based on Health)
+			// 패턴 2: 조건부 기본값 (Health 기반 ArmorType)
 			// ─────────────────────────────────────────────────────────────────
 			if (configJson["ArmorType"] == null)
 			{
 				var health = configJson["Health"]?.Value<int>() ?? 0;
 
-				// Derive armor type from health value
+				// 체력 값에서 방어구 타입을 파생합니다
 				string armorType;
 				if (health >= 100)
 				{

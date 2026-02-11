@@ -47,7 +47,7 @@ namespace Geuneda.DataExtensions.Tests.Integration
 
 			var json = _serializer.Serialize(_provider, "1.0.0");
 			
-			// Verify that LocalConfig is NOT in json
+			// LocalConfig가 JSON에 없는지 확인합니다
 			Assert.IsFalse(json.Contains("LocalConfig"));
 			
 			var newProvider = new ConfigsProvider();
@@ -56,7 +56,7 @@ namespace Geuneda.DataExtensions.Tests.Integration
 			Assert.AreEqual(heroes.Count, newProvider.GetConfigsList<HeroConfig>().Count);
 			Assert.AreEqual("Warrior", newProvider.GetConfig<HeroConfig>(1).Name);
 			Assert.AreEqual(Color.blue, newProvider.GetConfig<HeroConfig>(2).Theme);
-			// LocalConfig should be missing in newProvider (GetConfig throws InvalidOperationException when type is not registered)
+			// LocalConfig는 newProvider에 없어야 합니다(타입이 등록되지 않으면 GetConfig가 InvalidOperationException을 발생시킵니다)
 			Assert.Throws<InvalidOperationException>(() => newProvider.GetConfig<LocalConfig>());
 		}
 
@@ -67,9 +67,9 @@ namespace Geuneda.DataExtensions.Tests.Integration
 			var jsonV5 = "{\"Version\":\"5\",\"Configs\":{}}";
 			var jsonV15 = "{\"Version\":\"15\",\"Configs\":{}}";
 
-			// V5 is older, but ConfigsSerializer.Deserialize currently calls UpdateTo directly.
-			// The caller should normally check version.
-			// Let's verify that Deserialize DOES set the version regardless.
+			// V5는 더 오래되었지만, ConfigsSerializer.Deserialize는 현재 UpdateTo를 직접 호출합니다.
+			// 호출자는 일반적으로 버전을 확인해야 합니다.
+			// Deserialize가 버전에 관계없이 버전을 설정하는지 확인합니다.
 			_serializer.Deserialize(jsonV5, _provider);
 			Assert.AreEqual(5, (int)_provider.Version);
 

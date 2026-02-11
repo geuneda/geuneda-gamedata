@@ -5,7 +5,7 @@ using UnityEngine.UIElements;
 namespace Geuneda.DataExtensions.Samples.ReactiveUiDemo
 {
 	/// <summary>
-	/// UI Toolkit view that binds to an <see cref="ObservableField{T}"/> health value.
+	/// <see cref="ObservableField{T}"/> 체력 값에 바인딩하는 UI Toolkit 뷰입니다.
 	/// </summary>
 	public sealed class ReactiveToolkitHealthBar : IDisposable
 	{

@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Geuneda.DataExtensions.Samples.ReactiveUiDemo
 {
 	/// <summary>
-	/// uGUI view that binds to computed stats.
+	/// 계산된 스탯에 바인딩하는 uGUI 뷰입니다.
 	/// </summary>
 	[DisallowMultipleComponent]
 	public sealed class ReactiveUGuiStatsPanel : MonoBehaviour

@@ -10,7 +10,7 @@ using System.Text;
 namespace Geuneda.DataExtensions
 {
 	/// <summary>
-	/// Container for extensions to use when using reflection in a code base
+	/// 코드베이스에서 리플렉션 사용 시 활용할 확장 메서드의 컨테이너입니다
 	/// </summary>
 	/// <remarks>
 	/// <author>Bruno Coimbra, https://github.com/coimbrastudios/framework/blob/master/Coimbra/Utilities/ReflectionUtility.cs</author>
@@ -49,7 +49,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Search for a field by its name. It will also search on base types for private fields if none is found in the target type.
+		/// 이름으로 필드를 검색합니다. 대상 타입에서 찾지 못하면 기본 타입에서 private 필드도 검색합니다.
 		/// </summary>
 		public static FieldInfo? FindFieldByName(this Type type, in string name)
 		{
@@ -91,7 +91,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Search for a method by its name. It will also search on base types for private methods if none is found in the target type.
+		/// 이름으로 메서드를 검색합니다. 대상 타입에서 찾지 못하면 기본 타입에서 private 메서드도 검색합니다.
 		/// </summary>
 		public static MethodInfo? FindMethodByName(this Type type, in string name)
 		{
@@ -133,7 +133,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Search for a method by its signature. It will also search on base types for private methods if none is found in the target type.
+		/// 시그니처로 메서드를 검색합니다. 대상 타입에서 찾지 못하면 기본 타입에서 private 메서드도 검색합니다.
 		/// </summary>
 		public static MethodInfo? FindMethodBySignature(this Type type, in string name, params Type[] parameters)
 		{
@@ -175,7 +175,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Search for a setter by its name. It will also search on base types for private setters if none is found in the target type.
+		/// 이름으로 세터를 검색합니다. 대상 타입에서 찾지 못하면 기본 타입에서 private 세터도 검색합니다.
 		/// </summary>
 		public static MethodInfo? FindSetterByName(this Type type, in string name)
 		{
@@ -217,7 +217,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// 1<summary>
-		/// True if the type is a value type or contains a parameterless constructor.
+		/// 타입이 값 타입이거나 매개변수 없는 생성자를 포함하면 true입니다.
 		/// </summary>
 		public static bool CanCreateInstance(this Type type)
 		{

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Geuneda.DataExtensions.Samples.ReactiveUiDemo
 {
 	/// <summary>
-	/// Simple data model used by the Reactive UI Demo (UI Toolkit) sample.
+	/// Reactive UI Demo (UI Toolkit) 샘플에서 사용하는 간단한 데이터 모델입니다.
 	/// </summary>
 	[Serializable]
 	public sealed class ReactiveToolkitPlayerData : IDisposable

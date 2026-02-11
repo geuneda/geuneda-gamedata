@@ -66,10 +66,10 @@ namespace Geuneda.DataExtensions.Tests
 			var field = type.GetField("_selection", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
 			field.SetValue(_enumSelector, "InvalidValue");
 
-			// Expect the error log when trying to get the invalid selection
+			// 유효하지 않은 선택을 가져올 때 오류 로그를 예상합니다
 			LogAssert.Expect(LogType.Error, "Could not load enum for string: InvalidValue");
 
-			// EnumSelector returns the first enum value when selection is invalid
+			// 선택이 유효하지 않을 때 EnumSelector는 첫 번째 열거형 값을 반환합니다
 			Assert.AreEqual(EnumExample.Value1, _enumSelector.GetSelection());
 		}
 
@@ -80,7 +80,7 @@ namespace Geuneda.DataExtensions.Tests
 			var field = type.GetField("_selection", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
 			field.SetValue(_enumSelector, "NonExistentValue");
 
-			// Expect the error log from GetSelectedIndex
+			// GetSelectedIndex에서의 오류 로그를 예상합니다
 			LogAssert.Expect(LogType.Error, "Could not load enum for string: NonExistentValue");
 
 			Assert.IsFalse(_enumSelector.HasValidSelection());
@@ -93,7 +93,7 @@ namespace Geuneda.DataExtensions.Tests
 			var field = type.GetField("_selection", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
 			field.SetValue(_enumSelector, "");
 
-			// Expect the error log from GetSelectedIndex
+			// GetSelectedIndex에서의 오류 로그를 예상합니다
 			LogAssert.Expect(LogType.Error, "Could not load enum for string: ");
 
 			Assert.IsFalse(_enumSelector.HasValidSelection());

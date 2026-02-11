@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace Geuneda.DataExtensions
 {
 	/// <summary>
-	/// Generic contract for a config to be serialized in containers
+	/// 컨테이너에서 직렬화할 설정의 제네릭 계약입니다
 	/// </summary>
 	public interface IConfig
 	{
@@ -11,8 +11,8 @@ namespace Geuneda.DataExtensions
 	}
 
 	/// <summary>
-	/// Generic container of the configs imported with a ConfigsImporter script
-	/// The given <typeparamref name="T"/> type is the same of the config struct defined to be serialized in the scriptable object
+	/// ConfigsImporter 스크립트로 가져온 설정의 제네릭 컨테이너입니다
+	/// 주어진 <typeparamref name="T"/> 타입은 스크립터블 오브젝트에서 직렬화되도록 정의된 설정 구조체와 동일합니다
 	/// </summary>
 	public interface IConfigsContainer<T>
 	{
@@ -20,8 +20,8 @@ namespace Geuneda.DataExtensions
 	}
 
 	/// <summary>
-	/// Generic container of the unique single config imported with a ConfigsImporter script
-	/// The given <typeparamref name="T"/> type is the same of the config struct defined to be serialized in the scriptable object
+	/// ConfigsImporter 스크립트로 가져온 고유 단일 설정의 제네릭 컨테이너입니다
+	/// 주어진 <typeparamref name="T"/> 타입은 스크립터블 오브젝트에서 직렬화되도록 정의된 설정 구조체와 동일합니다
 	/// </summary>
 	public interface ISingleConfigContainer<T>
 	{
@@ -30,7 +30,7 @@ namespace Geuneda.DataExtensions
 
 	/// <inheritdoc />
 	/// <remarks>
-	/// Use this configs container to hold the configs data in pairs mapped by it's given <typeparamref name="TKey"/> id
+	/// 주어진 <typeparamref name="TKey"/> ID로 매핑된 쌍으로 설정 데이터를 보유하려면 이 설정 컨테이너를 사용하세요
 	/// </remarks>
 	public interface IPairConfigsContainer<TKey, TValue> : IConfigsContainer<Pair<TKey, TValue>>
 	{
@@ -38,7 +38,7 @@ namespace Geuneda.DataExtensions
 
 	/// <inheritdoc />
 	/// <remarks>
-	/// Use this configs container to hold the configs data in pairs mapped by it's given <typeparamref name="TKey"/> id
+	/// 주어진 <typeparamref name="TKey"/> ID로 매핑된 쌍으로 설정 데이터를 보유하려면 이 설정 컨테이너를 사용하세요
 	/// </remarks>
 	public interface IStructPairConfigsContainer<TKey, TValue> : IConfigsContainer<StructPair<TKey, TValue>>
 		where TKey : struct

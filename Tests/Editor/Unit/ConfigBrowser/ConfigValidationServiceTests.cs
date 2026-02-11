@@ -7,8 +7,8 @@ using NUnit.Framework;
 namespace Geuneda.DataExtensions.Tests
 {
 	/// <summary>
-	/// Unit tests for <see cref="ConfigValidationService"/>, verifying that validation attributes
-	/// on config fields are correctly evaluated for both full-provider and single-entry scopes.
+	/// <see cref="ConfigValidationService"/>의 유닛 테스트로, 설정 필드의 유효성 검사 어트리뷰트가
+	/// 전체 프로바이더 및 단일 항목 범위에서 올바르게 평가되는지 확인합니다.
 	/// </summary>
 	[TestFixture]
 	public class ConfigValidationServiceTests

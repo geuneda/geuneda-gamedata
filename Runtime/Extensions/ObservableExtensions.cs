@@ -3,13 +3,13 @@ using System;
 namespace Geuneda.DataExtensions
 {
 	/// <summary>
-	/// Extension methods for creating computed fields from observable field readers.
+	/// Observable 필드 리더에서 계산 필드를 생성하기 위한 확장 메서드입니다.
 	/// </summary>
 	public static class ObservableExtensions
 	{
 		/// <summary>
-		/// Creates a computed field that transforms this field's value using the given selector.
-		/// The computed field automatically updates when the source field changes.
+		/// 주어진 셀렉터를 사용하여 이 필드의 값을 변환하는 계산 필드를 생성합니다.
+		/// 소스 필드가 변경되면 계산 필드가 자동으로 업데이트됩니다.
 		/// </summary>
 		public static ComputedField<TResult> Select<T, TResult>(
 			this IObservableFieldReader<T> source,
@@ -19,8 +19,8 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Combines this observable field with another field into a computed result.
-		/// The computed field automatically updates when either source field changes.
+		/// 이 Observable 필드를 다른 필드와 결합하여 계산 결과를 생성합니다.
+		/// 어느 쪽 소스 필드가 변경되어도 계산 필드가 자동으로 업데이트됩니다.
 		/// </summary>
 		public static ComputedField<TResult> CombineWith<T1, T2, TResult>(
 			this IObservableFieldReader<T1> first,
@@ -31,8 +31,8 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Combines this observable field with two other fields into a computed result.
-		/// The computed field automatically updates when any source field changes.
+		/// 이 Observable 필드를 다른 두 필드와 결합하여 계산 결과를 생성합니다.
+		/// 소스 필드 중 하나라도 변경되면 계산 필드가 자동으로 업데이트됩니다.
 		/// </summary>
 		public static ComputedField<TResult> CombineWith<T1, T2, T3, TResult>(
 			this IObservableFieldReader<T1> first,
@@ -44,8 +44,8 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Combines this observable field with three other fields into a computed result.
-		/// The computed field automatically updates when any source field changes.
+		/// 이 Observable 필드를 다른 세 필드와 결합하여 계산 결과를 생성합니다.
+		/// 소스 필드 중 하나라도 변경되면 계산 필드가 자동으로 업데이트됩니다.
 		/// </summary>
 		public static ComputedField<TResult> CombineWith<T1, T2, T3, T4, TResult>(
 			this IObservableFieldReader<T1> first,

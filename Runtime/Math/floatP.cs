@@ -5,8 +5,8 @@ using System.Runtime.CompilerServices;
 namespace Geuneda.DataExtensions
 {
 	/// <summary>
-	/// Floating Point representation is identical to IEEE binary32 floatingpoints.
-	/// Valuable for deterministic cases where <see cref="float"/> is not a valid option
+	/// IEEE binary32 부동소수점과 동일한 부동소수점 표현입니다.
+	/// <see cref="float"/>가 유효한 옵션이 아닌 결정적 경우에 유용합니다
 	/// </summary>
 	/// <author>
 	/// https://github.com/CodesInChaos/floatP/tree/master
@@ -15,7 +15,7 @@ namespace Geuneda.DataExtensions
 	public struct floatP : IEquatable<floatP>, IComparable<floatP>, IComparable, IFormattable
 	{
 		/// <summary>
-		/// Raw byte representation of an floatP number
+		/// floatP 숫자의 원시 바이트 표현입니다
 		/// </summary>
 		private readonly uint _raw;
 
@@ -26,7 +26,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Creates an floatP number from its raw byte representation
+		/// 원시 바이트 표현에서 floatP 숫자를 생성합니다
 		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static floatP FromRaw(uint raw)
@@ -35,7 +35,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// The raw value that determines the base of this flaoting point
+		/// 이 부동소수점의 기본을 결정하는 원시 값입니다
 		/// </summary>
 		public uint RawValue => _raw;
 
@@ -87,11 +87,11 @@ namespace Geuneda.DataExtensions
 		public override string ToString() => ((float)this).ToString();
 
 		/// <summary>
-		/// Creates an floatP number from its parts: sign, exponent, mantissa
+		/// 부분(부호, 지수, 가수)에서 floatP 숫자를 생성합니다
 		/// </summary>
-		/// <param name="sign">Sign of the number: false = the number is positive, true = the number is negative</param>
-		/// <param name="exponent">Exponent of the number</param>
-		/// <param name="mantissa">Mantissa (significand) of the number</param>
+		/// <param name="sign">숫자의 부호: false = 양수, true = 음수입니다</param>
+		/// <param name="exponent">숫자의 지수입니다</param>
+		/// <param name="mantissa">숫자의 가수(유효 숫자)입니다</param>
 		/// <returns></returns>
 		public static floatP FromParts(bool sign, uint exponent, uint mantissa)
 		{
@@ -99,7 +99,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Creates an floatP number from a float value
+		/// float 값에서 floatP 숫자를 생성합니다
 		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static implicit operator floatP(float f)
@@ -109,7 +109,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Converts an floatP number to a float value
+		/// floatP 숫자를 float 값으로 변환합니다
 		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static implicit operator float(floatP f)
@@ -119,7 +119,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Converts an floatP number to an integer
+		/// floatP 숫자를 정수로 변환합니다
 		/// </summary>
 		public static implicit operator int(floatP f)
 		{
@@ -135,7 +135,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Creates an floatP number from an integer
+		/// 정수에서 floatP 숫자를 생성합니다
 		/// </summary>
 		public static implicit operator floatP(int value)
 		{
@@ -146,7 +146,7 @@ namespace Geuneda.DataExtensions
 
 			if (value == int.MinValue)
 			{
-				// special case
+				// 특수 경우
 				return FromRaw(0xcf000000);
 			}
 
@@ -629,7 +629,7 @@ namespace Geuneda.DataExtensions
 				}
 				else
 				{
-					// NaNs are equal for `Equals` (as opposed to the == operator)
+					// NaN은 `Equals`에서 동일합니다(== 연산자와는 반대)
 					return other.RawMantissa != 0;
 				}
 			}
@@ -639,7 +639,7 @@ namespace Geuneda.DataExtensions
 		{
 			if (RawValue == SignMask)
 			{
-				// +0 equals -0
+				// +0은 -0과 동일합니다
 				return 0;
 			}
 
@@ -649,7 +649,7 @@ namespace Geuneda.DataExtensions
 			}
 			else
 			{
-				// All NaNs are equal
+				// 모든 NaN은 동일합니다
 				return unchecked((int)RawNaN);
 			}
 		}
@@ -752,13 +752,13 @@ namespace Geuneda.DataExtensions
 		public string ToStringInv() => ((float)this).ToString(System.Globalization.CultureInfo.InvariantCulture);
 
 		/// <summary>
-		/// Returns true if the floatP number has a positive sign.
+		/// floatP 숫자가 양수 부호를 가지면 true를 반환합니다.
 		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public bool IsPositive() => (RawValue & 0x80000000) == 0;
 
 		/// <summary>
-		/// Returns true if the floatP number has a negative sign.
+		/// floatP 숫자가 음수 부호를 가지면 true를 반환합니다.
 		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public bool IsNegative() => (RawValue & 0x80000000) != 0;
@@ -821,7 +821,7 @@ namespace Geuneda.DataExtensions
 		};
 
 		/// <summary>
-		/// Returns the leading zero count of the given 32-bit unsigned integer
+		/// 주어진 32비트 부호 없는 정수의 선행 0 개수를 반환합니다
 		/// </summary>
 		private static uint clz(uint x)
 		{

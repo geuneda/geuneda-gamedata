@@ -6,8 +6,8 @@ using UnityEngine.UI;
 namespace Geuneda.DataExtensions.Samples.DesignerWorkflow
 {
 	/// <summary>
-	/// Entry point MonoBehaviour for the Designer Workflow sample.
-	/// Loads ScriptableObject configs and displays them at runtime, with a reload button.
+	/// Designer Workflow 샘플의 진입점 MonoBehaviour입니다.
+	/// ScriptableObject 설정을 로드하고 런타임에 표시하며, 다시 로드 버튼을 포함합니다.
 	/// </summary>
 	public sealed class DesignerWorkflowDemoController : MonoBehaviour
 	{

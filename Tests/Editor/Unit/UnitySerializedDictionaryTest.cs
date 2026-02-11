@@ -66,7 +66,7 @@ namespace Geuneda.DataExtensions.Tests
 		[Test]
 		public void OnAfterDeserialize_OverwritesDuplicateKeys()
 		{
-			// Manual setup of internal lists to simulate Unity serialization
+			// Unity 직렬화를 시뮬레이션하기 위한 내부 리스트의 수동 설정
 			var type = typeof(UnitySerializedDictionary<string, int>);
 			var keysField = type.GetField("_keyData", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
 			var valuesField = type.GetField("_valueData", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
@@ -77,7 +77,7 @@ namespace Geuneda.DataExtensions.Tests
 			((ISerializationCallbackReceiver)_dictionary).OnAfterDeserialize();
 
 			Assert.AreEqual(1, _dictionary.Count);
-			Assert.AreEqual(2, _dictionary["key"]); // Last one wins
+			Assert.AreEqual(2, _dictionary["key"]); // 마지막 것이 우선
 		}
 
 		[Test]

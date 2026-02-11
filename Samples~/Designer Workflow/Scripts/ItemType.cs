@@ -1,7 +1,7 @@
 namespace Geuneda.DataExtensions.Samples.DesignerWorkflow
 {
 	/// <summary>
-	/// Sample enum used by the Designer Workflow sample.
+	/// Designer Workflow 샘플에서 사용하는 샘플 열거형입니다.
 	/// </summary>
 	public enum ItemType
 	{

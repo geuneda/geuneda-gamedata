@@ -11,8 +11,8 @@ using UnityEngine.UIElements;
 namespace Geuneda.DataExtensions.Editor
 {
 	/// <summary>
-	/// UI Toolkit inspector for any concrete type deriving from <see cref="ConfigsScriptableObject{TId,TAsset}"/>.
-	/// Shows per-entry status (duplicate keys / validation errors) and provides a "Validate All" action.
+	/// <see cref="ConfigsScriptableObject{TId,TAsset}"/>에서 파생되는 모든 구체적 타입의 UI Toolkit 인스펙터입니다.
+	/// 항목별 상태(중복 키/유효성 검사 오류)를 표시하고 "Validate All" 작업을 제공합니다.
 	/// </summary>
 	[CustomEditor(typeof(ConfigsScriptableObject<,>), true)]
 	public sealed class ConfigsScriptableObjectInspector : UnityEditor.Editor
@@ -154,14 +154,14 @@ namespace Geuneda.DataExtensions.Editor
 
 			if (!valueProp.hasVisibleChildren)
 			{
-				// Simple type - bind directly to preserve label
+				// 단순 타입 - 레이블을 유지하기 위해 직접 바인딩
 				var simpleField = new PropertyField { label = string.Empty };
 				simpleField.BindProperty(valueProp);
 				container.contentContainer.Add(simpleField);
 				return;
 			}
 
-			// Complex type - iterate through child properties
+			// 복합 타입 - 자식 프로퍼티를 순회
 			var iterator = valueProp.Copy();
 			var endProperty = valueProp.GetEndProperty();
 
@@ -172,7 +172,7 @@ namespace Geuneda.DataExtensions.Editor
 					if (SerializedProperty.EqualContents(iterator, endProperty)) 
 						break;
 
-					// Use BindProperty with a copy to preserve the label
+					// 레이블을 유지하기 위해 복사본으로 BindProperty 사용
 					var childField = new PropertyField { label = ObjectNames.NicifyVariableName(iterator.name) };
 					childField.BindProperty(iterator.Copy());
 					container.contentContainer.Add(childField);

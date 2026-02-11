@@ -58,7 +58,7 @@ namespace Geuneda.DataExtensions.Tests
 			Assert.AreEqual((floatP)0f, MathfloatP.Lerp((floatP)0f, (floatP)10f, (floatP)0f));
 			Assert.AreEqual((floatP)10f, MathfloatP.Lerp((floatP)0f, (floatP)10f, (floatP)1f));
 			Assert.AreEqual((floatP)5f, MathfloatP.Lerp((floatP)0f, (floatP)10f, (floatP)0.5f));
-			// Clamped
+			// 클램핑됨
 			Assert.AreEqual((floatP)10f, MathfloatP.Lerp((floatP)0f, (floatP)10f, (floatP)1.5f));
 		}
 
@@ -212,7 +212,7 @@ namespace Geuneda.DataExtensions.Tests
 		[Test]
 		public void Determinism_VerifyRawValues()
 		{
-			// Verify that basic operations produce identical raw values
+			// 기본 연산이 동일한 원시 값을 생성하는지 확인합니다
 			var a = (floatP)1.234f;
 			var b = (floatP)5.678f;
 			
@@ -226,34 +226,34 @@ namespace Geuneda.DataExtensions.Tests
 		}
 
 		// ══════════════════════════════════════════════════════════════
-		// Extended Tests for 50+ coverage per plan
+		// 계획당 50+ 커버리지를 위한 확장 테스트
 		// ══════════════════════════════════════════════════════════════
 
-		#region Trigonometry Extended Tests
+		#region 삼각함수 확장 테스트
 
 		[Test]
 		public void Sin_AllQuadrants()
 		{
-			// Quadrant 1 (0 to π/2)
+			// 제1사분면 (0에서 π/2)
 			Assert.Greater((float)MathfloatP.Sin((floatP)(Math.PI / 4.0)), 0f);
-			// Quadrant 2 (π/2 to π)
+			// 제2사분면 (π/2에서 π)
 			Assert.Greater((float)MathfloatP.Sin((floatP)(3 * Math.PI / 4.0)), 0f);
-			// Quadrant 3 (π to 3π/2)
+			// 제3사분면 (π에서 3π/2)
 			Assert.Less((float)MathfloatP.Sin((floatP)(5 * Math.PI / 4.0)), 0f);
-			// Quadrant 4 (3π/2 to 2π)
+			// 제4사분면 (3π/2에서 2π)
 			Assert.Less((float)MathfloatP.Sin((floatP)(7 * Math.PI / 4.0)), 0f);
 		}
 
 		[Test]
 		public void Cos_AllQuadrants()
 		{
-			// Quadrant 1
+			// 제1사분면
 			Assert.Greater((float)MathfloatP.Cos((floatP)(Math.PI / 4.0)), 0f);
-			// Quadrant 2
+			// 제2사분면
 			Assert.Less((float)MathfloatP.Cos((floatP)(3 * Math.PI / 4.0)), 0f);
-			// Quadrant 3
+			// 제3사분면
 			Assert.Less((float)MathfloatP.Cos((floatP)(5 * Math.PI / 4.0)), 0f);
-			// Quadrant 4
+			// 제4사분면
 			Assert.Greater((float)MathfloatP.Cos((floatP)(7 * Math.PI / 4.0)), 0f);
 		}
 
@@ -289,16 +289,16 @@ namespace Geuneda.DataExtensions.Tests
 		[Test]
 		public void Atan2_AllQuadrants()
 		{
-			// Quadrant 1
+			// 제1사분면
 			var q1 = MathfloatP.Atan2((floatP)1f, (floatP)1f);
 			Assert.AreEqual((float)(Math.PI / 4), (float)q1, _epsilon);
-			// Quadrant 2
+			// 제2사분면
 			var q2 = MathfloatP.Atan2((floatP)1f, (floatP)(-1f));
 			Assert.AreEqual((float)(3 * Math.PI / 4), (float)q2, _epsilon);
-			// Quadrant 3
+			// 제3사분면
 			var q3 = MathfloatP.Atan2((floatP)(-1f), (floatP)(-1f));
 			Assert.AreEqual((float)(-3 * Math.PI / 4), (float)q3, _epsilon);
-			// Quadrant 4
+			// 제4사분면
 			var q4 = MathfloatP.Atan2((floatP)(-1f), (floatP)1f);
 			Assert.AreEqual((float)(-Math.PI / 4), (float)q4, _epsilon);
 		}
@@ -306,19 +306,19 @@ namespace Geuneda.DataExtensions.Tests
 		[Test]
 		public void Atan2_OnAxes()
 		{
-			// Positive X axis
+			// 양의 X축
 			Assert.AreEqual(0f, (float)MathfloatP.Atan2(floatP.Zero, floatP.One), _epsilon);
-			// Positive Y axis
+			// 양의 Y축
 			Assert.AreEqual((float)(Math.PI / 2), (float)MathfloatP.Atan2(floatP.One, floatP.Zero), _epsilon);
-			// Negative X axis
+			// 음의 X축
 			Assert.AreEqual((float)Math.PI, (float)MathfloatP.Atan2(floatP.Zero, floatP.MinusOne), _epsilon);
-			// Negative Y axis
+			// 음의 Y축
 			Assert.AreEqual((float)(-Math.PI / 2), (float)MathfloatP.Atan2(floatP.MinusOne, floatP.Zero), _epsilon);
 		}
 
 		#endregion
 
-		#region Power/Exp/Log Extended Tests
+		#region 거듭제곱/Exp/Log 확장 테스트
 
 		[Test]
 		public void Pow_NegativeBase_IntExponent()
@@ -369,7 +369,7 @@ namespace Geuneda.DataExtensions.Tests
 
 		#endregion
 
-		#region Rounding Extended Tests
+		#region 반올림 확장 테스트
 
 		[Test]
 		public void Floor_Integer_ReturnsSame()
@@ -388,7 +388,7 @@ namespace Geuneda.DataExtensions.Tests
 		[Test]
 		public void Round_HalfCases()
 		{
-			// Implementation uses round-half-up behavior (not banker's rounding)
+			// 구현은 반올림 동작을 사용합니다(뱅커스 라운딩이 아님)
 			Assert.AreEqual((floatP)2f, MathfloatP.Round((floatP)1.5f));
 			Assert.AreEqual((floatP)3f, MathfloatP.Round((floatP)2.5f));
 		}
@@ -401,15 +401,15 @@ namespace Geuneda.DataExtensions.Tests
 
 		#endregion
 
-		#region Utility Extended Tests
+		#region 유틸리티 확장 테스트
 
 		[Test]
 		public void LerpAngle_Works()
 		{
-			// 0 to 90 degrees at 0.5
+			// 0에서 90도 사이에서 0.5
 			Assert.AreEqual(45f, (float)MathfloatP.LerpAngle((floatP)0f, (floatP)90f, (floatP)0.5f), _epsilon);
-			// Wrapping across 360: LerpAngle takes the shortest path but doesn't normalize the result
-			// delta = DeltaAngle(350, 20) = 30 (shortest path), result = 350 + 30 * 0.5 = 365
+			// 360도 래핑: LerpAngle은 최단 경로를 사용하지만 결과를 정규화하지 않습니다
+			// delta = DeltaAngle(350, 20) = 30 (최단 경로), result = 350 + 30 * 0.5 = 365
 			Assert.AreEqual(365f, (float)MathfloatP.LerpAngle((floatP)350f, (floatP)20f, (floatP)0.5f), _epsilon);
 		}
 
@@ -429,7 +429,7 @@ namespace Geuneda.DataExtensions.Tests
 
 		#endregion
 
-		#region Min/Max Extended Tests
+		#region Min/Max 확장 테스트
 
 		[Test]
 		public void Max_WithInfinity()
@@ -447,7 +447,7 @@ namespace Geuneda.DataExtensions.Tests
 
 		#endregion
 
-		#region Abs Extended Tests
+		#region Abs 확장 테스트
 
 		[Test]
 		public void Abs_Infinity()
@@ -458,7 +458,7 @@ namespace Geuneda.DataExtensions.Tests
 
 		#endregion
 
-		#region Clamp Extended Tests
+		#region Clamp 확장 테스트
 
 		[Test]
 		public void Clamp_AtBoundaries()
@@ -469,7 +469,7 @@ namespace Geuneda.DataExtensions.Tests
 
 		#endregion
 
-		#region Determinism Extended Tests
+		#region 결정성 확장 테스트
 
 		[Test]
 		public void AllTrigFunctions_RawValueConsistent()
@@ -510,7 +510,7 @@ namespace Geuneda.DataExtensions.Tests
 		[Test]
 		public void CrossPlatform_Determinism_ComplexExpression()
 		{
-			// This test verifies that a complex expression produces the same raw value
+			// 이 테스트는 복잡한 표현이 동일한 원시 값을 생성하는지 확인합니다
 			var a = (floatP)1.5f;
 			var b = (floatP)2.5f;
 			var c = (floatP)3.5f;
@@ -523,7 +523,7 @@ namespace Geuneda.DataExtensions.Tests
 
 		#endregion
 
-		#region ScaleB Tests
+		#region ScaleB 테스트
 
 		[Test]
 		public void ScaleB_PowerOfTwo()
@@ -535,10 +535,10 @@ namespace Geuneda.DataExtensions.Tests
 
 		#endregion
 
-		#region Edge Case Tests
+		#region 엣지 케이스 테스트
 
 		[Test]
-		public void Lerp_NegativeT_Clamped()
+		public void Lerp_NegativeT_클램핑됨()
 		{
 			Assert.AreEqual((floatP)0f, MathfloatP.Lerp((floatP)0f, (floatP)10f, (floatP)(-0.5f)));
 		}
@@ -546,9 +546,9 @@ namespace Geuneda.DataExtensions.Tests
 		[Test]
 		public void InverseLerp_OutOfRange()
 		{
-			// Value below range
+			// 범위 미만 값
 			Assert.AreEqual((floatP)0f, MathfloatP.InverseLerp((floatP)0f, (floatP)10f, (floatP)(-5f)));
-			// Value above range
+			// 범위 초과 값
 			Assert.AreEqual((floatP)1f, MathfloatP.InverseLerp((floatP)0f, (floatP)10f, (floatP)15f));
 		}
 

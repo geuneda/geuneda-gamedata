@@ -16,7 +16,7 @@ namespace Geuneda.DataExtensions.Tests.PlayMode.Smoke
 			var val = 0;
 			field.Observe((p, c) => val = c);
 			
-			yield return null; // Wait for one frame
+			yield return null; // 1프레임 대기
 			
 			field.Value = 20;
 			Assert.AreEqual(20, val);

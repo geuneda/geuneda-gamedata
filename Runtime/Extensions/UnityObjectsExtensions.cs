@@ -9,12 +9,12 @@ using UnityEngine.UI;
 namespace Geuneda.DataExtensions
 {
 	/// <summary>
-	/// Extension methods for Unity objects.
+	/// Unity 객체를 위한 확장 메서드입니다.
 	/// </summary>
 	public static class UnityObjectsExtensions
 	{
 		/// <summary>
-		/// Get the corners of the <see cref="RectTransform"/> in the local space of its Transform.
+		/// Transform의 로컬 공간에서 <see cref="RectTransform"/>의 코너를 가져옵니다.
 		/// </summary>
 		public static Vector3[] GetLocalCornersArray(this RectTransform transform)
 		{
@@ -34,7 +34,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Get the corners of the <see cref="RectTransform"/> in world space of its Transform.
+		/// Transform의 월드 공간에서 <see cref="RectTransform"/>의 코너를 가져옵니다.
 		/// </summary>
 		public static Vector3[] GetWorldCornersArray(this RectTransform transform)
 		{
@@ -49,8 +49,8 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Extension method for GraphicRaycaster that performs a raycast at the specified screen point.
-		/// Returns true if any object was hit.
+		/// 지정된 화면 지점에서 레이캐스트를 수행하는 GraphicRaycaster의 확장 메서드입니다.
+		/// 객체가 적중되면 true를 반환합니다.
 		/// </summary>
 		public static bool RaycastPoint(this GraphicRaycaster raycaster, Vector2 screenPoint, out List<RaycastResult> results)
 		{

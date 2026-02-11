@@ -39,12 +39,12 @@ namespace Geuneda.DataExtensions.Tests.Integration
 				return field1.Value + field2.Value;
 			});
 
-			computed.Observe((p, c) => { }); // Observe to trigger recompute on dependency change
-			var val = computed.Value; // initial compute
+			computed.Observe((p, c) => { }); // 의존성 변경 시 재계산을 트리거하기 위해 관찰합니다
+			var val = computed.Value; // 초기 계산
 			callCount = 0;
 
-			// When computed is included in the batch, it should only recompute once
-			// when the batch ends (not once per field)
+			// 계산 필드가 배치에 포함될 때, 한 번만 재계산해야 합니다
+			// 배치가 끝날 때(필드당 한 번이 아님)
 			using (var batch = new ObservableBatch())
 			{
 				batch.Add(field1);

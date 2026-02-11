@@ -14,7 +14,7 @@ using Object = UnityEngine.Object;
 namespace Geuneda.DataExtensions
 {
 	/// <summary>
-	/// Utility methods for both Unity <see cref="Object"/> and C# <see cref="object"/> types.
+	/// Unity <see cref="Object"/>와 C# <see cref="object"/> 타입 모두를 위한 유틸리티 메서드입니다.
 	/// </summary>
 	/// <author>Bruno Coimbra, https://github.com/coimbrastudios/framework/blob/master/Coimbra/Utilities/</author>
 	public static class ObjectExtensions
@@ -33,7 +33,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Destroys the <see cref="GameObject"/> correctly by checking if it isn't already an <see cref="Actor"/> first.
+		/// <see cref="Actor"/>인지 먼저 확인하여 <see cref="GameObject"/>를 올바르게 파괴합니다.
 		/// </summary>
 		/// <seealso cref="Actor.Dispose"/>
 		public static ObjectDisposeResult Dispose(this GameObject? gameObject, bool forceDestroy)
@@ -56,7 +56,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Gets or adds the given component type.
+		/// 주어진 컴포넌트 타입을 가져오거나 추가합니다.
 		/// </summary>
 		public static T GetOrAddComponent<T>(this GameObject gameObject)
 			where T : Component
@@ -65,7 +65,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Gets or adds the given component type.
+		/// 주어진 컴포넌트 타입을 가져오거나 추가합니다.
 		/// </summary>
 		public static Component GetOrAddComponent(this GameObject gameObject, SerializableType<Component> type)
 		{
@@ -73,7 +73,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Checks if the game object have the given component type.
+		/// 게임 오브젝트가 주어진 컴포넌트 타입을 가지고 있는지 확인합니다.
 		/// </summary>
 		public static bool HasComponent<T>(this GameObject gameObject)
 		{
@@ -83,7 +83,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Checks if the game object have the given component type.
+		/// 게임 오브젝트가 주어진 컴포넌트 타입을 가지고 있는지 확인합니다.
 		/// </summary>
 		public static bool HasComponent(this GameObject gameObject, Type type)
 		{
@@ -91,7 +91,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Check if object is currently persistent.
+		/// 객체가 현재 영구적인지 확인합니다.
 		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool IsPersistent(this GameObject gameObject)
@@ -102,7 +102,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Destroys the <see cref="Object"/> correctly by checking if it isn't already an <see cref="Actor"/> first.
+		/// <see cref="Actor"/>인지 먼저 확인하여 <see cref="Object"/>를 올바르게 파괴합니다.
 		/// </summary>
 		/// <seealso cref="Actor.Dispose"/>
 		public static ObjectDisposeResult Dispose(this Object o, bool forceDestroy)
@@ -135,23 +135,23 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Gets a valid object to be used with ?. and ?? operators.
+		/// ?. 및 ?? 연산자와 함께 사용할 유효한 객체를 가져옵니다.
 		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static T GetValid<T>(this T o)
 		{
 			if (o is Object obj)
 			{
-#pragma warning disable CS8603 // Possible null reference return.
+#pragma warning disable CS8603 // null 참조 반환 가능성.
 				return obj != null ? o : default;
-#pragma warning restore CS8603 // Possible null reference return.
+#pragma warning restore CS8603 // null 참조 반환 가능성.
 			}
 
 			return o;
 		}
 
 		/// <summary>
-		/// Safe way to check if an object is valid even if the object is an Unity <see cref="Object"/> and got destroyed already.
+		/// Unity <see cref="Object"/>이고 이미 파괴된 경우에도 객체가 유효한지 안전하게 확인하는 방법입니다.
 		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool IsValid(this object o)
@@ -176,7 +176,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Gets the <see cref="string"/> for the specified <see cref="Type"/>..
+		/// 지정된 <see cref="Type"/>에 대한 <see cref="string"/>을 가져옵니다.
 		/// </summary>
 		public static string GetDisplayString(this Type type)
 		{

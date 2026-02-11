@@ -8,8 +8,8 @@ using UnityEngine.UIElements;
 namespace Geuneda.DataExtensions.Tests
 {
 	/// <summary>
-	/// Unit tests for <see cref="ConfigTreeBuilder"/>, verifying that the tree view hierarchy
-	/// is correctly constructed from provider data and that search filtering works as expected.
+	/// <see cref="ConfigTreeBuilder"/>의 유닛 테스트로, 프로바이더 데이터에서
+	/// 트리 뷰 계층이 올바르게 구성되고 검색 필터링이 예상대로 작동하는지 확인합니다.
 	/// </summary>
 	[TestFixture]
 	public class ConfigTreeBuilderTests

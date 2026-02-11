@@ -12,8 +12,8 @@ using UnityEditor;
 namespace Geuneda.DataExtensions.Samples.Migration
 {
 	/// <summary>
-	/// Editor-only demo (play mode) for schema migration.
-	/// Demonstrates the real developer workflow using the Config Browser window.
+	/// 스키마 마이그레이션을 위한 에디터 전용 데모(플레이 모드)입니다.
+	/// Config Browser 창을 사용한 실제 개발자 워크플로우를 시연합니다.
 	/// </summary>
 	public sealed class MigrationDemoController : MonoBehaviour
 	{
@@ -43,9 +43,9 @@ namespace Geuneda.DataExtensions.Samples.Migration
 		{
 			_provider = new ConfigsProvider();
 
-			// Add SampleEnemyConfig instance
-			// Note: This is a v3 schema instance, but the provider version is set to 1
-			// so migrations appear as "Pending" in the Config Browser.
+			// SampleEnemyConfig 인스턴스 추가
+			// 참고: 이것은 v3 스키마 인스턴스이지만, 프로바이더 버전은 1로 설정되어
+			// Config Browser에서 마이그레이션이 "Pending"으로 표시됩니다.
 			var enemyConfigs = new List<SampleEnemyConfig>
 			{
 				new SampleEnemyConfig
@@ -67,7 +67,7 @@ namespace Geuneda.DataExtensions.Samples.Migration
 			};
 			_provider.AddConfigs(c => c.Id, enemyConfigs);
 
-			// Set provider version to 1 (legacy) so migrations show as Pending
+			// 마이그레이션이 Pending으로 표시되도록 프로바이더 버전을 1(레거시)로 설정
 			_provider.UpdateTo(version: 1, new Dictionary<Type, System.Collections.IEnumerable>());
 		}
 

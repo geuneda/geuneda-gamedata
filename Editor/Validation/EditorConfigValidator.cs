@@ -6,14 +6,14 @@ using Geuneda.DataExtensions;
 namespace GeunedaEditor.GameData
 {
 	/// <summary>
-	/// Provides editor-only validation utilities for config data.
-	/// Uses reflection to validate fields and properties decorated with <see cref="ValidationAttribute"/>.
+	/// 설정 데이터를 위한 에디터 전용 유효성 검사 유틸리티를 제공합니다.
+	/// <see cref="ValidationAttribute"/>로 장식된 필드와 프로퍼티를 리플렉션을 사용하여 유효성 검사합니다.
 	/// </summary>
 	public static class EditorConfigValidator
 	{
 		/// <summary>
-		/// Validates all configurations in the given provider.
-		/// Iterates through every registered config type and validates each config instance.
+		/// 주어진 프로바이더의 모든 설정을 유효성 검사합니다.
+		/// 등록된 모든 설정 타입을 순회하며 각 설정 인스턴스를 유효성 검사합니다.
 		/// </summary>
 		public static ValidationResult ValidateAll(IConfigsProvider provider)
 		{
@@ -35,7 +35,7 @@ namespace GeunedaEditor.GameData
 		}
 
 		/// <summary>
-		/// Validates all configurations of a specific type in the given provider.
+		/// 주어진 프로바이더에서 특정 타입의 모든 설정을 유효성 검사합니다.
 		/// </summary>
 		public static ValidationResult Validate<T>(IConfigsProvider provider)
 		{

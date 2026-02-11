@@ -16,7 +16,7 @@ namespace Geuneda.DataExtensions.Tests
 		[SetUp]
 		public void Init()
 		{
-			// Use a real dictionary that's iterable by the constructor
+			// 생성자에서 반복 가능한 실제 딕셔너리를 사용합니다
 			_originDictionary = new Dictionary<int, string> { { _key, _value } };
 			_dictionary = new ObservableResolverDictionary<int, int, int, string>(
 				_originDictionary,
@@ -77,67 +77,67 @@ namespace Geuneda.DataExtensions.Tests
 		[Test]
 		public void Rebind_ChangesOriginDictionary()
 		{
-			// Note: _key already exists in the dictionary from Init(), so we don't add it again
+			// 참고: _key는 Init()에서 이미 딕셔너리에 존재하므로 다시 추가하지 않습니다
 
-			// Create new dictionary and rebind
+			// 새 딕셔너리 생성 및 리바인딩
 			var newDictionary = new Dictionary<int, string> { { 100, "100" }, { 200, "200" } };
 			_dictionary.Rebind(
 				newDictionary,
 				origin => new KeyValuePair<int, int>(origin.Key, int.Parse(origin.Value)),
 				(key, value) => new KeyValuePair<int, string>(key, value.ToString()));
 
-			// Verify new dictionary is being used
+			// 새 딕셔너리가 사용되는지 확인
 			Assert.AreEqual(2, _dictionary.Count);
 			Assert.IsTrue(_dictionary.ContainsKey(100));
 			Assert.IsTrue(_dictionary.ContainsKey(200));
 			Assert.AreEqual(100, _dictionary[100]);
 			Assert.AreEqual(200, _dictionary[200]);
 
-			// Verify old dictionary is no longer used
+			// 이전 딕셔너리가 더 이상 사용되지 않는지 확인
 			Assert.IsFalse(_dictionary.ContainsKey(_key));
 		}
 
 		[Test]
 		public void Rebind_KeepsObservers()
 		{
-			// Setup observer
+			// 옵저버 설정
 			var observerCalls = 0;
 			_dictionary.ObservableUpdateFlag = ObservableUpdateFlag.UpdateOnly;
 			_dictionary.Observe((key, prev, curr, type) => observerCalls++);
 
-			// Create new dictionary and rebind
+			// 새 딕셔너리 생성 및 리바인딩
 			var newDictionary = new Dictionary<int, string> { { 100, "100" } };
 			_dictionary.Rebind(
 				newDictionary,
 				origin => new KeyValuePair<int, int>(origin.Key, int.Parse(origin.Value)),
 				(key, value) => new KeyValuePair<int, string>(key, value.ToString()));
 
-			// Trigger update and verify observer is still active
+			// 업데이트 트리거 및 옵저버 활성 상태 확인
 			_dictionary.Add(300, 300);
 			Assert.AreEqual(1, observerCalls);
 		}
 		[Test]
 		public void ContainsKey_ReturnsTrue_WhenKeyExists()
 		{
-			// Key was added in Init() via origin dictionary
+			// 키는 Init()에서 원본 딕셔너리를 통해 추가되었습니다
 			Assert.IsTrue(_dictionary.ContainsKey(_key));
 		}
 
 		[Test]
 		public void TryGetValue_ReturnsTrue_WhenKeyExists()
 		{
-			// Key was added in Init() via origin dictionary with value "1"
+			// 키는 Init()에서 값 "1"을 가진 원본 딕셔너리를 통해 추가되었습니다
 			Assert.IsTrue(_dictionary.TryGetValue(_key, out var value));
-			Assert.AreEqual(1, value); // parsed "1"
+			Assert.AreEqual(1, value); // "1" 파싱됨
 		}
 
 		[Test]
 		public void Add_InvalidFormat_ThrowsException()
 		{
-			// Create a dictionary with an invalid format value
+			// 유효하지 않은 형식 값을 가진 딕셔너리 생성
 			var invalidDictionary = new Dictionary<int, string> { { 99, "invalid" } };
 			
-			// The FormatException should be thrown during construction when parsing "invalid"
+			// FormatException은 "invalid" 파싱 시 생성자에서 발생해야 합니다
 			Assert.Throws<FormatException>(() =>
 			{
 				_ = new ObservableResolverDictionary<int, int, int, string>(

@@ -4,11 +4,11 @@ using UnityEngine;
 namespace Geuneda.DataExtensions
 {
 	/// <summary>
-	/// This object contains a pair of data.
-	/// Use <see cref="StructPair{TKey, TValue}"/> if the container data is value types.
+	/// 이 객체는 한 쌍의 데이터를 포함합니다.
+	/// Use <see cref="StructPair{TKey, TValue}"/> 컨테이너 데이터가 값 타입인 경우 사용하세요.
 	/// 
-	/// Use this data structure if the container data is reference types, in order to 
-	/// improve memory usage performance.
+	/// 메모리 사용 성능을 향상시키기 위해 컨테이너 데이터가 참조 타입인 경우 
+	/// 이 데이터 구조를 사용하세요.
 	/// </summary>
 	[Serializable]
 	public class Pair<TKey, TValue>
@@ -48,9 +48,9 @@ namespace Geuneda.DataExtensions
 	}
 
 	/// <summary>
-	/// Represents a 4-component integer vector.
-	/// Unity does not provide a native Vector4Int type. This struct fills that gap
-	/// for both Inspector serialization and JSON/network serialization.
+	/// 4개 컴포넌트 정수 벡터를 나타냅니다.
+	/// Unity는 네이티브 Vector4Int 타입을 제공하지 않습니다. 이 구조체는
+	/// 인스펙터 직렬화와 JSON/네트워크 직렬화 모두를 위해 그 공백을 채웁니다.
 	/// </summary>
 	[Serializable]
 	public struct Vector4Int
@@ -70,10 +70,10 @@ namespace Geuneda.DataExtensions
 	}
 
 	/// <summary>
-	/// Serializable wrapper for Unity's Vector4 and Quaternion types.
-	/// Used primarily for JSON/network serialization where Unity's native types
-	/// are not directly supported. Unity 6 natively serializes Vector4/Quaternion
-	/// for Inspector fields - this struct is for external serialization formats.
+	/// Unity의 Vector4 및 Quaternion 타입을 위한 직렬화 가능한 래퍼입니다.
+	/// 주로 Unity의 네이티브 타입이 직접 지원되지 않는
+	/// JSON/네트워크 직렬화에 사용됩니다. Unity 6은 인스펙터 필드에서
+	/// Vector4/Quaternion을 네이티브로 직렬화합니다 - 이 구조체는 외부 직렬화 형식용입니다.
 	/// </summary>
 	[Serializable]
 	public struct Vector4Serializable
@@ -113,10 +113,10 @@ namespace Geuneda.DataExtensions
 	}
 
 	/// <summary>
-	/// Serializable wrapper for Unity's Vector3 type.
-	/// Used primarily for JSON/network serialization where Unity's native types
-	/// are not directly supported. Unity 6 natively serializes Vector3 for 
-	/// Inspector fields - this struct is for external serialization formats.
+	/// Unity의 Vector3 타입을 위한 직렬화 가능한 래퍼입니다.
+	/// 주로 Unity의 네이티브 타입이 직접 지원되지 않는
+	/// JSON/네트워크 직렬화에 사용됩니다. Unity 6은 인스펙터 필드에서 
+	/// Vector3을 네이티브로 직렬화합니다 - 이 구조체는 외부 직렬화 형식용입니다.
 	/// </summary>
 	[Serializable]
 	public struct Vector3Serializable
@@ -144,10 +144,10 @@ namespace Geuneda.DataExtensions
 	}
 
 	/// <summary>
-	/// Serializable wrapper for Unity's Vector2 type.
-	/// Used primarily for JSON/network serialization where Unity's native types
-	/// are not directly supported. Unity 6 natively serializes Vector2 for 
-	/// Inspector fields - this struct is for external serialization formats.
+	/// Unity의 Vector2 타입을 위한 직렬화 가능한 래퍼입니다.
+	/// 주로 Unity의 네이티브 타입이 직접 지원되지 않는
+	/// JSON/네트워크 직렬화에 사용됩니다. Unity 6은 인스펙터 필드에서 
+	/// Vector3을 네이티브로 직렬화합니다 - 이 구조체는 외부 직렬화 형식용입니다.
 	/// </summary>
 	[Serializable]
 	public struct Vector2Serializable
@@ -173,10 +173,10 @@ namespace Geuneda.DataExtensions
 	}
 
 	/// <summary>
-	/// Serializable wrapper for Unity's Vector3Int type.
-	/// Used primarily for JSON/network serialization where Unity's native types
-	/// are not directly supported. Unity 6 natively serializes Vector3Int for 
-	/// Inspector fields - this struct is for external serialization formats.
+	/// Unity의 Vector3Int 타입을 위한 직렬화 가능한 래퍼입니다.
+	/// 주로 Unity의 네이티브 타입이 직접 지원되지 않는
+	/// JSON/네트워크 직렬화에 사용됩니다. Unity 6은 인스펙터 필드에서 
+	/// Vector3을 네이티브로 직렬화합니다 - 이 구조체는 외부 직렬화 형식용입니다.
 	/// </summary>
 	[Serializable]
 	public struct Vector3IntSerializable
@@ -204,10 +204,10 @@ namespace Geuneda.DataExtensions
 	}
 
 	/// <summary>
-	/// Serializable wrapper for Unity's Vector2Int type.
-	/// Used primarily for JSON/network serialization where Unity's native types
-	/// are not directly supported. Unity 6 natively serializes Vector2Int for 
-	/// Inspector fields - this struct is for external serialization formats.
+	/// Unity의 Vector2Int 타입을 위한 직렬화 가능한 래퍼입니다.
+	/// 주로 Unity의 네이티브 타입이 직접 지원되지 않는
+	/// JSON/네트워크 직렬화에 사용됩니다. Unity 6은 인스펙터 필드에서 
+	/// Vector3을 네이티브로 직렬화합니다 - 이 구조체는 외부 직렬화 형식용입니다.
 	/// </summary>
 	[Serializable]
 	public struct Vector2IntSerializable

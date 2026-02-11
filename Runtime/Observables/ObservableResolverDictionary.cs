@@ -6,72 +6,72 @@ namespace Geuneda.DataExtensions
 {
 	/// <inheritdoc />
 	/// <remarks>
-	/// This interface resolves between 2 dictionaries with different types of keys and values
+	/// 이 인터페이스는 다른 타입의 키와 값을 가진 2개의 딕셔너리 사이를 해석합니다
 	/// </remarks>
 	public interface IObservableResolverDictionaryReader<TKey, TValue, TKeyOrigin, TValueOrigin> :
 		IObservableDictionaryReader<TKey, TValue>
 	{
 		/// <summary>
-		/// The Original Dictionary that is being resolved across the entire interface
+		/// 전체 인터페이스에서 해석되는 원본 딕셔너리입니다
 		/// </summary>
 		ReadOnlyDictionary<TKeyOrigin, TValueOrigin> OriginDictionary { get; }
 
 		/// <summary>
-		/// Gets the value from the origin dictionary corresponding to the specified key.
+		/// 지정된 키에 해당하는 원본 딕셔너리의 값을 가져옵니다.
 		/// </summary>
-		/// <param name="key">The key to locate in the origin dictionary.</param>
-		/// <returns>The value from the origin dictionary corresponding to the specified key.</returns>
+		/// <param name="key">원본 딕셔너리에서 찾을 키입니다.</param>
+		/// <returns>지정된 키에 해당하는 원본 딕셔너리의 값입니다.</returns>
 		TValueOrigin GetOriginValue(TKey key);
 
 		/// <summary>
-		/// Attempts to get the value from the origin dictionary corresponding to the specified key.
+		/// 지정된 키에 해당하는 원본 딕셔너리의 값을 가져오려고 시도합니다.
 		/// </summary>
-		/// <param name="key">The key to locate in the origin dictionary.</param>
+		/// <param name="key">원본 딕셔너리에서 찾을 키입니다.</param>
 		/// <param name="value">When this method returns, contains the value from the origin dictionary corresponding to the specified key, if the key is found; otherwise, the default value for the type of the value parameter. This parameter is passed uninitialized.</param>
-		/// <returns>true if the origin dictionary contains an element with the specified key; otherwise, false.</returns>
+		/// <returns>원본 딕셔너리에 지정된 키의 요소가 포함되어 있으면 true, 그렇지 않으면 false입니다.</returns>
 		bool TryGetOriginValue(TKey key, out TValueOrigin value);
 	}
 
 	/// <inheritdoc cref="IObservableDictionary{TKey,TValue}"/>
 	/// <remarks>
-	/// This interface resolves between 2 dictionaries with different types of keys and values
+	/// 이 인터페이스는 다른 타입의 키와 값을 가진 2개의 딕셔너리 사이를 해석합니다
 	/// </remarks>
 	public interface IObservableResolverDictionary<TKey, TValue, TKeyOrigin, TValueOrigin> :
 		IObservableResolverDictionaryReader<TKey, TValue, TKeyOrigin, TValueOrigin>,
 		IObservableDictionary<TKey, TValue>
 	{
 		/// <summary>
-		/// Updates the value in the origin dictionary corresponding to the specified origin key.
+		/// 지정된 원본 키에 해당하는 원본 딕셔너리의 값을 업데이트합니다.
 		/// </summary>
-		/// <param name="key">The key of the value to update in the origin dictionary.</param>
-		/// <param name="value">The new value to set in the origin dictionary.</param>
+		/// <param name="key">원본 딕셔너리에서 업데이트할 값의 키입니다.</param>
+		/// <param name="value">원본 딕셔너리에 설정할 새 값입니다.</param>
 		void UpdateOrigin(TKeyOrigin key, TValueOrigin value);
 
 		/// <inheritdoc cref="Dictionary{TKey,TValue}.Add" />
 		/// <remarks>
-		/// Add's to the origin dictionary
+		/// 원본 딕셔너리에 추가합니다
 		/// </remarks>
 		void AddOrigin(TKeyOrigin key, TValueOrigin value);
 
 		/// <inheritdoc cref="Dictionary{TKey,TValue}.Remove" />
 		/// <remarks>
-		/// Remove's to the origin dictionary
+		/// 원본 딕셔너리에서 제거합니다
 		/// </remarks>
 		bool RemoveOrigin(TKeyOrigin key);
 
 		/// <inheritdoc cref="Dictionary{TKey,TValue}.Clear" />
 		/// <remarks>
-		/// Clear's to the origin dictionary
+		/// 원본 딕셔너리를 비웁니다
 		/// </remarks>
 		void ClearOrigin();
 
 		/// <summary>
-		/// Rebinds this dictionary to a new origin dictionary and resolver functions without losing existing observers.
-		/// The internal dictionary will be rebuilt from the new origin dictionary using the new resolvers.
+		/// 기존 옵저버를 잃지 않고 이 딕셔너리를 새 원본 딕셔너리와 리졸버 함수에 리바인딩합니다.
+		/// 내부 딕셔너리는 새 리졸버를 사용하여 새 원본 딕셔너리에서 다시 빌드됩니다.
 		/// </summary>
-		/// <param name="dictionary">The new origin dictionary to bind to</param>
-		/// <param name="fromOrignResolver">The new function to convert from origin types to this dictionary's types</param>
-		/// <param name="toOrignResolver">The new function to convert from this dictionary's types to origin types</param>
+		/// <param name="dictionary">바인딩할 새 원본 딕셔너리입니다</param>
+		/// <param name="fromOrignResolver">원본 타입에서 이 딕셔너리 타입으로 변환하는 새 함수입니다</param>
+		/// <param name="toOrignResolver">이 딕셔너리 타입에서 원본 타입으로 변환하는 새 함수입니다</param>
 		void Rebind(IDictionary<TKeyOrigin, TValueOrigin> dictionary,
 			Func<KeyValuePair<TKeyOrigin, TValueOrigin>, KeyValuePair<TKey, TValue>> fromOrignResolver,
 			Func<TKey, TValue, KeyValuePair<TKeyOrigin, TValueOrigin>> toOrignResolver);
@@ -113,7 +113,7 @@ namespace Geuneda.DataExtensions
 			_toOrignResolver = toOrignResolver;
 			_fromOrignResolver = fromOrignResolver;
 
-			// Rebuild the internal dictionary from the new origin dictionary
+			// 새 원본 딕셔너리에서 내부 딕셔너리를 다시 빌드합니다
 			Dictionary.Clear();
 			foreach (var pair in dictionary)
 			{

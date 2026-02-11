@@ -5,14 +5,14 @@ using UnityEngine.UIElements;
 namespace Geuneda.DataExtensions.Samples.ReactiveUiDemo
 {
 	/// <summary>
-	/// Entry point MonoBehaviour for the Reactive UI Demo (UI Toolkit) sample.
+	/// Reactive UI Demo (UI Toolkit) 샘플의 진입점 MonoBehaviour입니다.
 	/// </summary>
 	[DisallowMultipleComponent]
 	public sealed class ReactiveToolkitDemoController : MonoBehaviour
 	{
 		[SerializeField] private UIDocument _document;
 
-		// Cached UI elements
+		// 캐싱된 UI 요소
 		private ProgressBar _healthBar;
 		private Label _healthLabel;
 		private ScrollView _inventoryList;
@@ -29,7 +29,7 @@ namespace Geuneda.DataExtensions.Samples.ReactiveUiDemo
 		private Label _weaponBonusLabel;
 		private Label _totalDamageLabel;
 
-		// View helpers
+		// 뷰 헬퍼
 		private ReactiveToolkitHealthBar _healthBarView;
 		private ReactiveToolkitInventoryList _inventoryListView;
 		private ReactiveToolkitStatsPanel _statsPanel;
@@ -146,7 +146,7 @@ namespace Geuneda.DataExtensions.Samples.ReactiveUiDemo
 
 		private void ApplyBatchUpdate()
 		{
-			// Batch multiple changes so observers get a consolidated update.
+			// 옵저버가 통합 업데이트를 받을 수 있도록 여러 변경을 일괄 처리합니다.
 			using var batch = new ObservableBatch();
 			batch.Add(_data.Health);
 			batch.Add(_data.BaseDamage);

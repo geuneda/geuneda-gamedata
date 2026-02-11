@@ -6,28 +6,28 @@ namespace Geuneda.DataExtensions
 {
 	/// <inheritdoc />
 	/// <remarks>
-	/// Extends the <see cref="IConfigsProvider"/> behaviour by allowing it to add configs to the provider
+	/// 프로바이더에 설정을 추가할 수 있도록 <see cref="IConfigsProvider"/> 동작을 확장합니다
 	/// </remarks>
 	public interface IConfigsAdder : IConfigsProvider
 	{
 		/// <summary>
-		/// Adds the given unique single <paramref name="config"/> to the container.
+		/// 주어진 고유 단일 <paramref name="config"/>을 컨테이너에 추가합니다.
 		/// </summary>
 		void AddSingletonConfig<T>(T config);
 
 		/// <summary>
-		/// Adds the given <paramref name="configList"/> to the container.
-		/// The configuration will use the given <paramref name="referenceIdResolver"/> to map each config to it's defined id.
+		/// 주어진 <paramref name="configList"/>를 컨테이너에 추가합니다.
+		/// 설정은 주어진 <paramref name="referenceIdResolver"/>를 사용하여 각 설정을 정의된 ID에 매핑합니다.
 		/// </summary>
 		void AddConfigs<T>(Func<T, int> referenceIdResolver, IList<T> configList);
 
 		/// <summary>
-		/// Adds the given dictionary of configuration lists to the config.
+		/// 주어진 설정 목록 딕셔너리를 설정에 추가합니다.
 		/// </summary>
 		void AddAllConfigs(IReadOnlyDictionary<Type, IEnumerable> configs);
 
 		/// <summary>
-		/// Updates the given configuration to the given version
+		/// 주어진 설정을 주어진 버전으로 업데이트합니다
 		/// </summary>
 		void UpdateTo(ulong version, IReadOnlyDictionary<Type, IEnumerable> toUpdate);
 	}

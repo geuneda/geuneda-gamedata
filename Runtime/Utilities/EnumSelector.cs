@@ -7,30 +7,30 @@ using UnityEngine;
 namespace Geuneda.DataExtensions
 {
 	/// <summary>
-	/// Tags the current object as an <seealso cref="EnumSelector{T}"/>
+	/// 현재 객체를 다음으로 태그합니다: <seealso cref="EnumSelector{T}"/>
 	/// </summary>
 	public interface IEnumSelector
 	{
 		/// <summary>
-		/// Requests the enum index number of current selected enum
+		/// 현재 선택된 열거형의 인덱스 번호를 요청합니다
 		/// </summary>
 		int GetSelectedIndex();
 
 		/// <summary>
-		/// Requests if the selected enum is a valid enum.
-		/// If the enum values was changed and the selected string was removed, then the selected enum will be invalid.
+		/// 선택된 열거형이 유효한 열거형인지 요청합니다.
+		/// 열거형 값이 변경되고 선택된 문자열이 제거되면, 선택된 열거형은 유효하지 않게 됩니다.
 		/// </summary>
 		bool HasValidSelection();
 
 		/// <summary>
-		/// Requests the enum selected value as string
+		/// 선택된 열거형 값을 문자열로 요청합니다
 		/// </summary>
 		string GetSelectionString();
 	}
 
 	/// <summary>
-	/// The EnumSelector <typeparamref name="T"/> serves as a dropdown selection field that offers all enum values of <typeparamref name="T"/>. 
-	/// It stores the enum name instead of the enum value, to prevent pointing to the wrong enum when new values are added or removed
+	/// The EnumSelector <typeparamref name="T"/> 의 모든 열거형 값을 제공하는 드롭다운 선택 필드 역할을 합니다. <typeparamref name="T"/>. 
+	/// 새 값이 추가되거나 제거될 때 잘못된 열거형을 가리키는 것을 방지하기 위해 열거형 값 대신 열거형 이름을 저장합니다
 	/// </summary>
 	[Serializable]
 	public class EnumSelector<T> : IEnumSelector where T : Enum
@@ -43,7 +43,7 @@ namespace Geuneda.DataExtensions
 
 		static EnumSelector()
 		{
-			// Optimized lookups from O(n) to O(1) by introducing a static dictionary cache (EnumDictionary)
+			// 정적 딕셔너리 캐시(EnumDictionary)를 도입하여 조회를 O(n)에서 O(1)로 최적화했습니다
 			for (var i = 0; i < EnumNames.Length; i++)
 			{
 				EnumDictionary[EnumNames[i]] = EnumValues[i];
@@ -86,7 +86,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Requests the enum selected value
+		/// 선택된 열거형 값을 요청합니다
 		/// </summary>
 		public T GetSelection()
 		{
@@ -101,7 +101,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Sets the enum value to <paramref name="data"/>
+		/// 열거형 값을 다음으로 설정합니다: <paramref name="data"/>
 		/// </summary>
 		public void SetSelection(T data)
 		{

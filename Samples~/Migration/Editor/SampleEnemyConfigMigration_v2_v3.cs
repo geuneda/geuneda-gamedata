@@ -4,13 +4,13 @@ using Newtonsoft.Json.Linq;
 namespace Geuneda.DataExtensions.Samples.Migration
 {
 	/// <summary>
-	/// Migration from version 2 to version 3 for <see cref="SampleEnemyConfig"/>.
+	/// <see cref="SampleEnemyConfig"/>의 버전 2에서 버전 3으로의 마이그레이션입니다.
 	/// 
-	/// Demonstrates:
-	/// - Field splitting (Health → BaseHealth + BonusHealth)
-	/// - Nested object creation (Stats with derived DamageReduction)
-	/// - Array initialization (Abilities)
-	/// - Data derivation (computing values from existing fields)
+	/// 시연 내용:
+	/// - 필드 분할 (Health -> BaseHealth + BonusHealth)
+	/// - 중첩 객체 생성 (파생된 DamageReduction을 가진 Stats)
+	/// - 배열 초기화 (Abilities)
+	/// - 데이터 파생 (기존 필드에서 값 계산)
 	/// </summary>
 	[ConfigMigration(typeof(SampleEnemyConfig))]
 	public sealed class SampleEnemyConfigMigration_v2_v3 : IConfigMigration
@@ -21,40 +21,40 @@ namespace Geuneda.DataExtensions.Samples.Migration
 		public void Migrate(JObject configJson)
 		{
 			// ─────────────────────────────────────────────────────────────────
-			// Pattern 1: Field Splitting (Health → BaseHealth + BonusHealth)
-			// Split original health: 80% base, 20% bonus
+			// 패턴 1: 필드 분할 (Health -> BaseHealth + BonusHealth)
+			// 원본 체력 분할: 80% 기본, 20% 보너스
 			// ─────────────────────────────────────────────────────────────────
 			if (configJson["Health"] != null)
 			{
 				var totalHealth = configJson["Health"].Value<int>();
 				
-				// Calculate split (80% base, 20% bonus, ensuring no rounding loss)
+				// 분할 계산 (80% 기본, 20% 보너스, 반올림 손실 없음 보장)
 				var baseHealth = (int)(totalHealth * 0.8f);
 				var bonusHealth = totalHealth - baseHealth;
 
 				configJson["BaseHealth"] = baseHealth;
 				configJson["BonusHealth"] = bonusHealth;
 				
-				// Remove the old field
+				// 이전 필드를 제거합니다
 				configJson.Remove("Health");
 			}
 			else
 			{
-				// Fallback if Health is somehow missing
+				// Health가 누락된 경우의 대체 처리
 				if (configJson["BaseHealth"] == null) configJson["BaseHealth"] = 0;
 				if (configJson["BonusHealth"] == null) configJson["BonusHealth"] = 0;
 			}
 
 			// ─────────────────────────────────────────────────────────────────
-			// Pattern 2: Nested Object Creation with Derived Values
-			// Create Stats object with DamageReduction derived from ArmorType
+			// 패턴 2: 파생 값을 가진 중첩 객체 생성
+			// ArmorType에서 파생된 DamageReduction을 가진 Stats 객체 생성
 			// ─────────────────────────────────────────────────────────────────
 			if (configJson["Stats"] == null)
 			{
 				var armorType = configJson["ArmorType"]?.Value<string>() ?? "Light";
 				var attackDamage = configJson["AttackDamage"]?.Value<int>() ?? 0;
 
-				// Derive DamageReduction from ArmorType
+				// ArmorType에서 DamageReduction을 파생합니다
 				int damageReduction;
 				switch (armorType)
 				{
@@ -70,12 +70,12 @@ namespace Geuneda.DataExtensions.Samples.Migration
 						break;
 				}
 
-				// Derive CritChance from AttackDamage (higher damage = lower crit, cap at 25%)
+				// AttackDamage에서 CritChance를 파생합니다 (높은 피해 = 낮은 치명타, 25% 상한)
 				var critChance = attackDamage > 0 
 					? System.Math.Min(25, 500 / attackDamage) 
 					: 10;
 
-				// Derive MoveSpeedMultiplier from ArmorType
+				// ArmorType에서 MoveSpeedMultiplier를 파생합니다
 				float moveSpeed;
 				switch (armorType)
 				{
@@ -100,8 +100,8 @@ namespace Geuneda.DataExtensions.Samples.Migration
 			}
 
 			// ─────────────────────────────────────────────────────────────────
-			// Pattern 3: Array Initialization
-			// Initialize empty Abilities array for future use
+			// 패턴 3: 배열 초기화
+			// 향후 사용을 위해 빈 Abilities 배열을 초기화합니다
 			// ─────────────────────────────────────────────────────────────────
 			if (configJson["Abilities"] == null)
 			{

@@ -4,45 +4,45 @@ using System.Collections.Generic;
 namespace Geuneda.DataExtensions
 {
 	/// <summary>
-	/// A field with the possibility to observe changes to it's elements defined <see cref="ObservableUpdateType"/> rules
+	/// <see cref="ObservableUpdateType"/> 규칙에 정의된 요소 변경을 관찰할 수 있는 필드입니다
 	/// </summary>
 	public interface IObservableFieldReader<out T>
 	{
 		/// <summary>
-		/// The field value
+		/// 필드 값
 		/// </summary>
 		T Value { get; }
 
 		/// <summary>
-		/// Starts a batch update for this field. 
-		/// Notifications will be suppressed until the returned object is disposed.
+		/// 이 필드의 배치 업데이트를 시작합니다.
+		/// 반환된 객체가 해제될 때까지 알림이 억제됩니다.
 		/// </summary>
 		IDisposable BeginBatch();
 
 		/// <summary>
-		/// Observes this field with the given <paramref name="onUpdate"/> when any data changes
+		/// 데이터가 변경될 때 주어진 <paramref name="onUpdate"/>로 이 필드를 관찰합니다
 		/// </summary>
 		void Observe(Action<T, T> onUpdate);
 
 		/// <inheritdoc cref="Observe" />
 		/// <remarks>
-		/// It invokes the given <paramref name="onUpdate"/> method before starting to observe to this field
+		/// 이 필드를 관찰하기 시작하기 전에 주어진 <paramref name="onUpdate"/> 메서드를 호출합니다
 		/// </remarks>
 		void InvokeObserve(Action<T, T> onUpdate);
 
 		/// <summary>
-		/// Stops observing this field with the given <paramref name="onUpdate"/> of any data changes
+		/// 주어진 <paramref name="onUpdate"/>로 이 필드의 모든 데이터 변경 관찰을 중지합니다
 		/// </summary>
 		void StopObserving(Action<T, T> onUpdate);
 
 		/// <summary>
-		/// Stops observing this field from all the given <paramref name="subscriber"/> calls.
-		/// If the given <paramref name="subscriber"/> is null then will stop observing from everything.
+		/// 주어진 <paramref name="subscriber"/> 호출의 모든 필드 관찰을 중지합니다.
+		/// 주어진 <paramref name="subscriber"/>가 null이면 모든 관찰을 중지합니다.
 		/// </summary>
 		void StopObservingAll(object subscriber = null);
 
 		/// <remarks>
-		/// It invokes any update method that is observing to this field
+		/// 이 필드를 관찰 중인 모든 업데이트 메서드를 호출합니다
 		/// </remarks>
 		void InvokeUpdate();
 	}
@@ -51,14 +51,14 @@ namespace Geuneda.DataExtensions
 	public interface IObservableField<T> : IObservableFieldReader<T>
 	{
 		/// <summary>
-		/// The field value with possibility to be changed
+		/// 변경될 수 있는 필드 값
 		/// </summary>
 		new T Value { get; set; }
 
 		/// <summary>
-		/// Rebinds this field to a new value without losing existing observers.
+		/// 기존 옵저버를 잃지 않고 이 필드를 새 값에 리바인딩합니다.
 		/// </summary>
-		/// <param name="initialValue">The new initial value for the field</param>
+		/// <param name="initialValue">필드의 새 초기 값입니다</param>
 		void Rebind(T initialValue);
 	}
 
@@ -194,8 +194,8 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Gets the current value without triggering dependency tracking.
-		/// Override in derived classes that store values differently.
+		/// 의존성 추적을 트리거하지 않고 현재 값을 가져옵니다.
+		/// 값을 다르게 저장하는 파생 클래스에서 재정의합니다.
 		/// </summary>
 		protected virtual T GetCurrentValue() => _value;
 
@@ -206,7 +206,7 @@ namespace Geuneda.DataExtensions
 				return;
 			}
 
-			// Cache value to avoid repeated Value getter calls (which trigger ComputedTracker.OnRead)
+			// 반복적인 Value 게터 호출을 피하기 위해 값을 캐싱합니다(ComputedTracker.OnRead를 트리거하므로)
 			var currentValue = GetCurrentValue();
 
 			for (var i = 0; i < _updateActions.Count; i++)
@@ -220,21 +220,21 @@ namespace Geuneda.DataExtensions
 			}
 		}
 
-		// Declared as a partial method so calls are compiled out in player builds.
+		// 플레이어 빌드에서 호출이 컴파일 제외되도록 partial 메서드로 선언됩니다.
 		partial void EditorDebug_Register();
 
 		// ═══════════════════════════════════════════════════════════════════════════
-		// EDITOR-ONLY: Observable Debug Window Support
+		// 에디터 전용: Observable 디버그 창 지원
 		// ═══════════════════════════════════════════════════════════════════════════
-		// This section provides automatic registration of observable instances for
-		// the Observable Debug Window (Tools > Game Data > Observable Debugger).
+		// 이 섹션은 Observable 디버그 창(Tools > Game Data > Observable Debugger)을 위한
+		// Observable 인스턴스의 자동 등록을 제공합니다.
 		//
-		// Features:
-		// - Zero configuration required from users
-		// - Automatic tracking using weak references (no memory leaks)
-		// - Live value/subscriber inspection via captured getters
+		// 기능:
+		// - 사용자 설정 불필요
+		// - 약한 참조를 사용한 자동 추적 (메모리 누수 없음)
+		// - 캡처된 게터를 통한 실시간 값/구독자 검사
 		//
-		// This code is compiled out in builds via #if UNITY_EDITOR.
+		// 이 코드는 #if UNITY_EDITOR를 통해 빌드에서 컴파일 제외됩니다.
 		// ═══════════════════════════════════════════════════════════════════════════
 #if UNITY_EDITOR
 		partial void EditorDebug_Register()

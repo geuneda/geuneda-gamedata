@@ -4,8 +4,8 @@ using UnityEngine;
 namespace Geuneda.DataExtensions.Samples.DesignerWorkflow
 {
 	/// <summary>
-	/// Loads designer-authored ScriptableObject assets into a runtime <see cref="ConfigsProvider"/>.
-	/// This sample uses Resources to avoid requiring scene references.
+	/// 디자이너가 작성한 ScriptableObject 에셋을 런타임 <see cref="ConfigsProvider"/>에 로드합니다.
+	/// 이 샘플은 씬 참조가 필요하지 않도록 Resources를 사용합니다.
 	/// </summary>
 	public sealed class ConfigLoader
 	{
@@ -21,7 +21,7 @@ namespace Geuneda.DataExtensions.Samples.DesignerWorkflow
 
 			var provider = new ConfigsProvider();
 
-			// Settings: stored as a single entry (key 0)
+			// 설정: 단일 항목으로 저장됨 (키 0)
 			var settings = default(GameSettingsConfig);
 			if (settingsAsset != null && settingsAsset.ConfigsDictionary != null &&
 			    settingsAsset.ConfigsDictionary.TryGetValue(GameSettingsAsset.SingletonKey, out var loadedSettings))
@@ -30,7 +30,7 @@ namespace Geuneda.DataExtensions.Samples.DesignerWorkflow
 			}
 			provider.AddSingletonConfig(settings);
 
-			// Enemies: pair list -> list -> id-keyed provider
+			// 적: 쌍 목록 -> 목록 -> ID 키 프로바이더
 			var enemies = new List<EnemyConfig>();
 			if (enemiesAsset != null && enemiesAsset.Configs != null)
 			{
@@ -41,7 +41,7 @@ namespace Geuneda.DataExtensions.Samples.DesignerWorkflow
 			}
 			provider.AddConfigs(e => e.Id, enemies);
 
-			// Loot table: stored in a UnitySerializedDictionary-derived concrete type
+			// 전리품 테이블: UnitySerializedDictionary 파생 구체 타입에 저장됨
 			var lootTable = lootAsset != null ? lootAsset.DropRates : new LootTable();
 
 			return new LoadedConfigs(provider, settingsAsset, enemiesAsset, lootAsset, enemies, lootTable);

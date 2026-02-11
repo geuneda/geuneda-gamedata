@@ -6,9 +6,9 @@ using NUnit.Framework;
 namespace Geuneda.DataExtensions.Tests
 {
 	/// <summary>
-	/// Unit tests for <see cref="ConfigsEditorUtil"/>, verifying that reflection-based
-	/// config reading from <c>Dictionary&lt;int, T&gt;</c> containers works correctly
-	/// and rejects unsupported container types.
+	/// <see cref="ConfigsEditorUtil"/>의 유닛 테스트로, 리플렉션 기반
+	/// <c>Dictionary&lt;int, T&gt;</c> 컨테이너에서의 설정 읽기가 올바르게 작동하고
+	/// 지원되지 않는 컨테이너 타입을 거부하는지 확인합니다.
 	/// </summary>
 	[TestFixture]
 	public class ConfigsEditorUtilTests

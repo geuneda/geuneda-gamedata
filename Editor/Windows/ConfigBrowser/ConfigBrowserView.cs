@@ -7,9 +7,9 @@ using UnityEngine.UIElements;
 namespace Geuneda.DataExtensions.Editor
 {
 	/// <summary>
-	/// Constructs and manages the entire Config Browser UI layout using UI Toolkit.
-	/// Exposes events for user interactions (search, validate, export, tab switching, tree selection)
-	/// that <see cref="ConfigBrowserWindow"/> subscribes to. This class is purely presentational.
+	/// UI Toolkit을 사용하여 전체 Config Browser UI 레이아웃을 구성하고 관리합니다.
+	/// 사용자 상호작용(검색, 유효성 검사, 내보내기, 탭 전환, 트리 선택)에 대한 이벤트를 노출하며
+	/// <see cref="ConfigBrowserWindow"/>가 구독합니다. 이 클래스는 순수하게 표현 계층입니다.
 	/// </summary>
 	internal sealed class ConfigBrowserView
 	{
@@ -53,24 +53,24 @@ namespace Geuneda.DataExtensions.Editor
 			Build(root);
 		}
 
-		/// <summary>Returns true after <see cref="Build"/> has completed.</summary>
+		/// <summary><see cref="Build"/>가 완료된 후 true를 반환합니다.</summary>
 		public bool IsInitialized => _detailsHeader != null;
 
-		/// <summary>The top-level toolbar element.</summary>
+		/// <summary>최상위 도구 모음 요소입니다.</summary>
 		public Toolbar Toolbar => _toolbar;
-		/// <summary>The provider selection dropdown menu in the toolbar.</summary>
+		/// <summary>도구 모음의 프로바이더 선택 드롭다운 메뉴입니다.</summary>
 		public ToolbarMenu ProviderMenu => _providerMenu;
-		/// <summary>Root container for the Browse tab content.</summary>
+		/// <summary>Browse 탭 콘텐츠의 루트 컨테이너입니다.</summary>
 		public VisualElement BrowseRoot => _browseRoot;
-		/// <summary>Root container for the Migrations tab content.</summary>
+		/// <summary>Migrations 탭 콘텐츠의 루트 컨테이너입니다.</summary>
 		public VisualElement MigrationsRoot => _migrationsRoot;
-		/// <summary>The embedded <see cref="MigrationPanelElement"/> inside the Migrations tab.</summary>
+		/// <summary>Migrations 탭 내부의 내장된 <see cref="MigrationPanelElement"/>입니다.</summary>
 		public MigrationPanelElement MigrationPanel => _migrationPanel;
-		/// <summary>Current text in the search field.</summary>
+		/// <summary>검색 필드의 현재 텍스트입니다.</summary>
 		public string SearchText => _searchField?.value;
 
 		/// <summary>
-		/// Replaces the current provider dropdown menu in the toolbar with <paramref name="newMenu"/>.
+		/// 도구 모음의 현재 프로바이더 드롭다운 메뉴를 <paramref name="newMenu"/>로 교체합니다.
 		/// </summary>
 		public void ReplaceProviderMenu(ToolbarMenu newMenu)
 		{
@@ -81,8 +81,8 @@ namespace Geuneda.DataExtensions.Editor
 		}
 
 		/// <summary>
-		/// Switches the visible tab. When <paramref name="isBrowse"/> is true the Browse tab is shown;
-		/// otherwise the Migrations tab is shown.
+		/// 표시되는 탭을 전환합니다. <paramref name="isBrowse"/>가 true이면 Browse 탭이 표시되고,
+		/// 그렇지 않으면 Migrations 탭이 표시됩니다.
 		/// </summary>
 		public void SetActiveTab(bool isBrowse)
 		{
@@ -93,7 +93,7 @@ namespace Geuneda.DataExtensions.Editor
 		}
 
 		/// <summary>
-		/// Replaces the tree view root items and rebuilds the visual tree.
+		/// 트리 뷰 루트 항목을 교체하고 시각적 트리를 다시 빌드합니다.
 		/// </summary>
 		public void SetTreeItems(IList<TreeViewItemData<ConfigNode>> items)
 		{
@@ -102,7 +102,7 @@ namespace Geuneda.DataExtensions.Editor
 		}
 
 		/// <summary>
-		/// Programmatically selects the tree item with the given <paramref name="itemId"/> and scrolls it into view.
+		/// 주어진 <paramref name="itemId"/>로 트리 항목을 프로그래밍 방식으로 선택하고 뷰로 스크롤합니다.
 		/// </summary>
 		public void SelectTreeItem(int itemId)
 		{
@@ -111,8 +111,8 @@ namespace Geuneda.DataExtensions.Editor
 		}
 
 		/// <summary>
-		/// Updates the details panel to display the given <paramref name="selection"/>.
-		/// Shows the config <paramref name="displayName"/> in the header and the serialized <paramref name="json"/> in the viewer.
+		/// 주어진 <paramref name="selection"/>을 표시하도록 상세 패널을 업데이트합니다.
+		/// 헤더에 설정 <paramref name="displayName"/>을 표시하고 뷰어에 직렬화된 <paramref name="json"/>을 표시합니다.
 		/// </summary>
 		public void SetSelection(ConfigSelection selection, string displayName, string json)
 		{
@@ -132,9 +132,9 @@ namespace Geuneda.DataExtensions.Editor
 		}
 
 		/// <summary>
-		/// Populates the validation panel with the given <paramref name="errors"/> list,
-		/// updating the header to reflect the active <paramref name="filter"/> scope.
-		/// When <paramref name="providerExists"/> is false, shows an informational message.
+		/// 주어진 <paramref name="errors"/> 목록으로 유효성 검사 패널을 채우고,
+		/// 활성 <paramref name="filter"/> 범위를 반영하도록 헤더를 업데이트합니다.
+		/// <paramref name="providerExists"/>가 false이면 안내 메시지를 표시합니다.
 		/// </summary>
 		public void SetValidationResults(List<ValidationErrorInfo> errors, ValidationFilter filter, bool providerExists)
 		{
@@ -167,7 +167,7 @@ namespace Geuneda.DataExtensions.Editor
 		}
 
 		/// <summary>
-		/// Removes all elements from the validation result list.
+		/// 유효성 검사 결과 목록에서 모든 요소를 제거합니다.
 		/// </summary>
 		public void ClearValidationList()
 		{
@@ -179,10 +179,10 @@ namespace Geuneda.DataExtensions.Editor
 			root.Clear();
 			root.style.flexGrow = 1;
 
-			// Global toolbar: Provider + Tabs
+			// 전역 도구 모음: 프로바이더 + 탭
 			root.Add(BuildToolbar());
 
-			// Tab content areas
+			// 탭 콘텐츠 영역
 			_browseRoot = BuildBrowseRoot();
 			_migrationsRoot = BuildMigrationsRoot();
 
@@ -199,7 +199,7 @@ namespace Geuneda.DataExtensions.Editor
 			_providerMenu = new ToolbarMenu { text = "No providers" };
 			_providerMenu.style.minWidth = 280;
 
-			// Tabs integrated into the global toolbar
+			// 전역 도구 모음에 통합된 탭
 			_browseTab = new ToolbarToggle { text = "Browse", value = true };
 			_migrationsTab = new ToolbarToggle { text = "Migrations", value = false };
 
@@ -221,7 +221,7 @@ namespace Geuneda.DataExtensions.Editor
 				}
 			});
 
-			// Spacer to push tabs to the left after provider menu
+			// 프로바이더 메뉴 뒤에 탭을 왼쪽으로 밀기 위한 스페이서
 			var spacer = new VisualElement { style = { flexGrow = 1 } };
 
 			_toolbar.Add(_providerMenu);
@@ -261,12 +261,12 @@ namespace Geuneda.DataExtensions.Editor
 		{
 			var root = new VisualElement { style = { flexGrow = 1 } };
 
-			// Browse action bar: Search + Validate All + Export All
+			// Browse 액션 바: 검색 + 전체 검증 + 전체 내보내기
 			root.Add(BuildBrowseActionBar());
 
-			// Horizontal split: tree view (left) + details panel (right)
+			// 가로 분할: 트리 뷰 (왼쪽) + 상세 패널 (오른쪽)
 			var horizontalSplit = new TwoPaneSplitView(0, 260, TwoPaneSplitViewOrientation.Horizontal);
-			horizontalSplit.viewDataKey = "ConfigBrowser_HorizontalSplit_v2"; // Changed key to reset persisted state
+			horizontalSplit.viewDataKey = "ConfigBrowser_HorizontalSplit_v2"; // 지속된 상태를 초기화하기 위해 키를 변경함
 			horizontalSplit.style.flexGrow = 1;
 			horizontalSplit.style.minHeight = 200;
 
@@ -282,7 +282,7 @@ namespace Geuneda.DataExtensions.Editor
 					var label = (Label)element;
 					label.text = node.DisplayName;
 
-					// Style based on node kind
+					// 노드 종류에 따른 스타일
 					label.style.unityFontStyleAndWeight = node.Kind == ConfigNodeKind.Header
 						? FontStyle.Bold
 						: FontStyle.Normal;
@@ -290,15 +290,15 @@ namespace Geuneda.DataExtensions.Editor
 			};
 			_treeView.selectionChanged += selection => TreeSelectionChanged?.Invoke(selection);
 
-			// Wrap TreeView in a container with minimum dimensions to prevent collapse
+			// 축소를 방지하기 위해 최소 크기의 컨테이너로 TreeView를 래핑
 			var treeContainer = new VisualElement { style = { flexGrow = 1, minWidth = 200 } };
 			treeContainer.Add(_treeView);
 			horizontalSplit.Add(treeContainer);
 			horizontalSplit.Add(BuildDetailsPanel());
 
-			// Vertical split: content (top) + validation panel (bottom)
+			// 세로 분할: 콘텐츠 (상단) + 유효성 검사 패널 (하단)
 			var verticalSplit = new TwoPaneSplitView(1, 180, TwoPaneSplitViewOrientation.Vertical);
-			verticalSplit.viewDataKey = "ConfigBrowser_BrowseVerticalSplit_v2"; // Changed key to reset persisted state
+			verticalSplit.viewDataKey = "ConfigBrowser_BrowseVerticalSplit_v2"; // 지속된 상태를 초기화하기 위해 키를 변경함
 			verticalSplit.style.flexGrow = 1;
 
 			verticalSplit.Add(horizontalSplit);
@@ -344,7 +344,7 @@ namespace Geuneda.DataExtensions.Editor
 			_detailsHeader = new Label("No selection");
 			_detailsHeader.style.unityFontStyleAndWeight = FontStyle.Bold;
 
-			// Button container for per-config actions
+			// 설정별 작업을 위한 버튼 컨테이너
 			var buttonContainer = new VisualElement
 			{
 				style =

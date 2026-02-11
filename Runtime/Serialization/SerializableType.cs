@@ -5,13 +5,13 @@ using UnityEngine;
 namespace Geuneda.DataExtensions
 {
 	/// <summary>
-	/// <see cref="Type"/> that can be viewed, modified and saved from the inspector.
+	/// <see cref="Type"/> 인스펙터에서 보고, 수정하고, 저장할 수 있는 타입입니다.
 	/// </summary>
 	/// <remarks>
-	/// It is compatible with <see cref="FilterTypesAttributeBase"/> attributes.
+	/// <see cref="FilterTypesAttributeBase"/> 어트리뷰트와 호환됩니다.
 	/// </remarks>
 	/// <author>Bruno Coimbra, https://github.com/coimbrastudios/framework/blob/master/Coimbra/SerializableType%601.cs</author>
-	/// <typeparam name="T">Will require the type to be assignable to that.</typeparam>
+	/// <typeparam name="T">타입이 이것에 할당 가능해야 합니다.</typeparam>
 	/// <seealso cref="FilterTypesAttributeBase"/>
 	/// <seealso cref="FilterTypesByAccessibilityAttribute"/>
 	/// <seealso cref="FilterTypesByMethodAttribute"/>
@@ -35,17 +35,17 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Gets the assembly of the type.
+		/// 타입의 어셈블리를 가져옵니다.
 		/// </summary>
 		public string AssemblyName => _assemblyName;
 
 		/// <summary>
-		/// Gets the name of the type.
+		/// 타입의 이름을 가져옵니다.
 		/// </summary>
 		public string ClassName => _className;
 
 		/// <summary>
-		/// Gets or sets the serialized type.
+		/// 직렬화된 타입을 가져오거나 설정합니다.
 		/// </summary>
 		public Type Value
 		{
@@ -106,8 +106,8 @@ namespace Geuneda.DataExtensions
 		void ISerializationCallbackReceiver.OnBeforeSerialize() { }
 
 		/// <summary>
-		/// Reconstructs the type after deserialization.
-		/// Uses an AOT-safe resolution pattern that searches loaded assemblies to avoid issues with code stripping.
+		/// 역직렬화 후 타입을 재구성합니다.
+		/// 코드 스트리핑 문제를 방지하기 위해 로드된 어셈블리를 검색하는 AOT 안전 해석 패턴을 사용합니다.
 		/// </summary>
 		void ISerializationCallbackReceiver.OnAfterDeserialize()
 		{
@@ -119,7 +119,7 @@ namespace Geuneda.DataExtensions
 					return;
 				}
 
-				// AOT-safe: Search loaded assemblies instead of Assembly.Load
+				// AOT 안전: Assembly.Load 대신 로드된 어셈블리를 검색합니다
 				Value = Type.GetType($"{_className}, {_assemblyName}");
 
 				if (Value != null)
@@ -127,7 +127,7 @@ namespace Geuneda.DataExtensions
 					return;
 				}
 
-				// Fallback: Search all loaded assemblies
+				// 대체: 모든 로드된 어셈블리를 검색합니다
 				foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
 				{
 					if (assembly.FullName == _assemblyName)

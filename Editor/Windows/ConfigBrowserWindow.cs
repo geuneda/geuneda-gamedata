@@ -7,12 +7,12 @@ using UnityEngine;
 namespace Geuneda.DataExtensions.Editor
 {
 	/// <summary>
-	/// Editor window that provides a unified interface for browsing, validating, and migrating config data.
-	/// Access via <c>Tools/Game Data/Config Browser</c>.
+	/// 설정 데이터를 탐색, 유효성 검사 및 마이그레이션하기 위한 통합 인터페이스를 제공하는 에디터 창입니다.
+	/// <c>Tools/Game Data/Config Browser</c>를 통해 접근합니다.
 	/// </summary>
 	/// <remarks>
-	/// <para>The Browse tab displays a tree view of all configs in the assigned provider with JSON preview and validation.</para>
-	/// <para>The Migrations tab (visible only when migrations exist) shows migration status and provides in-memory preview.</para>
+	/// <para>Browse 탭은 할당된 프로바이더의 모든 설정을 JSON 미리보기 및 유효성 검사와 함께 트리 뷰로 표시합니다.</para>
+	/// <para>Migrations 탭(마이그레이션이 존재할 때만 표시)은 마이그레이션 상태를 표시하고 인메모리 미리보기를 제공합니다.</para>
 	/// </remarks>
 	public sealed class ConfigBrowserWindow : EditorWindow
 	{
@@ -21,7 +21,7 @@ namespace Geuneda.DataExtensions.Editor
 		private ConfigBrowserView _view;
 		private ProviderMenuController _providerMenuController;
 
-		// Change detection: track provider data fingerprint to auto-refresh when data changes.
+		// 변경 감지: 데이터가 변경될 때 자동 새로고침을 위해 프로바이더 데이터 지문을 추적합니다.
 		private int _lastConfigTypeCount = -1;
 		private int _lastTotalConfigCount = -1;
 
@@ -29,7 +29,7 @@ namespace Geuneda.DataExtensions.Editor
 		private ConfigSelection _selection;
 
 		/// <summary>
-		/// Opens the Config Browser window.
+		/// Config Browser 창을 엽니다.
 		/// </summary>
 		[MenuItem("Tools/Game Data/Config Browser")]
 		public static void ShowWindow()
@@ -50,7 +50,7 @@ namespace Geuneda.DataExtensions.Editor
 		}
 
 		/// <summary>
-		/// Creates the UI Toolkit GUI when the window is opened or reloaded.
+		/// 창이 열리거나 리로드될 때 UI Toolkit GUI를 생성합니다.
 		/// </summary>
 		public void CreateGUI()
 		{
@@ -77,7 +77,7 @@ namespace Geuneda.DataExtensions.Editor
 		{
 			var isGuiInitialized = _view != null && _view.IsInitialized;
 
-			// Clear selection when entering or exiting play mode to avoid stale references
+			// 오래된 참조를 방지하기 위해 플레이 모드 진입/종료 시 선택을 초기화
 			if (state == PlayModeStateChange.ExitingEditMode || state == PlayModeStateChange.ExitingPlayMode)
 			{
 				_providerMenuController?.ClearSelection();
@@ -93,7 +93,7 @@ namespace Geuneda.DataExtensions.Editor
 			{
 				if (isGuiInitialized)
 				{
-					// Refresh to pick up newly registered providers or clear stale state
+					// 새로 등록된 프로바이더를 가져오거나 오래된 상태를 정리하기 위해 새로고침
 					RefreshProviderList();
 					RefreshAll();
 				}
@@ -114,7 +114,7 @@ namespace Geuneda.DataExtensions.Editor
 		{
 			_providerMenuController.RefreshSnapshots();
 
-			// Detect data changes within the current provider and refresh tree if needed.
+			// 현재 프로바이더 내 데이터 변경을 감지하고 필요 시 트리를 새로고침합니다.
 			var provider = _providerMenuController.Provider;
 			if (provider != null)
 			{
@@ -132,7 +132,7 @@ namespace Geuneda.DataExtensions.Editor
 		{
 			_view.SetActiveTab(isBrowse);
 
-			// Keep migration panel updated when switching.
+			// 전환 시 마이그레이션 패널을 업데이트된 상태로 유지합니다.
 			if (!isBrowse)
 			{
 				_view.MigrationPanel.SetProvider(_providerMenuController.Provider);
@@ -152,7 +152,7 @@ namespace Geuneda.DataExtensions.Editor
 
 		private void RefreshMigrationsVisibility()
 		{
-			// Migrations tab is always visible; empty state is handled by MigrationPanelElement.
+			// Migrations 탭은 항상 표시됩니다; 빈 상태는 MigrationPanelElement에서 처리합니다.
 			_view.MigrationPanel.SetProvider(_providerMenuController.Provider);
 		}
 
@@ -200,13 +200,13 @@ namespace Geuneda.DataExtensions.Editor
 
 		private void OnValidationRowClicked(string configTypeName, int? configId)
 		{
-			// Best-effort: select matching node in tree by scanning visible items.
+			// 최선의 노력: 표시된 항목을 스캔하여 트리에서 일치하는 노드를 선택합니다.
 			var provider = _providerMenuController.Provider;
 			if (provider == null) return;
 			var targetType = provider.GetAllConfigs().Keys.FirstOrDefault(t => t.Name == configTypeName);
 			if (targetType == null) return;
 
-			// Rebuild tree item data so we can search it deterministically.
+			// 결정적으로 검색할 수 있도록 트리 항목 데이터를 다시 빌드합니다.
 			var roots = ConfigTreeBuilder.BuildTreeItems(provider, _view.SearchText);
 			_view.SetTreeItems(roots);
 

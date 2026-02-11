@@ -10,9 +10,9 @@ using UnityEngine.UIElements;
 namespace GeunedaEditor.GameData
 {
 	/// <summary>
-	/// Implement this property drawer with your own custom EnumSelectorPropertyDrawer implementation for the given
-	/// enum of type <typeparamref name="T"/>.
-	/// Supports both UI Toolkit (CreatePropertyGUI) and IMGUI (OnGUI) for custom inspector compatibility.
+	/// 주어진 <typeparamref name="T"/> 열거형 타입에 대해
+	/// 자체 커스텀 EnumSelectorPropertyDrawer 구현으로 이 프로퍼티 드로어를 구현하세요.
+	/// 커스텀 인스펙터 호환성을 위해 UI Toolkit(CreatePropertyGUI)과 IMGUI(OnGUI)를 모두 지원합니다.
 	/// 
 	/// Ex:
 	/// [CustomPropertyDrawer(typeof(EnumSelectorExample))]
@@ -28,7 +28,7 @@ namespace GeunedaEditor.GameData
 		private bool _errorFound;
 
 		/// <summary>
-		/// UI Toolkit implementation for default inspector in Unity 6+.
+		/// Unity 6+의 기본 인스펙터를 위한 UI Toolkit 구현입니다.
 		/// </summary>
 		public override VisualElement CreatePropertyGUI(SerializedProperty property)
 		{
@@ -68,7 +68,7 @@ namespace GeunedaEditor.GameData
 		}
 
 		/// <summary>
-		/// IMGUI implementation for custom inspectors using OnInspectorGUI.
+		/// OnInspectorGUI를 사용하는 커스텀 인스펙터의 IMGUI 구현입니다.
 		/// </summary>
 		public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
 		{
@@ -88,7 +88,7 @@ namespace GeunedaEditor.GameData
 			}
 			else
 			{
-				// The string is not a valid enum constant, because it was renamed or removed
+				// 문자열이 유효한 열거형 상수가 아닙니다. 이름이 변경되었거나 제거되었기 때문입니다
 				if (!_errorFound)
 				{
 					var targetObject = selectionProperty.serializedObject.targetObject;

@@ -19,7 +19,7 @@ namespace Geuneda.DataExtensions.Tests
 		public void Value_Property_ResolvesCorrectly()
 		{
 			var st = new SerializableType<object>();
-			// Set the private fields to simulate deserialization
+			// 역직렬화를 시뮬레이션하기 위해 private 필드를 설정합니다
 			var type = typeof(SerializableType<object>);
 			var classNameField = type.GetField("_className", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
 			var assemblyNameField = type.GetField("_assemblyName", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
@@ -28,10 +28,10 @@ namespace Geuneda.DataExtensions.Tests
 			classNameField.SetValue(boxed, typeof(string).FullName);
 			assemblyNameField.SetValue(boxed, typeof(string).Assembly.FullName);
 			
-			// Trigger OnAfterDeserialize on the same boxed instance (struct boxing semantics!)
+			// 동일한 박싱된 인스턴스에서 OnAfterDeserialize를 트리거합니다 (구조체 박싱 의미론!)
 			((ISerializationCallbackReceiver)boxed).OnAfterDeserialize();
 			
-			// Now unbox the modified struct
+			// 이제 수정된 구조체를 언박싱합니다
 			st = (SerializableType<object>)boxed;
 			
 			Assert.AreEqual(typeof(string), st.Value);

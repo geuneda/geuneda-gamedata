@@ -35,8 +35,8 @@ namespace Geuneda.DataExtensions.Tests
 			var json = JsonConvert.SerializeObject(color, _settings);
 			var result = JsonConvert.DeserializeObject<Color>(json, _settings);
 			
-			// Hex color format (#RRGGBBAA) has 8-bit precision per channel,
-			// so tolerance needs to account for 1/255 ≈ 0.004 quantization error
+			// 16진수 색상 형식(#RRGGBBAA)은 채널당 8비트 정밀도를 가지므로,
+			// 허용 오차는 1/255 ≈ 0.004 양자화 오류를 고려해야 합니다
 			Assert.AreEqual(color.r, result.r, 0.01f);
 			Assert.AreEqual(color.g, result.g, 0.01f);
 			Assert.AreEqual(color.b, result.b, 0.01f);

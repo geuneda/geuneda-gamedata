@@ -10,9 +10,9 @@ using Newtonsoft.Json.Linq;
 namespace Geuneda.DataExtensions.Editor
 {
 	/// <summary>
-	/// Controller that drives the migration panel UI.
-	/// Discovers available migrations from <see cref="MigrationRunner"/>, populates the
-	/// <see cref="MigrationPanelView"/> with rows, and handles preview / apply actions.
+	/// 마이그레이션 패널 UI를 구동하는 컨트롤러입니다.
+	/// <see cref="MigrationRunner"/>에서 사용 가능한 마이그레이션을 검색하고,
+	/// <see cref="MigrationPanelView"/>에 행을 채우며, 미리보기/적용 작업을 처리합니다.
 	/// </summary>
 	internal sealed class MigrationPanelController
 	{
@@ -28,7 +28,7 @@ namespace Geuneda.DataExtensions.Editor
 		}
 
 		/// <summary>
-		/// Assigns the <paramref name="provider"/> to inspect for migrations and rebuilds the panel.
+		/// 마이그레이션 검사 대상으로 <paramref name="provider"/>를 할당하고 패널을 다시 빌드합니다.
 		/// </summary>
 		public void SetProvider(IConfigsProvider provider)
 		{
@@ -37,7 +37,7 @@ namespace Geuneda.DataExtensions.Editor
 		}
 
 		/// <summary>
-		/// Rebuilds the migration row list and refreshes the view.
+		/// 마이그레이션 행 목록을 다시 빌드하고 뷰를 새로고침합니다.
 		/// </summary>
 		public void Rebuild()
 		{
@@ -62,7 +62,7 @@ namespace Geuneda.DataExtensions.Editor
 				.OrderBy(t => t.Name)
 				.ToList();
 
-			// Show empty state when no migrations are available.
+			// 사용 가능한 마이그레이션이 없을 때 빈 상태를 표시합니다.
 			if (migratableTypes.Count == 0)
 			{
 				_view.SetHeader("Migrations");
@@ -119,7 +119,7 @@ namespace Geuneda.DataExtensions.Editor
 
 		private void ApplyMigration(MigrationRow row)
 		{
-			// UpdateTo is only available on ConfigsProvider, not the interface
+			// UpdateTo는 인터페이스가 아닌 ConfigsProvider에서만 사용 가능합니다
 			if (!(_provider is ConfigsProvider concreteProvider))
 			{
 				_view.SetLog("Apply Failed: Provider does not support UpdateTo (must be ConfigsProvider).");
@@ -128,7 +128,7 @@ namespace Geuneda.DataExtensions.Editor
 
 			var currentVersion = _provider.Version;
 
-			// Get all configs of this type from the provider
+			// 프로바이더에서 이 타입의 모든 설정을 가져옵니다
 			var allConfigs = _provider.GetAllConfigs();
 			if (!allConfigs.TryGetValue(row.ConfigType, out var container))
 			{
@@ -136,7 +136,7 @@ namespace Geuneda.DataExtensions.Editor
 				return;
 			}
 
-			// Read configs into a list of (id, value) pairs
+			// 설정을 (id, value) 쌍의 목록으로 읽어옵니다
 			if (!ConfigsEditorUtil.TryReadConfigs(container, out var entries) || entries.Count == 0)
 			{
 				_view.SetLog($"Apply Failed: Could not read configs of type {row.ConfigType.Name}.");
@@ -145,7 +145,7 @@ namespace Geuneda.DataExtensions.Editor
 
 			try
 			{
-				// Migrate each config and collect results
+				// 각 설정을 마이그레이션하고 결과를 수집합니다
 				var migratedEntries = new List<(int Id, object Value)>();
 				int totalApplied = 0;
 
@@ -157,12 +157,12 @@ namespace Geuneda.DataExtensions.Editor
 					var applied = MigrationRunner.Migrate(row.ConfigType, outputJson, currentVersion, row.ToVersion);
 					totalApplied += applied;
 
-					// Deserialize back to the config type
+					// 설정 타입으로 다시 역직렬화합니다
 					var migratedValue = outputJson.ToObject(row.ConfigType);
 					migratedEntries.Add((entry.Id, migratedValue));
 				}
 
-				// Create a new dictionary with migrated values using reflection
+				// 리플렉션을 사용하여 마이그레이션된 값으로 새 딕셔너리를 생성합니다
 				var dictionaryType = typeof(Dictionary<,>).MakeGenericType(typeof(int), row.ConfigType);
 				var newDictionary = (IDictionary)Activator.CreateInstance(dictionaryType);
 
@@ -171,13 +171,13 @@ namespace Geuneda.DataExtensions.Editor
 					newDictionary.Add(id, value);
 				}
 
-				// Update the provider
+				// 프로바이더를 업데이트합니다
 				var updateDict = new Dictionary<Type, IEnumerable> { { row.ConfigType, newDictionary } };
 				concreteProvider.UpdateTo(row.ToVersion, updateDict);
 
 				_view.SetLog($"Apply Success: Migrated {entries.Count} config(s), {totalApplied} migration step(s) applied. Provider now at v{row.ToVersion}.");
 
-				// Rebuild to reflect new state
+				// 새로운 상태를 반영하기 위해 다시 빌드합니다
 				Rebuild();
 			}
 			catch (Exception ex)
@@ -197,7 +197,7 @@ namespace Geuneda.DataExtensions.Editor
 			JObject inputJson;
 			string instanceLabel;
 
-			// Priority 1: Custom JSON input from the text field
+			// 우선순위 1: 텍스트 필드에서 입력된 사용자 정의 JSON
 			var customJson = _view.CustomJson;
 			if (!string.IsNullOrEmpty(customJson))
 			{
@@ -214,7 +214,7 @@ namespace Geuneda.DataExtensions.Editor
 					return;
 				}
 			}
-			// Priority 2: Provider data (current schema)
+			// 우선순위 2: 프로바이더 데이터 (현재 스키마)
 			else if (TryGetFirstInstance(row.ConfigType, out var id, out var instance))
 			{
 				inputJson = JObject.FromObject(instance);

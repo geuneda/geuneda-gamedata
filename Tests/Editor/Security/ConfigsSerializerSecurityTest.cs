@@ -6,10 +6,10 @@ using NUnit.Framework;
 namespace Geuneda.DataExtensions.Tests.Security
 {
 	/// <summary>
-	/// Security tests for ConfigsSerializer verifying protection against:
-	/// - Type injection attacks via $type metadata
-	/// - Malformed JSON payloads
-	/// - Stack overflow from deeply nested JSON
+	/// ConfigsSerializer의 보안 테스트로, 다음에 대한 보호를 확인합니다:
+	/// - $type 메타데이터를 통한 타입 주입 공격
+	/// - 잘못된 형식의 JSON 페이로드
+	/// - 깊이 중첩된 JSON으로 인한 스택 오버플로
 	/// </summary>
 	[TestFixture]
 	public class ConfigsSerializerSecurityTest
@@ -19,7 +19,7 @@ namespace Geuneda.DataExtensions.Tests.Security
 		[Serializable]
 		public class DerivedConfig : BaseConfig { public string Extra; }
 		
-		// A type that should NEVER be allowed during deserialization
+		// 역직렬화 중 절대 허용되어서는 안 되는 타입
 		[Serializable]
 		public class MaliciousConfig { public string Payload; }
 
@@ -39,7 +39,7 @@ namespace Geuneda.DataExtensions.Tests.Security
 			
 			var json = serializer.Serialize(_provider, "1");
 			
-			// Should NOT contain $type
+			// $type를 포함하면 안 됩니다
 			Assert.IsFalse(json.Contains("$type"));
 		}
 
@@ -51,32 +51,32 @@ namespace Geuneda.DataExtensions.Tests.Security
 			
 			var json = serializer.Serialize(_provider, "1");
 			
-			// SHOULD contain $type for polymorphic serialization
+			// 다형성 직렬화를 위해 $type를 포함해야 합니다
 			Assert.IsTrue(json.Contains("$type"));
 		}
 
 		[Test]
 		public void TrustedOnlyMode_BinderBlocksUnregisteredTypes()
 		{
-			// Create serializer and serialize DerivedConfig (which registers it)
+			// 직렬화기를 생성하고 DerivedConfig를 직렬화합니다(등록됨)
 			var serializer = new ConfigsSerializer(SerializationSecurityMode.TrustedOnly);
 			_provider.AddSingletonConfig(new DerivedConfig { Id = 10, Extra = "Data" });
 			var json = serializer.Serialize(_provider, "1");
 			
-			// Now try to inject a different type by modifying the JSON
-			// Replace DerivedConfig type reference with MaliciousConfig
-			// Use FullName because Newtonsoft doesn't serialize with full AssemblyQualifiedName
+			// JSON을 수정하여 다른 타입 주입을 시도합니다
+			// DerivedConfig 타입 참조를 MaliciousConfig로 교체합니다
+			// Newtonsoft는 전체 AssemblyQualifiedName으로 직렬화하지 않으므로 FullName을 사용합니다
 			var maliciousJson = json.Replace(
 				typeof(DerivedConfig).FullName,
 				typeof(MaliciousConfig).FullName);
 			
-			// The binder should reject MaliciousConfig because it was never registered
+			// 바인더는 등록된 적이 없는 MaliciousConfig를 거부해야 합니다
 			var newProvider = new ConfigsProvider();
 			var ex = Assert.Throws<JsonSerializationException>(() => 
 				serializer.Deserialize(maliciousJson, newProvider));
 			
-			// Check both main message and inner exception for security-related keywords
-			// Newtonsoft may wrap the binder's exception with additional context
+			// 보안 관련 키워드에 대해 기본 메시지와 내부 예외를 모두 확인합니다
+			// Newtonsoft는 바인더의 예외를 추가 컨텍스트로 감쌀 수 있습니다
 			var fullMessage = ex.Message + (ex.InnerException?.Message ?? "");
 			var containsSecurityMessage = 
 				fullMessage.Contains("not allowed") || 
@@ -109,22 +109,22 @@ namespace Geuneda.DataExtensions.Tests.Security
 		[Test]
 		public void SecureMode_CannotRoundTrip_ExpectedLimitation()
 		{
-			// Secure mode uses TypeNameHandling.None, which means the internal
-			// Dictionary<Type, IEnumerable> structure cannot be round-tripped
-			// because the deserializer doesn't know the concrete type.
+			// 보안 모드는 TypeNameHandling.None을 사용하므로, 내부
+			// Dictionary<Type, IEnumerable> 구조를 왕복 변환할 수 없습니다
+			// 역직렬화기가 구체적인 타입을 모르기 때문입니다.
 			//
-			// This is a documented limitation - Secure mode is for serialize-only
-			// scenarios (e.g., sending configs TO untrusted clients).
+			// 이것은 문서화된 제한사항입니다 - 보안 모드는 직렬화 전용
+			// 시나리오용입니다(예: 신뢰할 수 없는 클라이언트에 설정 전송).
 			
 			var secureSerializer = new ConfigsSerializer(SerializationSecurityMode.Secure);
 			_provider.AddSingletonConfig(new DerivedConfig { Id = 10, Extra = "Data" });
 			
 			var secureJson = secureSerializer.Serialize(_provider, "1");
 			
-			// Verify no $type metadata
+			// $type 메타데이터가 없는지 확인합니다
 			Assert.IsFalse(secureJson.Contains("$type"), "Secure mode should NOT include $type metadata");
 			
-			// Verify deserialization fails (expected limitation)
+			// 역직렬화가 실패하는지 확인합니다(예상된 제한사항)
 			var secureProvider = new ConfigsProvider();
 			Assert.Throws<JsonSerializationException>(() => secureSerializer.Deserialize(secureJson, secureProvider),
 				"Secure mode cannot round-trip because IEnumerable requires $type to know concrete type");
@@ -133,16 +133,16 @@ namespace Geuneda.DataExtensions.Tests.Security
 		[Test]
 		public void RegisterAllowedTypes_AllowsTypesForDeserialization()
 		{
-			// Create a serializer and manually register types
+			// 직렬화기를 생성하고 수동으로 타입을 등록합니다
 			var serializer = new ConfigsSerializer(SerializationSecurityMode.TrustedOnly);
 			serializer.RegisterAllowedTypes(new[] { typeof(DerivedConfig) });
 			
-			// Serialize using another serializer
+			// 다른 직렬화기를 사용하여 직렬화합니다
 			var otherSerializer = new ConfigsSerializer(SerializationSecurityMode.TrustedOnly);
 			_provider.AddSingletonConfig(new DerivedConfig { Id = 5, Extra = "Test" });
 			var json = otherSerializer.Serialize(_provider, "1");
 			
-			// Should be able to deserialize because DerivedConfig was registered
+			// DerivedConfig가 등록되었으므로 역직렬화할 수 있어야 합니다
 			var newProvider = new ConfigsProvider();
 			serializer.Deserialize(json, newProvider);
 			
@@ -171,18 +171,18 @@ namespace Geuneda.DataExtensions.Tests.Security
 		[Test]
 		public void MaxDepth_PreventsStackOverflow()
 		{
-			// Create a serializer with a very low max depth
+			// 매우 낮은 최대 깊이로 직렬화기를 생성합니다
 			var serializer = new ConfigsSerializer(SerializationSecurityMode.TrustedOnly, maxDepth: 5);
 			
-			// Try to deserialize deeply nested JSON (simulating attack)
-			// The Configs dictionary expects Type keys, so using invalid string keys like "a"
-			// will cause a JsonSerializationException when trying to convert to Type.
-			// This still validates that malformed/deeply-nested payloads are rejected.
+			// 깊이 중첩된 JSON 역직렬화를 시도합니다(공격 시뮬레이션)
+			// Configs 딕셔너리는 Type 키를 예상하므로, "a"와 같은 유효하지 않은 문자열 키를 사용하면
+			// Type으로 변환 시 JsonSerializationException이 발생합니다.
+			// 이는 잘못된 형식/깊이 중첩된 페이로드가 거부되는지 여전히 검증합니다.
 			var deeplyNestedJson = "{\"Version\":\"1\",\"Configs\":{" +
 				"\"a\":{\"b\":{\"c\":{\"d\":{\"e\":{\"f\":{\"g\":{}}}}}}}" +
 				"}}";
 			
-			// Should throw due to invalid type key conversion (rejects malformed payload)
+			// 유효하지 않은 타입 키 변환으로 인해 예외가 발생해야 합니다(잘못된 페이로드 거부)
 			Assert.Throws<JsonSerializationException>(() => serializer.Deserialize(deeplyNestedJson, _provider));
 		}
 
