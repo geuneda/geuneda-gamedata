@@ -1,55 +1,55 @@
-# Reactive UI Demo (UI Toolkit)
+# Reactive UI 데모 (UI Toolkit)
 
-This sample demonstrates how to build **reactive user interfaces** using Unity's **UI Toolkit** with the observable data types from Geuneda.DataExtensions.
+이 샘플은 Geuneda.DataExtensions의 Observable 데이터 타입과 Unity의 **UI Toolkit**을 사용하여 **반응형 사용자 인터페이스**를 구축하는 방법을 보여줍니다.
 
-## Design Philosophy
+## 설계 철학
 
-UI Toolkit provides a modern, CSS-like approach to UI development. This sample shows how to integrate reactive data binding:
-1. **Element queries**: Find elements by name and bind data to them.
-2. **View helpers**: Encapsulate subscription logic in reusable classes.
-3. **Clean disposal**: Properly clean up subscriptions when views are destroyed.
+UI Toolkit은 CSS와 유사한 현대적인 UI 개발 방식을 제공합니다. 이 샘플은 반응형 데이터 바인딩을 통합하는 방법을 보여줍니다:
+1. **요소 쿼리**: 이름으로 요소를 찾아 데이터를 바인딩합니다.
+2. **뷰 헬퍼**: 구독 로직을 재사용 가능한 클래스로 캡슐화합니다.
+3. **깔끔한 해제**: 뷰가 파괴될 때 구독을 올바르게 정리합니다.
 
-## Sample Content
+## 샘플 내용
 
-The sample showcases a player stats panel with reactive bindings (same as the uGUI demo, but using UI Toolkit):
+이 샘플은 반응형 바인딩이 적용된 플레이어 스탯 패널을 보여줍니다 (uGUI 데모와 동일하지만 UI Toolkit 사용):
 
-### Health Bar
-Bound to an `ObservableField<int>` that updates a ProgressBar and Label automatically.
+### 체력 바
+ProgressBar와 Label을 자동으로 업데이트하는 `ObservableField<int>`에 바인딩됩니다.
 
-### Stats Panel
-Displays `BaseDamage`, `WeaponBonus`, and a computed `TotalDamage` that updates when either source value changes.
+### 스탯 패널
+`BaseDamage`, `WeaponBonus`, 그리고 두 값 중 하나가 변경되면 자동으로 업데이트되는 계산된 `TotalDamage`를 표시합니다.
 
-### Inventory List
-Bound to an `ObservableList<string>` that reacts to add/remove operations in a ScrollView.
+### 인벤토리 목록
+ScrollView에서 추가/삭제 작업에 반응하는 `ObservableList<string>`에 바인딩됩니다.
 
-### Batch Update
-Demonstrates `ObservableBatch` to group multiple changes into a single UI refresh.
+### 일괄 업데이트
+여러 변경 사항을 단일 UI 갱신으로 그룹화하는 `ObservableBatch`를 보여줍니다.
 
-## How to Use
+## 사용 방법
 
-1. **Import the sample** and open the `ReactiveToolkitDemo.unity` scene.
-2. **Enter Play Mode** to see the reactive UI in action.
-3. **Interact with the buttons**:
-   - **Damage/Heal**: Modify health and watch the progress bar update.
-   - **+Base Damage / +Weapon Bonus**: See the computed TotalDamage update automatically.
-   - **Add/Remove Item**: Watch the inventory ScrollView react to collection changes.
-   - **Batch Update**: Apply multiple changes with a single UI refresh.
+1. **샘플을 임포트**하고 `ReactiveToolkitDemo.unity` 씬을 엽니다.
+2. **플레이 모드에 진입**하면 반응형 UI가 작동하는 것을 확인할 수 있습니다.
+3. **버튼과 상호작용**합니다:
+   - **Damage/Heal**: 체력을 수정하고 프로그레스 바가 업데이트되는 것을 확인합니다.
+   - **+Base Damage / +Weapon Bonus**: 계산된 TotalDamage가 자동으로 업데이트되는 것을 확인합니다.
+   - **Add/Remove Item**: 인벤토리 ScrollView가 컬렉션 변경에 반응하는 것을 확인합니다.
+   - **Batch Update**: 단일 UI 갱신으로 여러 변경 사항을 적용합니다.
 
-## Implementation Details
+## 구현 세부사항
 
-### Data Model
-`PlayerData.cs` defines the observable properties:
-- `ObservableField<int>`: Single values (Health, BaseDamage, WeaponBonus).
-- `ObservableList<string>`: Collection (Inventory).
-- `ComputedField<int>`: Derived value (TotalDamage = BaseDamage + WeaponBonus).
+### 데이터 모델
+`PlayerData.cs`에서 Observable 프로퍼티를 정의합니다:
+- `ObservableField<int>`: 단일 값 (Health, BaseDamage, WeaponBonus).
+- `ObservableList<string>`: 컬렉션 (Inventory).
+- `ComputedField<int>`: 파생 값 (TotalDamage = BaseDamage + WeaponBonus).
 
-### View Helpers
-Plain C# classes that implement `IDisposable` for clean subscription management. See the `Scripts/` folder:
-- `ReactiveToolkitHealthBar.cs`: Binds a ProgressBar and Label to health.
-- `ReactiveToolkitStatsPanel.cs`: Binds labels to damage stats.
-- `ReactiveToolkitInventoryList.cs`: Binds a ScrollView to the inventory list.
+### 뷰 헬퍼
+깔끔한 구독 관리를 위해 `IDisposable`을 구현하는 순수 C# 클래스입니다. `Scripts/` 폴더를 참조하세요:
+- `ReactiveToolkitHealthBar.cs`: ProgressBar와 Label을 체력에 바인딩합니다.
+- `ReactiveToolkitStatsPanel.cs`: Label을 공격력 스탯에 바인딩합니다.
+- `ReactiveToolkitInventoryList.cs`: ScrollView를 인벤토리 목록에 바인딩합니다.
 
-### UI Assets
-The `UI/` folder contains:
-- `ReactiveToolkitDemo.uxml`: UI layout definition.
-- `ReactiveToolkitDemo.uss`: Stylesheet for visual styling.
+### UI 에셋
+`UI/` 폴더에 포함되어 있습니다:
+- `ReactiveToolkitDemo.uxml`: UI 레이아웃 정의.
+- `ReactiveToolkitDemo.uss`: 시각적 스타일링을 위한 스타일시트.
