@@ -139,7 +139,27 @@ namespace Geuneda.DataExtensions
 			var convertPair = _fromOrignResolver(new KeyValuePair<TKeyOrigin, TValueOrigin>(key, value));
 
 			_dictionary[key] = value;
-			this[convertPair.Key] = convertPair.Value;
+			// 원본은 이미 바꿨으므로 재정의된 인덱서를 거치지 않습니다
+			base[convertPair.Key] = convertPair.Value;
+		}
+
+		/// <inheritdoc />
+		/// <remarks>
+		/// 원본 딕셔너리의 대응 항목도 변환한 값으로 바꿉니다. 없는 키는 기본 구현처럼 예외가 나며, 이때 원본은 바꾸지 않습니다.
+		/// </remarks>
+		public override TValue this[TKey key]
+		{
+			get => base[key];
+			set
+			{
+				if (Dictionary.ContainsKey(key))
+				{
+					var pair = _toOrignResolver(key, value);
+					_dictionary[pair.Key] = pair.Value;
+				}
+
+				base[key] = value;
+			}
 		}
 
 		/// <inheritdoc />

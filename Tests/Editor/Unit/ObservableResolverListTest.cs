@@ -92,6 +92,36 @@ namespace Geuneda.DataExtensions.Tests
 		}
 
 		[Test]
+		public void Indexer_Set_UpdatesOriginList()
+		{
+			var originList = new List<string> { "1", "2" };
+			var list = new ObservableResolverList<int, string>(originList,
+				origin => int.Parse(origin),
+				value => value.ToString());
+			var calls = new List<(int index, int prev, int curr, ObservableUpdateType type)>();
+			list.Observe((index, prev, curr, type) => calls.Add((index, prev, curr, type)));
+
+			list[1] = 7;
+
+			CollectionAssert.AreEqual(new[] { "1", "7" }, originList);
+			Assert.AreEqual(7, list[1]);
+			CollectionAssert.AreEqual(new[] { (1, 2, 7, ObservableUpdateType.Updated) }, calls);
+		}
+
+		[Test]
+		public void Indexer_SetThroughInterface_UpdatesOriginList()
+		{
+			var originList = new List<string> { "1" };
+			IObservableList<int> list = new ObservableResolverList<int, string>(originList,
+				origin => int.Parse(origin),
+				value => value.ToString());
+
+			list[0] = 3;
+
+			CollectionAssert.AreEqual(new[] { "3" }, originList);
+		}
+
+		[Test]
 		public void RemoveOrigin_RealList_RemovesOnlyOneOriginElement()
 		{
 			var originList = new List<string> { "1", "2", "3" };

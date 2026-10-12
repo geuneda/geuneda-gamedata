@@ -104,7 +104,7 @@ namespace Geuneda.DataExtensions
 		partial void EditorDebug_Register();
 
 		/// <inheritdoc cref="IObservableList{T}.this" />
-		public T this[int index]
+		public virtual T this[int index]
 		{
 			get
 			{

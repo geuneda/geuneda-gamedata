@@ -4,6 +4,11 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.0.4] - 2026-10-12
+
+**Fixes**:
+- `ObservableResolverList`/`ObservableResolverDictionary`의 인덱서 setter(`list[i] = v`, `dict[k] = v`)가 원본 컬렉션에 반영되지 않던 문제 수정. `ObservableList`/`ObservableDictionary` 인덱서를 `virtual`로 바꾸고 리졸버에서 재정의해 원본도 함께 갱신합니다. 없는 키에 쓰면 원본은 바꾸지 않고 기존처럼 `KeyNotFoundException`을 던집니다
+
 ## [1.0.3] - 2026-10-12
 
 **Changes**:

@@ -211,7 +211,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <inheritdoc cref="Dictionary{TKey,TValue}.this" />
-		public TValue this[TKey key]
+		public virtual TValue this[TKey key]
 		{
 			get
 			{

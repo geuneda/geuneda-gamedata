@@ -25,6 +25,22 @@ namespace Geuneda.DataExtensions.Tests
 		}
 
 		[Test]
+		public void Indexer_Set_UpdatesOriginDictionary()
+		{
+			_dictionary[_key] = 5;
+
+			Assert.AreEqual(5, _dictionary[_key]);
+			Assert.AreEqual("5", _originDictionary[_key]);
+		}
+
+		[Test]
+		public void Indexer_SetMissingKey_ThrowsAndKeepsOriginDictionary()
+		{
+			Assert.Throws<KeyNotFoundException>(() => _dictionary[999] = 5);
+			Assert.IsFalse(_originDictionary.ContainsKey(999));
+		}
+
+		[Test]
 		public void TryGetOriginValue_KeyExists_ReturnsTrueAndOutValue()
 		{
 			Assert.IsTrue(_dictionary.TryGetOriginValue(_key, out var value));

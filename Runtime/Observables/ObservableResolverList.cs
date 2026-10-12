@@ -104,6 +104,21 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <inheritdoc />
+		/// <remarks>
+		/// 원본 리스트의 같은 위치도 변환한 값으로 바꿉니다. 두 리스트의 길이가 같으므로 잘못된 위치면
+		/// 어느 쪽도 바뀌기 전에 예외가 납니다.
+		/// </remarks>
+		public override T this[int index]
+		{
+			get => base[index];
+			set
+			{
+				_originList[index] = _toOrignResolver(value);
+				base[index] = value;
+			}
+		}
+
+		/// <inheritdoc />
 		public override void Add(T data)
 		{
 			_originList.Add(_toOrignResolver(data));
@@ -128,7 +143,8 @@ namespace Geuneda.DataExtensions
 		public void UpdateOrigin(TOrigin value, int index)
 		{
 			_originList[index] = value;
-			this[index] = _fromOrignResolver(value);
+			// 원본은 이미 바꿨으므로 재정의된 인덱서를 거치지 않습니다
+			base[index] = _fromOrignResolver(value);
 		}
 
 		/// <inheritdoc />
