@@ -13,11 +13,25 @@ namespace Geuneda.DataExtensions.Tests
 	[TestFixture]
 	public class ConfigValidationServiceTests
 	{
+		/// <summary>
+		/// 프로바이더는 타입마다 컨테이너를 하나만 가지므로, 컬렉션과 같은 타입을 싱글톤으로 등록할 수 없습니다.
+		/// 싱글톤 검증용으로 <see cref="MockValidatableConfig"/>의 유효성 검사 필드를 그대로 상속한 별도 타입을 사용합니다.
+		/// </summary>
+		private class MockValidatableSingletonConfig : MockValidatableConfig
+		{
+		}
+
 		[Test]
 		public void ValidateAll_ReportsFieldsAndConfigIds()
 		{
 			var provider = new ConfigsProvider();
-			var invalidSingleton = new MockValidatableConfigBuilder().Invalid().Build();
+			var invalid = new MockValidatableConfigBuilder().Invalid().Build();
+			var invalidSingleton = new MockValidatableSingletonConfig
+			{
+				Name = invalid.Name,
+				Health = invalid.Health,
+				Tag = invalid.Tag
+			};
 			provider.AddSingletonConfig(invalidSingleton);
 
 			var invalidList = new List<MockValidatableConfig>

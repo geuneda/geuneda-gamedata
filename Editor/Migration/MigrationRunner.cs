@@ -58,7 +58,7 @@ namespace GeunedaEditor.GameData
 	/// <example>
 	/// 마이그레이션 생성:
 	/// <code>
-	/// [ConfigMigration(typeof(EnemyConfig), fromVersion: 1, toVersion: 2)]
+	/// [ConfigMigration(typeof(EnemyConfig))]
 	/// public class EnemyConfigMigration_v1_v2 : IConfigMigration
 	/// {
 	///     public ulong FromVersion => 1;
@@ -82,7 +82,7 @@ namespace GeunedaEditor.GameData
 	/// MigrationRunner.Migrate(typeof(EnemyConfig), json, currentVersion: 1, targetVersion: 2);
 	/// 
 	/// // 또는 ScriptableObject 마이그레이션
-	/// var result = MigrationRunner.MigrateScriptableObject(myConfigSO, fromVersion: 1, toVersion: 2);
+	/// var result = MigrationRunner.MigrateScriptableObject(myConfigSO, typeof(EnemyConfig), fromVersion: 1, toVersion: 2);
 	/// </code>
 	/// </example>
 	/// </summary>

@@ -128,22 +128,32 @@ namespace Geuneda.DataExtensions
 		public void UpdateOrigin(TOrigin value, int index)
 		{
 			_originList[index] = value;
-			List[index] = _fromOrignResolver(value);
+			this[index] = _fromOrignResolver(value);
 		}
 
 		/// <inheritdoc />
 		public void AddOrigin(TOrigin value)
 		{
 			_originList.Add(value);
-			List.Add(_fromOrignResolver(value));
+			// 재정의된 Add 를 거치면 원본에 한 번 더 추가되므로 기본 구현을 직접 호출합니다
+			base.Add(_fromOrignResolver(value));
 		}
 
 		/// <inheritdoc />
 		public bool RemoveOrigin(TOrigin value)
 		{
-			_originList.Remove(value);
+			// 변환 결과의 동등성은 원본과 다를 수 있으므로, 원본의 위치를 찾아 두 리스트의 같은 위치를 지웁니다
+			var index = _originList.IndexOf(value);
+			if (index < 0)
+			{
+				return false;
+			}
 
-			return base.Remove(_fromOrignResolver(value));
+			_originList.RemoveAt(index);
+			// 재정의된 RemoveAt 을 거치면 원본에서 한 번 더 제거하므로 기본 RemoveAt 을 직접 호출합니다
+			base.RemoveAt(index);
+
+			return true;
 		}
 
 		/// <inheritdoc />

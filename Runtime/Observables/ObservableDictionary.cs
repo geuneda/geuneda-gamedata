@@ -67,7 +67,7 @@ namespace Geuneda.DataExtensions
 		/// </remarks>
 		void Observe(TKey key, Action<TKey, TValue, TValue, ObservableUpdateType> onUpdate);
 
-		/// <inheritdoc cref="Observe(TKey,System.Action{TKey,TValue,TValue,Geuneda.Observables.ObservableUpdateType})" />
+		/// <inheritdoc cref="Observe(TKey,System.Action{TKey,TValue,TValue,Geuneda.DataExtensions.ObservableUpdateType})" />
 		/// <remarks>
 		/// 이 딕셔너리를 관찰하기 시작하기 전에 주어진 <paramref name="onUpdate"/> 메서드를 호출합니다
 		/// </remarks>

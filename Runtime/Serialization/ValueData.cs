@@ -147,7 +147,7 @@ namespace Geuneda.DataExtensions
 	/// Unity의 Vector2 타입을 위한 직렬화 가능한 래퍼입니다.
 	/// 주로 Unity의 네이티브 타입이 직접 지원되지 않는
 	/// JSON/네트워크 직렬화에 사용됩니다. Unity 6은 인스펙터 필드에서 
-	/// Vector3을 네이티브로 직렬화합니다 - 이 구조체는 외부 직렬화 형식용입니다.
+	/// Vector2를 네이티브로 직렬화합니다 - 이 구조체는 외부 직렬화 형식용입니다.
 	/// </summary>
 	[Serializable]
 	public struct Vector2Serializable
@@ -176,7 +176,7 @@ namespace Geuneda.DataExtensions
 	/// Unity의 Vector3Int 타입을 위한 직렬화 가능한 래퍼입니다.
 	/// 주로 Unity의 네이티브 타입이 직접 지원되지 않는
 	/// JSON/네트워크 직렬화에 사용됩니다. Unity 6은 인스펙터 필드에서 
-	/// Vector3을 네이티브로 직렬화합니다 - 이 구조체는 외부 직렬화 형식용입니다.
+	/// Vector3Int를 네이티브로 직렬화합니다 - 이 구조체는 외부 직렬화 형식용입니다.
 	/// </summary>
 	[Serializable]
 	public struct Vector3IntSerializable
@@ -207,7 +207,7 @@ namespace Geuneda.DataExtensions
 	/// Unity의 Vector2Int 타입을 위한 직렬화 가능한 래퍼입니다.
 	/// 주로 Unity의 네이티브 타입이 직접 지원되지 않는
 	/// JSON/네트워크 직렬화에 사용됩니다. Unity 6은 인스펙터 필드에서 
-	/// Vector3을 네이티브로 직렬화합니다 - 이 구조체는 외부 직렬화 형식용입니다.
+	/// Vector2Int를 네이티브로 직렬화합니다 - 이 구조체는 외부 직렬화 형식용입니다.
 	/// </summary>
 	[Serializable]
 	public struct Vector2IntSerializable

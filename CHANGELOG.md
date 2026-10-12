@@ -4,6 +4,30 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.0.3] - 2026-10-12
+
+**Changes**:
+- `ObservableResolverList.AddOrigin`/`UpdateOrigin`이 `ObservableResolverDictionary`와 같이 옵저버에게 `Added`/`Updated`를 통지하도록 변경
+- `com.unity.textmeshpro` 3.0.6 의존성을 `com.unity.ugui` 2.0.0으로 교체 (Unity 6에서는 TextMeshPro가 uGUI에 포함됨)
+
+**Fixes**:
+- `ObservableResolverList.RemoveOrigin`이 재정의된 `RemoveAt`을 거쳐 원본 리스트에서 요소를 한 번 더 제거하던 문제 수정 (원본에 요소가 하나뿐이면 `ArgumentOutOfRangeException` 발생). 이제 원본에서 값의 위치를 찾아 원본과 내부 리스트의 같은 위치를 지우며, 원본에 값이 없으면 아무것도 바꾸지 않고 `false`를 반환
+- `ConfigValidationServiceTests.ValidateAll_ReportsFieldsAndConfigIds`가 같은 타입을 싱글톤과 컬렉션으로 중복 등록해 실패하던 테스트 수정
+- `MigrationRunner` XML 예제를 실제 API(`ConfigMigration(Type)`, `MigrateScriptableObject`의 `configType` 인자)에 맞게 수정
+- 존재하지 않는 대상을 가리키는 cref와 잘못된 주석 정정
+- `Samples~`에 누락된 `.meta` 파일 추가
+
+---
+
+## [1.0.2] - 2026-02-26
+
+**Changes**:
+- `package.json`의 `displayName`과 `description`을 영어로 변경
+- 영어 문서를 한국어로 번역
+- 모든 .cs 파일의 영어 주석을 한국어로 번역
+
+---
+
 ## [1.0.1] - 2026-02-10
 
 **New**:
@@ -42,7 +66,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Observable 리졸버 타입 추가 (`ObservableResolverField`, `ObservableResolverList`, `ObservableResolverDictionary`)
 
 **Changes**:
-- **BREAKING**: 패키지가 `com.gamelovers.dataextensions`에서 `com.gamelovers.gamedata`로 이름 변경 (geuneda 포크에서는 `com.geuneda.dataextensions` 유지)
+- **BREAKING**: 패키지가 `com.gamelovers.dataextensions`에서 `com.gamelovers.gamedata`로 이름 변경 (geuneda 포크의 패키지명은 `com.geuneda.gamedata`이며 런타임 네임스페이스는 `Geuneda.DataExtensions`를 유지)
 - `SerializableType<T>`의 IL2CPP/AOT 안전성 개선
 - `EnumSelector`의 정적 딕셔너리 캐싱 및 O(1) 조회 최적화
 - `IConfigBackendService`가 UniTask 사용으로 변경

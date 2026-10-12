@@ -23,7 +23,7 @@ namespace Geuneda.DataExtensions
 		private const string PersistentSceneName = "DontDestroyOnLoad";
 
 		/// <summary>
-		/// Defines the possible results when calling <see cref="ObjectUtility.Dispose"/>, <see cref="GameObjectUtility.Dispose"/> or <see cref="Actor.Dispose"/>.
+		/// <see cref="Dispose(UnityEngine.GameObject, bool)"/> 또는 <see cref="Dispose(UnityEngine.Object, bool)"/> 호출 시 가능한 결과를 정의합니다.
 		/// </summary>
 		public enum ObjectDisposeResult
 		{
@@ -33,9 +33,11 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// <see cref="Actor"/>인지 먼저 확인하여 <see cref="GameObject"/>를 올바르게 파괴합니다.
+		/// 플레이 중이면 <see cref="Object.Destroy(Object)"/>, 아니면 <see cref="Object.DestroyImmediate(Object)"/>로 <see cref="GameObject"/>를 파괴합니다.
 		/// </summary>
-		/// <seealso cref="Actor.Dispose"/>
+		/// <remarks>
+		/// <paramref name="forceDestroy"/>는 현재 사용되지 않으며 기존 호출 코드와의 호환을 위해 남아 있습니다.
+		/// </remarks>
 		public static ObjectDisposeResult Dispose(this GameObject? gameObject, bool forceDestroy)
 		{
 			if (!gameObject.TryGetValid(out gameObject))
@@ -102,9 +104,12 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// <see cref="Actor"/>인지 먼저 확인하여 <see cref="Object"/>를 올바르게 파괴합니다.
+		/// <see cref="Object"/>를 파괴합니다. <see cref="GameObject"/>이면 <see cref="Dispose(UnityEngine.GameObject, bool)"/>에 위임하고,
+		/// <see cref="IDisposable"/>이면 파괴하기 전에 <see cref="IDisposable.Dispose"/>를 호출합니다.
 		/// </summary>
-		/// <seealso cref="Actor.Dispose"/>
+		/// <remarks>
+		/// <paramref name="forceDestroy"/>는 현재 사용되지 않으며 기존 호출 코드와의 호환을 위해 남아 있습니다.
+		/// </remarks>
 		public static ObjectDisposeResult Dispose(this Object o, bool forceDestroy)
 		{
 			if (!o.TryGetValid(out o))
@@ -165,7 +170,7 @@ namespace Geuneda.DataExtensions
 		}
 
 		/// <summary>
-		/// Safe way to check if an object is valid even if the object is an Unity <see cref="Object"/> and got destroyed already, getting a valid object to be used with ?. and ?? operators too.
+		/// Unity <see cref="Object"/>이고 이미 파괴된 경우에도 객체가 유효한지 안전하게 확인하고, ?. 및 ?? 연산자와 함께 사용할 유효한 객체도 가져옵니다.
 		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool TryGetValid<T>(this T o, [NotNullWhen(true)] out T valid)

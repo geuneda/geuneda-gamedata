@@ -7,16 +7,8 @@ namespace Geuneda.DataExtensions
 	/// <summary>
 	/// <see cref="Type"/> 인스펙터에서 보고, 수정하고, 저장할 수 있는 타입입니다.
 	/// </summary>
-	/// <remarks>
-	/// <see cref="FilterTypesAttributeBase"/> 어트리뷰트와 호환됩니다.
-	/// </remarks>
 	/// <author>Bruno Coimbra, https://github.com/coimbrastudios/framework/blob/master/Coimbra/SerializableType%601.cs</author>
 	/// <typeparam name="T">타입이 이것에 할당 가능해야 합니다.</typeparam>
-	/// <seealso cref="FilterTypesAttributeBase"/>
-	/// <seealso cref="FilterTypesByAccessibilityAttribute"/>
-	/// <seealso cref="FilterTypesByMethodAttribute"/>
-	/// <seealso cref="FilterTypesByAssignableFromAttribute"/>
-	/// <seealso cref="FilterTypesBySpecificTypeAttribute"/>
 	[Serializable]
 	public struct SerializableType<T> : IEquatable<SerializableType<T>>, IEquatable<Type>, ISerializationCallbackReceiver
 	{

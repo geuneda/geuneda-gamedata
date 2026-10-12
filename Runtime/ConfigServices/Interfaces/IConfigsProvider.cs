@@ -6,7 +6,7 @@ namespace Geuneda.DataExtensions
 {
 	/// <summary>
 	/// 게임 디자인 데이터를 포함한 게임의 모든 정적 설정 데이터를 제공합니다
-	/// 웹의 Universal Google Sheet 파일에서 가져온 데이터를 보유합니다
+	/// 스크립터블 오브젝트, 임포터, 백엔드 등에서 가져와 등록한 설정 데이터를 보유합니다
 	/// </summary>
 	public interface IConfigsProvider
 	{

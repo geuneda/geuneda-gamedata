@@ -6,7 +6,7 @@ namespace Geuneda.DataExtensions
 {
 	/// <summary>
 	/// 키-값 쌍을 저장하는 설정 스크립터블 오브젝트의 추상 기본 클래스입니다.
-	/// Provides a foundation for config containers with serializable dictionary collections using Unity's serialization workaround pattern.
+	/// Unity 직렬화 우회 패턴을 사용해 직렬화 가능한 딕셔너리 컬렉션을 가진 설정 컨테이너의 기반을 제공합니다.
 	/// </summary>
 	/// <typeparam name="TId">식별자/키의 타입입니다.</typeparam>
 	/// <typeparam name="TAsset">에셋/값의 타입입니다.</typeparam>

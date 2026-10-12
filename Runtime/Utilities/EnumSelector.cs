@@ -29,7 +29,7 @@ namespace Geuneda.DataExtensions
 	}
 
 	/// <summary>
-	/// The EnumSelector <typeparamref name="T"/> 의 모든 열거형 값을 제공하는 드롭다운 선택 필드 역할을 합니다. <typeparamref name="T"/>. 
+	/// EnumSelector는 <typeparamref name="T"/>의 모든 열거형 값을 제공하는 드롭다운 선택 필드 역할을 합니다.
 	/// 새 값이 추가되거나 제거될 때 잘못된 열거형을 가리키는 것을 방지하기 위해 열거형 값 대신 열거형 이름을 저장합니다
 	/// </summary>
 	[Serializable]

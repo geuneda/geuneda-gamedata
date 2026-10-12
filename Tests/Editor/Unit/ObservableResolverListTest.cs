@@ -52,9 +52,105 @@ namespace Geuneda.DataExtensions.Tests
 			var value = "1";
 
 			_list.AddOrigin(value);
+			_mockList.IndexOf(value).Returns(0);
 
 			Assert.IsTrue(_list.RemoveOrigin(value));
-			_mockList.Received().Remove(value);
+			_mockList.Received().RemoveAt(0);
+		}
+
+		[Test]
+		public void RemoveOrigin_ValueNotInOrigin_ReturnsFalseAndKeepsBothLists()
+		{
+			var originList = new List<string> { "1" };
+			var list = new ObservableResolverList<int, string>(originList,
+				origin => int.Parse(origin),
+				value => value.ToString());
+
+			// "01" 은 원본에 없지만 변환하면 1 이 되어 내부 리스트의 값과 같다
+			Assert.IsFalse(list.RemoveOrigin("01"));
+
+			CollectionAssert.AreEqual(new[] { "1" }, originList);
+			CollectionAssert.AreEqual(new[] { 1 }, list.ReadOnlyList);
+		}
+
+		[Test]
+		public void RemoveOrigin_ResolverCreatesNewReferences_RemovesSameIndexInBothLists()
+		{
+			var originList = new List<string> { "a", "b" };
+			var list = new ObservableResolverList<ReferenceItem, string>(originList,
+				origin => new ReferenceItem(origin),
+				item => item.Value);
+			var calls = new List<(int index, ObservableUpdateType type)>();
+			list.Observe((index, prev, curr, type) => calls.Add((index, type)));
+
+			Assert.IsTrue(list.RemoveOrigin("a"));
+
+			CollectionAssert.AreEqual(new[] { "b" }, originList);
+			Assert.AreEqual(1, list.Count);
+			Assert.AreEqual("b", list[0].Value);
+			CollectionAssert.AreEqual(new[] { (0, ObservableUpdateType.Removed) }, calls);
+		}
+
+		[Test]
+		public void RemoveOrigin_RealList_RemovesOnlyOneOriginElement()
+		{
+			var originList = new List<string> { "1", "2", "3" };
+			var list = new ObservableResolverList<int, string>(originList,
+				origin => int.Parse(origin),
+				value => value.ToString());
+
+			Assert.IsTrue(list.RemoveOrigin("1"));
+
+			CollectionAssert.AreEqual(new[] { "2", "3" }, originList);
+			CollectionAssert.AreEqual(new[] { 2, 3 }, list.ReadOnlyList);
+		}
+
+		[Test]
+		public void RemoveOrigin_RealList_LastElement_DoesNotThrow()
+		{
+			var originList = new List<string> { "1" };
+			var list = new ObservableResolverList<int, string>(originList,
+				origin => int.Parse(origin),
+				value => value.ToString());
+
+			Assert.DoesNotThrow(() => list.RemoveOrigin("1"));
+			Assert.AreEqual(0, originList.Count);
+			Assert.AreEqual(0, list.Count);
+		}
+
+		[Test]
+		public void AddOrigin_NotifiesObservers()
+		{
+			var originList = new List<string> { "1" };
+			var list = new ObservableResolverList<int, string>(originList,
+				origin => int.Parse(origin),
+				value => value.ToString());
+			var calls = new List<(int index, int prev, int curr, ObservableUpdateType type)>();
+			list.Observe((index, prev, curr, type) => calls.Add((index, prev, curr, type)));
+
+			list.AddOrigin("2");
+
+			CollectionAssert.AreEqual(new[] { "1", "2" }, originList);
+			Assert.AreEqual(1, calls.Count);
+			Assert.AreEqual((1, 0, 2, ObservableUpdateType.Added), calls[0]);
+		}
+
+		[Test]
+		public void UpdateOrigin_NotifiesObservers()
+		{
+			var originList = new List<string> { "1", "2" };
+			var list = new ObservableResolverList<int, string>(originList,
+				origin => int.Parse(origin),
+				value => value.ToString());
+			var calls = new List<(int index, int prev, int curr, ObservableUpdateType type)>();
+			list.Observe((index, prev, curr, type) => calls.Add((index, prev, curr, type)));
+
+			list.UpdateOrigin("5", 1);
+
+			CollectionAssert.AreEqual(new[] { "1", "5" }, originList);
+			Assert.AreEqual(5, list[1]);
+			Assert.AreEqual(1, calls.Count);
+			Assert.AreEqual((1, 2, 5, ObservableUpdateType.Updated), calls[0]);
 		}
 
 		[Test]
@@ -129,6 +225,19 @@ namespace Geuneda.DataExtensions.Tests
 			// 리졸버 'origin => int.Parse(origin)'은 origin이 유효한 숫자가 아니면 예외를 발생시킵니다
 			// AddOrigin은 원본 값을 즉시 파싱하므로, 추가 시 예외가 발생합니다
 			Assert.Throws<FormatException>(() => _list.AddOrigin("invalid"));
+		}
+
+		/// <summary>
+		/// Equals 를 재정의하지 않아 변환할 때마다 다른 참조가 되는 테스트용 항목
+		/// </summary>
+		private sealed class ReferenceItem
+		{
+			public string Value { get; }
+
+			public ReferenceItem(string value)
+			{
+				Value = value;
+			}
 		}
 	}
 }

@@ -11,7 +11,7 @@ namespace Geuneda.DataExtensions
 	}
 
 	/// <summary>
-	/// ConfigsImporter 스크립트로 가져온 설정의 제네릭 컨테이너입니다
+	/// 임포터(예: com.geuneda.googlesheetimporter 의 GoogleSheetConfigsImporter)로 가져온 설정의 제네릭 컨테이너입니다
 	/// 주어진 <typeparamref name="T"/> 타입은 스크립터블 오브젝트에서 직렬화되도록 정의된 설정 구조체와 동일합니다
 	/// </summary>
 	public interface IConfigsContainer<T>
@@ -20,7 +20,7 @@ namespace Geuneda.DataExtensions
 	}
 
 	/// <summary>
-	/// ConfigsImporter 스크립트로 가져온 고유 단일 설정의 제네릭 컨테이너입니다
+	/// 임포터(예: com.geuneda.googlesheetimporter 의 GoogleSheetConfigsImporter)로 가져온 고유 단일 설정의 제네릭 컨테이너입니다
 	/// 주어진 <typeparamref name="T"/> 타입은 스크립터블 오브젝트에서 직렬화되도록 정의된 설정 구조체와 동일합니다
 	/// </summary>
 	public interface ISingleConfigContainer<T>

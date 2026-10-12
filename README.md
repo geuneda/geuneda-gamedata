@@ -21,7 +21,7 @@ Unity 게임용 데이터 기반 패키지입니다. Observable 반응형 데이
 
 Package Manager 의 **+ > Add package from git URL...** 에 `https://github.com/geuneda/geuneda-gamedata.git` 을 입력해도 됩니다. 특정 버전에 고정하려면 URL 끝에 `#<태그>` 를 붙입니다.
 
-나머지 의존성(Newtonsoft.Json, TextMeshPro)은 Unity 레지스트리 패키지입니다.
+나머지 의존성(Newtonsoft.Json, uGUI)은 Unity 레지스트리 패키지입니다. Unity 6 에서는 TextMeshPro 가 `com.unity.ugui` 2.0 에 포함되어 있습니다.
 
 ## 빠른 시작
 
@@ -195,7 +195,7 @@ Package Manager 에서 이 패키지를 선택하고 **Samples** 에서 가져�
 - Unity 6000.0 이상
 - `com.unity.nuget.newtonsoft-json` 3.2.1
 - `com.cysharp.unitask` 2.5.10 (`IConfigBackendService` 에서 사용)
-- `com.unity.textmeshpro` 3.0.6 (샘플 UI 에서 사용)
+- `com.unity.ugui` 2.0.0 (TextMeshPro 포함, 샘플 UI 에서 사용)
 
 ## 라이선스
 
