@@ -1,81 +1,51 @@
 # 스키마 마이그레이션 샘플
 
-이 샘플은 **Config Browser**와 `MigrationRunner` API를 사용하여 설정 스키마를 마이그레이션하는 실제 개발 워크플로우를 보여줍니다.
+Config Browser 와 `MigrationRunner` API 로 설정 스키마를 마이그레이션하는 에디터 전용 워크플로우를 보여줍니다. 마이그레이션은 레거시 JSON 을 현재 클래스 정의에 맞게 변환합니다.
 
-## 설계 철학
+## 마이그레이션 체이닝
 
-새로운 기능이 추가됨에 따라 설정 스키마는 시간이 지나면서 변화합니다. 이 패키지는 정보 손실이나 수동 파일 편집 없이 레거시 데이터를 현재 클래스 정의에 맞게 변환하는 강력한 방법을 제공합니다.
+`MigrationRunner` 는 버전 번호를 기준으로 마이그레이션을 순서대로 이어서 적용합니다. 현재 버전에서 대상 버전까지 해당하는 마이그레이션이 모두 실행되므로 "v1→v3" 같은 마이그레이션을 따로 작성할 필요가 없습니다.
 
-이 샘플은 실제 도구를 탐색하며 학습할 수 있도록 구성되어 있습니다:
-1. **탐색**: 마이그레이션이 등록되고 검색되는 방법을 확인합니다.
-2. **미리보기**: 적용 전에 변환 결과를 시각적으로 확인합니다.
-3. **적용**: 마이그레이션을 개별적으로 또는 체인으로 실행합니다.
+프로바이더가 버전 1일 때:
 
-## 마이그레이션 체이닝 동작 원리
-
-`MigrationRunner`는 버전 번호에 기반하여 **마이그레이션을 자동으로 체이닝**합니다. "미리보기"를 클릭하면 프로바이더의 현재 버전에서 대상 버전까지 모든 마이그레이션이 순차적으로 적용됩니다.
-
-예를 들어, 프로바이더가 버전 1인 경우:
-- **v1→v2** 클릭: v1→v2만 적용
-- **v2→v3** 클릭: v1→v2 **와** v2→v3 **모두** 적용 (체이닝)
-
-즉, 명시적인 "v1→v3" 마이그레이션을 작성할 필요가 없습니다 - 러너가 자동으로 체인을 처리합니다.
+- 대상 v2: v1→v2 만 적용
+- 대상 v3: v1→v2, v2→v3 순서로 적용
 
 ## 스키마 변화 (SampleEnemyConfig)
 
-이 샘플은 전투 유닛 설정이 세 가지 버전에 걸쳐 변화하는 과정을 따릅니다:
+### 버전 1
 
-### 버전 1 (원본)
-- `Id`: int
-- `Name`: string
-- `Health`: int
-- `Damage`: int
+- `Id` (int), `Name` (string), `Health` (int), `Damage` (int)
 
-### 버전 2 (리팩토링)
-- **이름 변경**: `Damage` → `AttackDamage` (더 명확한 이름)
-- **새 필드**: `ArmorType` (string)
-- **파생 로직**: `Health` ≥ 100이면 `ArmorType`이 자동으로 "Heavy"로 설정되고, 그렇지 않으면 "Medium" 또는 "Light"로 설정됩니다.
+### 버전 2
 
-### 버전 3 (복잡도 증가)
-- **분할**: `Health`가 `BaseHealth` (80%)와 `BonusHealth` (20%)로 분할됩니다.
-- **새 객체**: `Stats` (중첩 객체) 포함:
-  - `DamageReduction`: `ArmorType`에서 파생.
-  - `CritChance`: `AttackDamage`에서 파생.
-  - `MoveSpeedMultiplier`: `ArmorType`에서 파생.
-- **새 배열**: `Abilities` (빈 배열로 초기화).
+- 이름 변경: `Damage` → `AttackDamage`
+- 새 필드: `ArmorType` (string). `Health` 가 100 이상이면 "Heavy", 50 이상이면 "Medium", 그 밖에는 "Light"
+
+### 버전 3
+
+- 분할: `Health` → `BaseHealth` (80%) + `BonusHealth` (나머지)
+- 새 중첩 객체 `Stats`:
+  - `DamageReduction`: `ArmorType` 에서 파생
+  - `CritChance`: `AttackDamage` 에서 파생
+  - `MoveSpeedMultiplier`: `ArmorType` 에서 파생
+- 새 배열: `Abilities` (빈 배열로 초기화)
 
 ## 사용 방법
 
-1. **샘플을 임포트**하고 `Migration.unity` 씬을 엽니다.
-2. **플레이 모드에 진입**합니다. `ConfigsProvider`가 초기화되고 내부 버전이 1로 설정됩니다.
-3. 씬의 버튼 또는 `Tools > Game Data > Config Browser`를 통해 **Config Browser를 엽니다**.
-4. 브라우저에서 활성 프로바이더를 선택합니다.
-5. **Migrations** 탭으로 이동합니다.
-6. 두 개의 대기 중인 마이그레이션을 확인할 수 있습니다:
-   - `SampleEnemyConfigMigration_v1_v2` (상태: **Current**)
-   - `SampleEnemyConfigMigration_v2_v3` (상태: **Pending**)
+1. 샘플을 임포트하고 `Migration.unity` 씬을 엽니다.
+2. 플레이 모드에 들어갑니다. `ConfigsProvider` 가 만들어지고 버전이 1로 설정됩니다.
+3. 씬의 버튼 또는 `Tools > Game Data > Config Browser` 로 Config Browser 를 엽니다.
+4. 툴바에서 프로바이더를 선택하고 **Migrations** 탭으로 이동합니다.
+5. 마이그레이션 두 개가 보입니다.
+   - `SampleEnemyConfigMigration_v1_v2` (State: **Current**)
+   - `SampleEnemyConfigMigration_v2_v3` (State: **Pending**)
 
-### 미리보기 워크플로우 (커스텀 JSON으로 테스트)
+### 미리보기 (커스텀 JSON)
 
-7. 씬의 출력 패널에서 (런타임에 표시되는) **v1 샘플 JSON을 복사**합니다.
-8. Config Browser의 Migrations 탭에 있는 **"Custom Input JSON" 필드에 붙여넣기**합니다.
-9. 드롭다운에서 **대상 버전을 선택**하고 **Preview**를 클릭합니다:
-   - **Input** 패널에 붙여넣은 v1 JSON이 표시됩니다
-   - **Output** 패널에 선택한 대상 버전까지 마이그레이션이 적용된 결과가 표시됩니다
-
-### 적용 워크플로우 (프로바이더 데이터 업데이트)
-
-10. 드롭다운에서 **대상 버전을 선택**하고 **Apply Migration**을 클릭합니다:
-    - 실제 프로바이더 데이터에 마이그레이션이 적용됩니다
-    - 프로바이더 버전이 업데이트됩니다 (예: 1 → 2)
-    - **State** 열이 새 버전을 반영하도록 업데이트됩니다
-11. v1→v2 적용 후 확인 사항:
-    - v1→v2가 **Applied** 상태로 변경됨
-    - v2→v3가 **Current** 상태로 변경됨 (다음 적용 준비 완료)
-
-### 샘플 v1 JSON
-
-다음 JSON을 직접 사용할 수도 있습니다:
+1. 씬 출력 패널의 v1 샘플 JSON(아래와 같음)을 복사합니다.
+2. Migrations 탭의 **Custom Input JSON** 필드에 붙여넣습니다.
+3. **Target Version** 드롭다운에서 대상 버전을 고르고 **Preview** 를 누릅니다. **Input** 패널에 입력 JSON 이, **Output** 패널에 마이그레이션 결과가 표시됩니다.
 
 ```json
 {
@@ -86,16 +56,23 @@
 }
 ```
 
-이것은 v1 스키마 설정을 나타냅니다. Custom Input JSON 필드에 붙여넣어 마이그레이션이 데이터를 어떻게 변환하는지 확인하세요.
+같은 JSON 이 `Data/sample_enemy_v1.json` 에도 있습니다.
+
+### 적용 (프로바이더 데이터 갱신)
+
+1. 대상 버전을 고르고 **Apply Migration** 을 누르면 실제 프로바이더 데이터에 마이그레이션이 적용되고 프로바이더 버전이 올라갑니다(예: 1 → 2).
+2. v1→v2 를 적용한 뒤에는 v1→v2 가 **Applied**, v2→v3 가 **Current** 로 바뀝니다.
 
 ## 구현 세부사항
 
-### 마이그레이션 클래스
-마이그레이션은 `IConfigMigration`을 상속하고 `[ConfigMigration]` 어트리뷰트가 표시된 클래스로 구현됩니다. `Editor/` 폴더의 예제를 참조하세요:
-- `SampleEnemyConfigMigration_v1_v2.cs`: 이름 변경 및 조건부 기본값 설정을 보여줍니다.
-- `SampleEnemyConfigMigration_v2_v3.cs`: 필드 분할, 중첩 객체, 배열을 보여줍니다.
+마이그레이션은 `IConfigMigration` 을 구현하고 `[ConfigMigration(typeof(SampleEnemyConfig))]` 를 붙인 클래스입니다. 버전은 어트리뷰트가 아니라 `FromVersion`, `ToVersion` 프로퍼티로 지정합니다. `Editor/` 폴더:
 
-### API 참조
-- `MigrationRunner.GetAvailableMigrations<T>()`: 특정 타입에 대해 등록된 마이그레이션을 검색합니다.
-- `MigrationRunner.Migrate()`: `JObject`에 변환을 적용합니다.
-- `MigrationRunner.MigrateScriptableObject()`: `ScriptableObject` 에셋을 위한 고수준 헬퍼입니다.
+- `SampleEnemyConfigMigration_v1_v2.cs`: 필드 이름 변경, 조건부 기본값
+- `SampleEnemyConfigMigration_v2_v3.cs`: 필드 분할, 중첩 객체, 배열
+
+`MigrationRunner` 주요 API (`GeunedaEditor.GameData`, 에디터 전용):
+
+- `GetAvailableMigrations<T>()` / `GetAvailableMigrations(Type)`: 설정 타입에 등록된 마이그레이션 목록(`MigrationInfo`)
+- `GetLatestVersion(Type)`: 등록된 마이그레이션의 최대 `ToVersion`
+- `Migrate(Type configType, JObject json, ulong currentVersion, ulong targetVersion)`: `JObject` 에 마이그레이션을 적용하고 적용 개수를 반환
+- `MigrateScriptableObject(scriptableObject, configType, fromVersion, toVersion = 0)`: ScriptableObject 를 JSON 으로 바꿔 마이그레이션한 뒤 다시 채움. `toVersion` 이 0이면 최신 버전까지 적용하고 `MigrationResult` 를 반환
