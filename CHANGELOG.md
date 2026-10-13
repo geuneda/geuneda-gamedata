@@ -4,6 +4,30 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+**Fixes**:
+- `ObservableList.RemoveAt`/`Remove`와 `ObservableDictionary.Remove` 통지 중 구독자가 자기 구독을 해제하면, 마지막 구독자에서는 `ArgumentOutOfRangeException`이 나고 중간 구독자에서는 다음 구독자가 두 번 호출되던 문제 수정
+- 미리 `Observe(key)` 한 키가 사전에 없을 때 `ObservableDictionary.Clear`(와 이를 쓰는 `ObservableResolverDictionary.Clear`/`ClearOrigin`)가 `KeyNotFoundException`을 던지던 문제 수정. 사전에 있는 키의 구독자에게만 `Removed`를 보냅니다
+- `ObservableDictionary.Clear`와 `ObservableHashSet.Clear`가 비우기 전에 의존 통지를 보내 `ComputedField`가 비우기 전 값으로 남던 문제 수정. `ObservableList.Clear`처럼 비운 뒤에 의존 통지를 보냅니다(`Removed` 콜백은 지금처럼 비우기 전에 호출)
+- 구독자 하나가 예외를 던지면 나머지 구독자와 의존 갱신이 실행되지 않아 `ComputedField`가 낡은 값에 머물던 문제 수정. 모든 구독자와 의존 통지를 마친 뒤 예외를 다시 던집니다. 예외가 하나면 원래 예외(스택 정보 유지), 여럿이면 `AggregateException`입니다. 이미 적용된 데이터 변경은 되돌리지 않습니다
+- `ObservableBatch.Dispose`에서 한 Observable의 구독자 예외로 뒤쪽 Observable이 재개되지 않아 배치 상태에 남던 문제 수정. 모두 재개하고 배치를 닫은 뒤 예외를 다시 던집니다. List/Dictionary/HashSet의 재개도 한 항목의 예외로 나머지 항목 통지가 멈추지 않습니다
+- `ObservableDictionary.StopObserving(key)`와 `StopObservingAll()`이 진행 중인 통지에는 반영되지 않던 문제 수정
+- 배치 안에서 컬렉션을 모두 비우면 배치가 끝날 때 의존 통지를 보내지 않아 `ComputedField`가 낡은 값에 머물던 문제 수정. 재개 시 항목 통지 뒤 의존 통지를 항상 한 번 보냅니다
+- 배치 재개 통지 중 콜백이 같은 Observable에 새 배치를 열어도 나머지 항목을 계속 통지하던 문제 수정. 남은 항목 통지와 의존 통지를 멈추고, 새 배치가 끝날 때 전체 항목을 다시 통지합니다. HashSet/Dictionary는 새 배치에서 항목을 추가해도 열거자 예외 없이 멈춥니다. `Clear`의 `Removed` 콜백이 새 배치를 열면 비운 뒤의 의존 통지도 그 배치가 끝날 때 보냅니다
+- `null` 콜백이 구독돼 있으면 다른 콜백의 `StopObserving`/`StopObservingAll(subscriber)`가 `NullReferenceException`을 던지던 문제 수정
+
+**Changes**:
+- 모든 Observable과 `ComputedField`의 구독 목록을 공통 `ObserverList<TAction>`(internal)으로 바꿨습니다. 구독 한 건마다 등록 객체를 두고, 해제하면 그 등록만 비활성으로 표시합니다
+  - 변경 연산 하나가 시작될 때 관련 구독 목록의 스냅샷(ArrayPool)을 고정하고 구독 순서대로 호출합니다. `Remove`/`Clear`의 통지 순서가 역순에서 구독 순서로 바뀌었습니다
+  - 통지 중 해제된 등록은 아직 호출 전이면 건너뜁니다. 같은 콜백을 여러 번 구독했으면 해제한 건만 빠집니다
+  - 통지 중 새로 구독한 콜백은 그 연산의 통지를 받지 않고 다음 연산부터 받습니다. 이전에는 `Add`/값 설정에서 같은 통지 루프의 뒤쪽에 붙어 바로 호출되기도 했습니다
+  - 의존 통지(`ComputedField` 무효화)는 스냅샷 규칙과 달리 알리는 시점의 의존 관계 전체에 보냅니다. 콜백 안에서 처음 계산된 `ComputedField`도 그 연산에서 갱신됩니다
+  - `ObservableDictionary`의 배치 재개는 항목마다 키 구독자와 전체 구독자를 번갈아 부르던 순서에서, 모든 키 구독자에게 먼저, 그다음 전체 구독자에게 알리는 순서로 바뀌었습니다(`Clear`와 같은 순서). 키 구독자에게는 알리는 시점의 값을 보내고, 앞선 콜백이 지운 키는 건너뜁니다
+  - `Clear`가 구독자 목록을 매번 복사하던 할당(`ToList`)이 없어졌습니다. 구독할 때 등록 객체 하나를 할당합니다
+- `ObservableList.Clear`의 통지 순서가 "구독자별로 모든 항목"에서 "항목별로 모든 구독자"로 바뀌었습니다. 각 구독자가 받는 항목과 인덱스는 같습니다
+- `ObservableDictionary.StopObserving(Action)`은 각 목록에서 같은 콜백의 마지막 등록 대신 첫 등록을 해제합니다(같은 콜백이 여러 번 구독돼 있으면 다른 구독자와의 상대 호출 순서가 달라질 수 있음)
+
 ## [1.0.4] - 2026-10-12
 
 **Fixes**:

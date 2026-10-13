@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace Geuneda.DataExtensions
 {
@@ -123,11 +122,11 @@ namespace Geuneda.DataExtensions
 	/// <inheritdoc />
 	public partial class ObservableDictionary<TKey, TValue> : IObservableDictionary<TKey, TValue>, IBatchable, IComputedDependency
 	{
-		private readonly IDictionary<TKey, IList<Action<TKey, TValue, TValue, ObservableUpdateType>>> _keyUpdateActions =
-			new Dictionary<TKey, IList<Action<TKey, TValue, TValue, ObservableUpdateType>>>();
-		private readonly IList<Action<TKey, TValue, TValue, ObservableUpdateType>> _updateActions =
-			new List<Action<TKey, TValue, TValue, ObservableUpdateType>>();
-		private readonly List<Action> _dependencyActions = new List<Action>();
+		private readonly IDictionary<TKey, ObserverList<Action<TKey, TValue, TValue, ObservableUpdateType>>> _keyUpdateActions =
+			new Dictionary<TKey, ObserverList<Action<TKey, TValue, TValue, ObservableUpdateType>>>();
+		private readonly ObserverList<Action<TKey, TValue, TValue, ObservableUpdateType>> _updateActions =
+			new ObserverList<Action<TKey, TValue, TValue, ObservableUpdateType>>();
+		private readonly ObserverList<Action> _dependencyActions = new ObserverList<Action>();
 		private bool _isBatching;
 
 		// 플레이어 빌드에서 호출이 컴파일 제외되도록 partial 메서드로 선언됩니다.
@@ -175,10 +174,60 @@ namespace Geuneda.DataExtensions
 			if (_isBatching)
 			{
 				_isBatching = false;
-				foreach (var pair in Dictionary)
+
+				// 한 항목의 구독자 예외로 나머지 항목 통지가 멈추지 않도록 끝까지 알린 뒤 다시 던집니다
+				var errors = new NotifyErrors();
+				var keyUpdates = TakeKeySnapshots();
+
+				try
 				{
-					InvokeUpdate(pair.Key, default);
+					using var updates = ObservableUpdateFlag != ObservableUpdateFlag.KeyUpdateOnly
+						? _updateActions.TakeSnapshot()
+						: default;
+
+					// 콜백이 새 배치를 열었으면 남은 항목은 그 배치가 끝날 때 알립니다
+					foreach (var entry in keyUpdates)
+					{
+						if (_isBatching)
+						{
+							break;
+						}
+
+						// 앞선 콜백이 값을 바꾸거나 키를 지웠을 수 있으므로 알리는 시점의 값을 읽습니다
+						if (!Dictionary.TryGetValue(entry.Key, out var value))
+						{
+							continue;
+						}
+
+						entry.Snapshot.Notify(entry.Key, default(TValue), value, ObservableUpdateType.Updated, ref errors);
+					}
+
+					if (ObservableUpdateFlag != ObservableUpdateFlag.KeyUpdateOnly && !_isBatching)
+					{
+						foreach (var pair in Dictionary)
+						{
+							updates.Notify(pair.Key, default(TValue), pair.Value, ObservableUpdateType.Updated, ref errors);
+
+							// 새 배치에서 사전이 바뀌었을 수 있으므로 다음 항목으로 넘어가기(열거자 검사) 전에 멈춥니다
+							if (_isBatching)
+							{
+								break;
+							}
+						}
+					}
 				}
+				finally
+				{
+					DisposeKeySnapshots(keyUpdates);
+				}
+
+				// 배치 안에서 비워 항목이 없어도 의존 값은 갱신합니다. 새 배치가 열렸으면 그 배치가 끝날 때 갱신합니다
+				if (!_isBatching)
+				{
+					_dependencyActions.NotifyAll(ref errors);
+				}
+
+				errors.ThrowIfAny();
 			}
 		}
 
@@ -264,26 +313,9 @@ namespace Geuneda.DataExtensions
 				return;
 			}
 
-			if (ObservableUpdateFlag != ObservableUpdateFlag.UpdateOnly && _keyUpdateActions.TryGetValue(key, out var actions))
-			{
-				for (var i = 0; i < actions.Count; i++)
-				{
-					actions[i](key, default, value, ObservableUpdateType.Added);
-				}
-			}
-
-			if (ObservableUpdateFlag != ObservableUpdateFlag.KeyUpdateOnly)
-			{
-				for (var i = 0; i < _updateActions.Count; i++)
-				{
-					_updateActions[i](key, default, value, ObservableUpdateType.Added);
-				}
-			}
-
-			for (var i = 0; i < _dependencyActions.Count; i++)
-			{
-				_dependencyActions[i].Invoke();
-			}
+			var errors = new NotifyErrors();
+			Notify(key, default, value, ObservableUpdateType.Added, ref errors);
+			errors.ThrowIfAny();
 		}
 
 		/// <inheritdoc />
@@ -299,35 +331,9 @@ namespace Geuneda.DataExtensions
 				return true;
 			}
 
-			if (ObservableUpdateFlag != ObservableUpdateFlag.UpdateOnly && _keyUpdateActions.TryGetValue(key, out var actions))
-			{
-				for (var i = actions.Count - 1; i > -1; i--)
-				{
-					var action = actions[i];
-
-					action(key, value, default, ObservableUpdateType.Removed);
-
-					// 액션이 구독 해제된 경우 인덱스를 이동합니다
-					i = AdjustIndex(i, action, actions);
-				}
-			}
-			if (ObservableUpdateFlag != ObservableUpdateFlag.KeyUpdateOnly)
-			{
-				for (var i = _updateActions.Count - 1; i > -1; i--)
-				{
-					var action = _updateActions[i];
-
-					action(key, value, default, ObservableUpdateType.Removed);
-
-					// 액션이 구독 해제된 경우 인덱스를 이동합니다
-					i = AdjustIndex(i, action, _updateActions);
-				}
-			}
-
-			for (var i = 0; i < _dependencyActions.Count; i++)
-			{
-				_dependencyActions[i].Invoke();
-			}
+			var errors = new NotifyErrors();
+			Notify(key, value, default, ObservableUpdateType.Removed, ref errors);
+			errors.ThrowIfAny();
 
 			return true;
 		}
@@ -335,42 +341,84 @@ namespace Geuneda.DataExtensions
 		/// <inheritdoc />
 		public virtual void Clear()
 		{
-			if (!_isBatching)
+			if (_isBatching)
 			{
-				if (ObservableUpdateFlag != ObservableUpdateFlag.UpdateOnly)
-				{
-					// 콜백 중 하나가 목록을 수정하는 경우에 대비하여 복사본을 생성합니다(예: 구독자 제거)
-					var copy = new Dictionary<TKey, IList<Action<TKey, TValue, TValue, ObservableUpdateType>>>(_keyUpdateActions);
+				Dictionary.Clear();
+				return;
+			}
 
-					foreach (var data in copy)
-					{
-						var listCopy = data.Value.ToList();
-						for (var i = 0; i < listCopy.Count; i++)
-						{
-							listCopy[i](data.Key, Dictionary[data.Key], default, ObservableUpdateType.Removed);
-						}
-					}
+			var errors = new NotifyErrors();
+
+			// 연산 시작 시점의 구독자로 스냅샷을 고정합니다. 콜백 안에서 새로 구독해도 이번 Clear 는 받지 않습니다
+			var keyUpdates = TakeKeySnapshots();
+
+			try
+			{
+				using var updates = ObservableUpdateFlag != ObservableUpdateFlag.KeyUpdateOnly
+					? _updateActions.TakeSnapshot()
+					: default;
+
+				foreach (var entry in keyUpdates)
+				{
+					entry.Snapshot.Notify(entry.Key, entry.Value, default(TValue), ObservableUpdateType.Removed, ref errors);
 				}
 
 				if (ObservableUpdateFlag != ObservableUpdateFlag.KeyUpdateOnly)
 				{
-					foreach (var data in Dictionary)
+					foreach (var pair in Dictionary)
 					{
-						var listCopy = _updateActions.ToList();
-						for (var i = 0; i < listCopy.Count; i++)
-						{
-							listCopy[i](data.Key, data.Value, default, ObservableUpdateType.Removed);
-						}
+						updates.Notify(pair.Key, pair.Value, default(TValue), ObservableUpdateType.Removed, ref errors);
 					}
 				}
-
-				for (var i = 0; i < _dependencyActions.Count; i++)
-				{
-					_dependencyActions[i].Invoke();
-				}
+			}
+			finally
+			{
+				DisposeKeySnapshots(keyUpdates);
 			}
 
 			Dictionary.Clear();
+
+			// 의존 값(ComputedField)이 비워진 뒤의 상태로 다시 계산되도록, 비운 다음 그 시점의 의존 관계 전체에 알립니다.
+			// 콜백이 새 배치를 열었으면 그 배치가 끝날 때 알립니다
+			if (!_isBatching)
+			{
+				_dependencyActions.NotifyAll(ref errors);
+			}
+
+			errors.ThrowIfAny();
+		}
+
+		/// <summary>
+		/// 키 구독이 있고 사전에 있는 키마다 (키, 현재 값, 키 구독 스냅샷)을 모읍니다.
+		/// 미리 구독했지만 사전에 없는 키는 알릴 값이 없으므로 넣지 않습니다
+		/// </summary>
+		private List<(TKey Key, TValue Value, ObserverList<Action<TKey, TValue, TValue, ObservableUpdateType>>.Snapshot Snapshot)> TakeKeySnapshots()
+		{
+			var keyUpdates = new List<(TKey Key, TValue Value, ObserverList<Action<TKey, TValue, TValue, ObservableUpdateType>>.Snapshot Snapshot)>();
+
+			if (ObservableUpdateFlag == ObservableUpdateFlag.UpdateOnly)
+			{
+				return keyUpdates;
+			}
+
+			foreach (var pair in _keyUpdateActions)
+			{
+				if (Dictionary.TryGetValue(pair.Key, out var value))
+				{
+					keyUpdates.Add((pair.Key, value, pair.Value.TakeSnapshot()));
+				}
+			}
+
+			return keyUpdates;
+		}
+
+		private static void DisposeKeySnapshots(
+			List<(TKey Key, TValue Value, ObserverList<Action<TKey, TValue, TValue, ObservableUpdateType>>.Snapshot Snapshot)> keyUpdates)
+		{
+			foreach (var entry in keyUpdates)
+			{
+				entry.Snapshot.Dispose();
+			}
 		}
 
 		/// <inheritdoc />
@@ -382,7 +430,12 @@ namespace Geuneda.DataExtensions
 		/// <inheritdoc />
 		public void StopObserving(TKey key)
 		{
-			_keyUpdateActions.Remove(key);
+			if (_keyUpdateActions.TryGetValue(key, out var actions))
+			{
+				// 진행 중인 통지에서도 이 키의 구독자가 빠지도록 등록을 먼저 비활성화합니다
+				actions.Clear();
+				_keyUpdateActions.Remove(key);
+			}
 		}
 
 		/// <inheritdoc />
@@ -394,16 +447,13 @@ namespace Geuneda.DataExtensions
 		/// <inheritdoc />
 		public void Observe(TKey key, Action<TKey, TValue, TValue, ObservableUpdateType> onUpdate)
 		{
-			var list = new List<Action<TKey, TValue, TValue, ObservableUpdateType>> { onUpdate };
+			if (!_keyUpdateActions.TryGetValue(key, out var listeners))
+			{
+				listeners = new ObserverList<Action<TKey, TValue, TValue, ObservableUpdateType>>();
+				_keyUpdateActions.Add(key, listeners);
+			}
 
-			if (_keyUpdateActions.TryGetValue(key, out var listeners))
-			{
-				listeners.Add(onUpdate);
-			}
-			else
-			{
-				_keyUpdateActions.Add(key, new List<Action<TKey, TValue, TValue, ObservableUpdateType>> { onUpdate });
-			}
+			listeners.Add(onUpdate);
 		}
 
 		/// <inheritdoc />
@@ -418,24 +468,10 @@ namespace Geuneda.DataExtensions
 		{
 			foreach (var actions in _keyUpdateActions)
 			{
-				for (var i = actions.Value.Count - 1; i > -1; i--)
-				{
-					if (actions.Value[i] == onUpdate)
-					{
-						actions.Value.RemoveAt(i);
-						break;
-					}
-				}
+				actions.Value.Remove(onUpdate);
 			}
 
-			for (var i = _updateActions.Count - 1; i > -1; i--)
-			{
-				if (_updateActions[i] == onUpdate)
-				{
-					_updateActions.RemoveAt(i);
-					break;
-				}
-			}
+			_updateActions.Remove(onUpdate);
 		}
 
 		/// <inheritdoc />
@@ -443,6 +479,12 @@ namespace Geuneda.DataExtensions
 		{
 			if (subscriber == null)
 			{
+				// 진행 중인 통지에서도 빠지도록 키별 등록을 먼저 비활성화합니다
+				foreach (var actions in _keyUpdateActions)
+				{
+					actions.Value.Clear();
+				}
+
 				_keyUpdateActions.Clear();
 				_updateActions.Clear();
 				return;
@@ -450,22 +492,10 @@ namespace Geuneda.DataExtensions
 
 			foreach (var actions in _keyUpdateActions)
 			{
-				for (var i = actions.Value.Count - 1; i > -1; i--)
-				{
-					if (actions.Value[i].Target == subscriber)
-					{
-						actions.Value.RemoveAt(i);
-					}
-				}
+				actions.Value.RemoveByTarget(subscriber);
 			}
 
-			for (var i = _updateActions.Count - 1; i > -1; i--)
-			{
-				if (_updateActions[i].Target == subscriber)
-				{
-					_updateActions.RemoveAt(i);
-				}
-			}
+			_updateActions.RemoveByTarget(subscriber);
 		}
 
 		protected void InvokeUpdate(TKey key, TValue previousValue)
@@ -475,47 +505,29 @@ namespace Geuneda.DataExtensions
 				return;
 			}
 
-			var value = Dictionary[key];
-
-			if (ObservableUpdateFlag != ObservableUpdateFlag.UpdateOnly && _keyUpdateActions.TryGetValue(key, out var actions))
-			{
-				for (var i = 0; i < actions.Count; i++)
-				{
-					actions[i](key, previousValue, value, ObservableUpdateType.Updated);
-				}
-			}
-
-			if (ObservableUpdateFlag != ObservableUpdateFlag.KeyUpdateOnly)
-			{
-				for (var i = 0; i < _updateActions.Count; i++)
-				{
-					_updateActions[i](key, previousValue, value, ObservableUpdateType.Updated);
-				}
-			}
-
-			for (var i = 0; i < _dependencyActions.Count; i++)
-			{
-				_dependencyActions[i].Invoke();
-			}
+			var errors = new NotifyErrors();
+			Notify(key, previousValue, Dictionary[key], ObservableUpdateType.Updated, ref errors);
+			errors.ThrowIfAny();
 		}
 
-		private int AdjustIndex(int index, Action<TKey, TValue, TValue, ObservableUpdateType> action,
-			IList<Action<TKey, TValue, TValue, ObservableUpdateType>> list)
+		/// <summary>
+		/// 키 하나의 변경을 키 구독자, 전체 구독자, 의존 순서로 알립니다.
+		/// 키·전체 구독 스냅샷은 시작 시점에 고정하고, 의존 갱신은 알리는 시점의 의존 관계 전체에 보냅니다
+		/// </summary>
+		private void Notify(TKey key, TValue previousValue, TValue value, ObservableUpdateType updateType, ref NotifyErrors errors)
 		{
-			if (index < list.Count && list[index] == action)
+			using (var keyUpdates = ObservableUpdateFlag != ObservableUpdateFlag.UpdateOnly && _keyUpdateActions.TryGetValue(key, out var actions)
+				       ? actions.TakeSnapshot()
+				       : default)
+			using (var updates = ObservableUpdateFlag != ObservableUpdateFlag.KeyUpdateOnly
+				       ? _updateActions.TakeSnapshot()
+				       : default)
 			{
-				return index;
+				keyUpdates.Notify(key, previousValue, value, updateType, ref errors);
+				updates.Notify(key, previousValue, value, updateType, ref errors);
 			}
 
-			for (var i = index - 1; i > -1; i--)
-			{
-				if (list[i] == action)
-				{
-					return i;
-				}
-			}
-
-			return index + 1;
+			_dependencyActions.NotifyAll(ref errors);
 		}
 
 

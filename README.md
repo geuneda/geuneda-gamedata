@@ -92,6 +92,14 @@ stats.Add("Health", 100); // 키 구독자에게 Added 통지
 - `ObservableDictionary` 의 `ObservableUpdateFlag` 기본값은 `KeyUpdateOnly` 입니다. 이 상태에서는 키를 지정한 `Observe(key, ...)` 구독자만 통지를 받습니다. 키 없이 `Observe(...)` 로 구독했다면 `UpdateOnly` 또는 `Both` 로 바꿔야 합니다.
 - `StopObservingAll(subscriber)` 에 구독 객체를 넘기면 그 객체의 콜백만 해제하고, 인자를 생략하면 모두 해제합니다.
 
+**통지 규칙** (모든 Observable 과 `ComputedField` 공통)
+
+- 변경 연산(값 설정, `Add`, `Remove`, `Clear` 등) 하나가 시작될 때 그 시점의 구독자 목록을 고정하고, 구독한 순서대로 호출합니다. `Remove`, `Clear` 도 같은 순서입니다.
+- 콜백 안에서 구독을 해제해도 다른 구독자를 건너뛰거나 두 번 부르지 않습니다. 아직 호출되지 않은 구독자를 해제하면 그 구독자는 이번 통지에서 빠집니다. 같은 콜백을 여러 번 구독했다면 해제한 한 건만 빠집니다. `StopObserving(key)` 와 `StopObservingAll()` 도 진행 중인 통지에 바로 반영됩니다.
+- 콜백 안에서 새로 구독한 콜백은 그 연산의 통지를 받지 않고 다음 연산부터 받습니다. 의존 갱신(`ComputedField` 무효화)은 이 규칙과 달리 알리는 시점의 의존 관계 전체에 보내므로, 콜백 안에서 처음 계산된 `ComputedField` 도 갱신됩니다.
+- 구독자가 예외를 던져도 나머지 구독자와 의존 갱신(`ComputedField`)은 끝까지 실행한 뒤 예외를 다시 던집니다. 예외가 하나면 원래 예외 그대로, 여럿이면 `AggregateException` 입니다. 이미 적용된 데이터 변경은 되돌리지 않습니다.
+- `Clear` 는 구독자에게 `Removed` 를 보낸 뒤 실제로 비우고, 그다음 의존 갱신을 알립니다. 미리 구독했지만 아직 없는 키에는 `Removed` 를 보내지 않습니다.
+
 ### ComputedField
 
 계산 함수 안에서 읽은 Observable 을 자동으로 추적해, 그중 하나가 바뀌면 다시 계산하고 통지합니다.
@@ -127,6 +135,11 @@ using (var batch = new ObservableBatch())
 }
 // 여기서 health, mana 옵저버가 각각 한 번씩 호출된다
 ```
+
+- 배치가 끝나면 컬렉션은 남은 항목마다 통지한 뒤 의존 갱신(`ComputedField`)을 한 번 보냅니다. 배치 안에서 모두 지워 남은 항목이 없어도 의존 갱신은 보냅니다.
+- 재개 통지 중 콜백이 같은 Observable 에 새 배치를 열면 남은 항목 통지와 의존 갱신을 멈추고, 그 배치가 끝날 때 전체 항목을 다시 통지합니다.
+- `Clear` 의 `Removed` 콜백이 새 배치를 열면 `Removed` 는 끝까지 보내고, 비운 뒤의 의존 갱신은 그 배치가 끝날 때 보냅니다.
+- 구독자가 예외를 던져도 배치에 든 Observable 을 모두 재개하고 배치를 닫은 뒤 예외를 다시 던집니다.
 
 ### 설정 관리
 

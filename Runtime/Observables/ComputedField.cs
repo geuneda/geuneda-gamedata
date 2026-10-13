@@ -38,8 +38,8 @@ namespace Geuneda.DataExtensions
 	public partial class ComputedField<T> : IObservableFieldReader<T>, IDisposable, IBatchable, IComputedDependency, IComputedFieldInternal
 	{
 		private readonly Func<T> _computation;
-		private readonly List<Action<T, T>> _updateActions = new List<Action<T, T>>();
-		private readonly List<Action> _dependencyActions = new List<Action>();
+		private readonly ObserverList<Action<T, T>> _updateActions = new ObserverList<Action<T, T>>();
+		private readonly ObserverList<Action> _dependencyActions = new ObserverList<Action>();
 		private readonly HashSet<IComputedDependency> _dependencies = new HashSet<IComputedDependency>();
 		private T _value;
 		private bool _isDirty = true;
@@ -128,13 +128,7 @@ namespace Geuneda.DataExtensions
 				return;
 			}
 
-			for (var i = _updateActions.Count - 1; i > -1; i--)
-			{
-				if (_updateActions[i].Target == subscriber)
-				{
-					_updateActions.RemoveAt(i);
-				}
-			}
+			_updateActions.RemoveByTarget(subscriber);
 		}
 
 		/// <inheritdoc />
@@ -148,16 +142,16 @@ namespace Geuneda.DataExtensions
 			_isDirty = true;
 			var previousValue = _value;
 			Recompute();
-			
-			for (var i = 0; i < _updateActions.Count; i++)
+
+			var errors = new NotifyErrors();
+
+			using (var updates = _updateActions.TakeSnapshot())
 			{
-				_updateActions[i].Invoke(previousValue, _value);
+				updates.Notify(previousValue, _value, ref errors);
 			}
 
-			for (var i = 0; i < _dependencyActions.Count; i++)
-			{
-				_dependencyActions[i].Invoke();
-			}
+			_dependencyActions.NotifyAll(ref errors);
+			errors.ThrowIfAny();
 		}
 
 		private void Recompute()

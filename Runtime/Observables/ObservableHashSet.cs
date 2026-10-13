@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Geuneda.DataExtensions
 {
@@ -68,8 +67,8 @@ namespace Geuneda.DataExtensions
 	public partial class ObservableHashSet<T> : IObservableHashSet<T>, IBatchable, IComputedDependency
 	{
 		private readonly HashSet<T> _hashSet;
-		private readonly IList<Action<T, ObservableUpdateType>> _updateActions = new List<Action<T, ObservableUpdateType>>();
-		private readonly List<Action> _dependencyActions = new List<Action>();
+		private readonly ObserverList<Action<T, ObservableUpdateType>> _updateActions = new ObserverList<Action<T, ObservableUpdateType>>();
+		private readonly ObserverList<Action> _dependencyActions = new ObserverList<Action>();
 		private bool _isBatching;
 
 		// 플레이어 빌드에서 호출이 컴파일 제외되도록 partial 메서드로 선언됩니다.
@@ -135,10 +134,32 @@ namespace Geuneda.DataExtensions
 			if (_isBatching)
 			{
 				_isBatching = false;
-				foreach (var item in _hashSet)
+
+				// 한 항목의 구독자 예외로 나머지 항목 통지가 멈추지 않도록 끝까지 알린 뒤 다시 던집니다
+				var errors = new NotifyErrors();
+
+				using (var updates = _updateActions.TakeSnapshot())
 				{
-					InvokeUpdate(item, ObservableUpdateType.Added);
+					foreach (var item in _hashSet)
+					{
+						updates.Notify(item, ObservableUpdateType.Added, ref errors);
+
+						// 콜백이 새 배치를 열었으면 남은 항목은 그 배치가 끝날 때 알립니다.
+						// 새 배치에서 항목이 바뀌었을 수 있으므로 다음 항목으로 넘어가기(열거자 검사) 전에 멈춥니다
+						if (_isBatching)
+						{
+							break;
+						}
+					}
 				}
+
+				// 배치 안에서 비워 항목이 없어도 의존 값은 갱신합니다. 새 배치가 열렸으면 그 배치가 끝날 때 갱신합니다
+				if (!_isBatching)
+				{
+					_dependencyActions.NotifyAll(ref errors);
+				}
+
+				errors.ThrowIfAny();
 			}
 		}
 
@@ -170,13 +191,7 @@ namespace Geuneda.DataExtensions
 				return;
 			}
 
-			for (var i = _updateActions.Count - 1; i > -1; i--)
-			{
-				if (_updateActions[i].Target == subscriber)
-				{
-					_updateActions.RemoveAt(i);
-				}
-			}
+			_updateActions.RemoveByTarget(subscriber);
 		}
 
 		/// <inheritdoc />
@@ -204,23 +219,32 @@ namespace Geuneda.DataExtensions
 		/// <inheritdoc />
 		public void Clear()
 		{
-			if (!_isBatching)
+			if (_isBatching)
 			{
-				var copy = _updateActions.ToList();
+				_hashSet.Clear();
+				return;
+			}
+
+			var errors = new NotifyErrors();
+
+			using (var updates = _updateActions.TakeSnapshot())
+			{
 				foreach (var item in _hashSet)
 				{
-					foreach (var action in copy)
-					{
-						action(item, ObservableUpdateType.Removed);
-					}
-				}
-
-				for (var i = 0; i < _dependencyActions.Count; i++)
-				{
-					_dependencyActions[i].Invoke();
+					updates.Notify(item, ObservableUpdateType.Removed, ref errors);
 				}
 			}
+
 			_hashSet.Clear();
+
+			// 의존 값(ComputedField)이 비워진 뒤의 상태로 다시 계산되도록, 비운 다음 그 시점의 의존 관계 전체에 알립니다.
+			// 콜백이 새 배치를 열었으면 그 배치가 끝날 때 알립니다
+			if (!_isBatching)
+			{
+				_dependencyActions.NotifyAll(ref errors);
+			}
+
+			errors.ThrowIfAny();
 		}
 
 		private void InvokeUpdate(T item, ObservableUpdateType updateType)
@@ -230,15 +254,15 @@ namespace Geuneda.DataExtensions
 				return;
 			}
 
-			for (var i = 0; i < _updateActions.Count; i++)
+			var errors = new NotifyErrors();
+
+			using (var updates = _updateActions.TakeSnapshot())
 			{
-				_updateActions[i](item, updateType);
+				updates.Notify(item, updateType, ref errors);
 			}
 
-			for (var i = 0; i < _dependencyActions.Count; i++)
-			{
-				_dependencyActions[i].Invoke();
-			}
+			_dependencyActions.NotifyAll(ref errors);
+			errors.ThrowIfAny();
 		}
 
 		public IEnumerator<T> GetEnumerator()

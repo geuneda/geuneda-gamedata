@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 
 namespace Geuneda.DataExtensions
 {
@@ -65,8 +64,8 @@ namespace Geuneda.DataExtensions
 	/// <inheritdoc />
 	public partial class ObservableField<T> : IObservableField<T>, IBatchable, IComputedDependency
 	{
-		private readonly IList<Action<T, T>> _updateActions = new List<Action<T, T>>();
-		private readonly List<Action> _dependencyActions = new List<Action>();
+		private readonly ObserverList<Action<T, T>> _updateActions = new ObserverList<Action<T, T>>();
+		private readonly ObserverList<Action> _dependencyActions = new ObserverList<Action>();
 
 		private T _value;
 		private bool _isBatching;
@@ -178,13 +177,7 @@ namespace Geuneda.DataExtensions
 				return;
 			}
 
-			for (var i = _updateActions.Count - 1; i > -1; i--)
-			{
-				if (_updateActions[i].Target == subscriber)
-				{
-					_updateActions.RemoveAt(i);
-				}
-			}
+			_updateActions.RemoveByTarget(subscriber);
 		}
 
 		/// <inheritdoc />
@@ -208,16 +201,15 @@ namespace Geuneda.DataExtensions
 
 			// 반복적인 Value 게터 호출을 피하기 위해 값을 캐싱합니다(ComputedTracker.OnRead를 트리거하므로)
 			var currentValue = GetCurrentValue();
+			var errors = new NotifyErrors();
 
-			for (var i = 0; i < _updateActions.Count; i++)
+			using (var updates = _updateActions.TakeSnapshot())
 			{
-				_updateActions[i].Invoke(previousValue, currentValue);
+				updates.Notify(previousValue, currentValue, ref errors);
 			}
 
-			for (var i = 0; i < _dependencyActions.Count; i++)
-			{
-				_dependencyActions[i].Invoke();
-			}
+			_dependencyActions.NotifyAll(ref errors);
+			errors.ThrowIfAny();
 		}
 
 		// 플레이어 빌드에서 호출이 컴파일 제외되도록 partial 메서드로 선언됩니다.

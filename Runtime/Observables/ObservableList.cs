@@ -96,8 +96,8 @@ namespace Geuneda.DataExtensions
 	/// <inheritdoc />
 	public partial class ObservableList<T> : IObservableList<T>, IBatchable, IComputedDependency
 	{
-		private readonly IList<Action<int, T, T, ObservableUpdateType>> _updateActions = new List<Action<int, T, T, ObservableUpdateType>>();
-		private readonly List<Action> _dependencyActions = new List<Action>();
+		private readonly ObserverList<Action<int, T, T, ObservableUpdateType>> _updateActions = new ObserverList<Action<int, T, T, ObservableUpdateType>>();
+		private readonly ObserverList<Action> _dependencyActions = new ObserverList<Action>();
 		private bool _isBatching;
 
 		// 플레이어 빌드에서 호출이 컴파일 제외되도록 partial 메서드로 선언됩니다.
@@ -178,10 +178,31 @@ namespace Geuneda.DataExtensions
 			if (_isBatching)
 			{
 				_isBatching = false;
-				for (var i = 0; i < List.Count; i++)
+
+				// 한 항목의 구독자 예외로 나머지 항목 통지가 멈추지 않도록 끝까지 알린 뒤 다시 던집니다
+				var errors = new NotifyErrors();
+
+				using (var updates = _updateActions.TakeSnapshot())
 				{
-					InvokeUpdate(i, default);
+					for (var i = 0; i < List.Count; i++)
+					{
+						// 콜백이 새 배치를 열었으면 남은 항목은 그 배치가 끝날 때 알립니다
+						if (_isBatching)
+						{
+							break;
+						}
+
+						updates.Notify(i, default(T), List[i], ObservableUpdateType.Updated, ref errors);
+					}
 				}
+
+				// 배치 안에서 비워 항목이 없어도 의존 값은 갱신합니다. 새 배치가 열렸으면 그 배치가 끝날 때 갱신합니다
+				if (!_isBatching)
+				{
+					_dependencyActions.NotifyAll(ref errors);
+				}
+
+				errors.ThrowIfAny();
 			}
 		}
 
@@ -236,15 +257,9 @@ namespace Geuneda.DataExtensions
 				return;
 			}
 
-			for (var i = 0; i < _updateActions.Count; i++)
-			{
-				_updateActions[i](List.Count - 1, default, data, ObservableUpdateType.Added);
-			}
-
-			for (var i = 0; i < _dependencyActions.Count; i++)
-			{
-				_dependencyActions[i].Invoke();
-			}
+			var errors = new NotifyErrors();
+			Notify(List.Count - 1, default, data, ObservableUpdateType.Added, ref errors);
+			errors.ThrowIfAny();
 		}
 
 		/// <inheritdoc />
@@ -274,48 +289,41 @@ namespace Geuneda.DataExtensions
 				return;
 			}
 
-			for (var i = _updateActions.Count - 1; i > -1; i--)
-			{
-				var action = _updateActions[i];
-
-				action(index, data, default, ObservableUpdateType.Removed);
-
-				// 액션이 구독 해제된 경우 인덱스를 이동합니다
-				i = AdjustIndex(i, action);
-			}
-
-			for (var i = 0; i < _dependencyActions.Count; i++)
-			{
-				_dependencyActions[i].Invoke();
-			}
+			var errors = new NotifyErrors();
+			Notify(index, data, default, ObservableUpdateType.Removed, ref errors);
+			errors.ThrowIfAny();
 		}
 
 		/// <inheritdoc />
 		public virtual void Clear()
 		{
-			if (!_isBatching)
+			if (_isBatching)
 			{
-				// 콜백 중 하나가 목록을 수정하는 경우에 대비하여 복사본을 생성합니다(예: 구독자 제거)
-				var copy = _updateActions.ToList();
+				List.Clear();
+				return;
+			}
 
-				for (var i = copy.Count - 1; i > -1; i--)
+			var errors = new NotifyErrors();
+
+			// 연산 시작 시점의 구독자에게만 알립니다. 콜백 안에서 새로 구독해도 이번 Clear 는 받지 않습니다
+			using (var updates = _updateActions.TakeSnapshot())
+			{
+				for (var j = 0; j < List.Count; j++)
 				{
-					for (var j = 0; j < List.Count; j++)
-					{
-						copy[i](j, List[j], default, ObservableUpdateType.Removed);
-					}
+					updates.Notify(j, List[j], default(T), ObservableUpdateType.Removed, ref errors);
 				}
 			}
 
 			List.Clear();
 
+			// 의존 값(ComputedField)이 비워진 뒤의 상태로 다시 계산되도록, 비운 다음 그 시점의 의존 관계 전체에 알립니다.
+			// 콜백이 새 배치를 열었으면 그 배치가 끝날 때 알립니다
 			if (!_isBatching)
 			{
-				for (var i = 0; i < _dependencyActions.Count; i++)
-				{
-					_dependencyActions[i].Invoke();
-				}
+				_dependencyActions.NotifyAll(ref errors);
 			}
+
+			errors.ThrowIfAny();
 		}
 
 		/// <inheritdoc />
@@ -352,13 +360,7 @@ namespace Geuneda.DataExtensions
 				return;
 			}
 
-			for (var i = _updateActions.Count - 1; i > -1; i--)
-			{
-				if (_updateActions[i].Target == subscriber)
-				{
-					_updateActions.RemoveAt(i);
-				}
-			}
+			_updateActions.RemoveByTarget(subscriber);
 		}
 
 		protected void InvokeUpdate(int index, T previousValue)
@@ -368,35 +370,19 @@ namespace Geuneda.DataExtensions
 				return;
 			}
 
-			var data = List[index];
-
-			for (var i = 0; i < _updateActions.Count; i++)
-			{
-				_updateActions[i](index, previousValue, data, ObservableUpdateType.Updated);
-			}
-
-			for (var i = 0; i < _dependencyActions.Count; i++)
-			{
-				_dependencyActions[i].Invoke();
-			}
+			var errors = new NotifyErrors();
+			Notify(index, previousValue, List[index], ObservableUpdateType.Updated, ref errors);
+			errors.ThrowIfAny();
 		}
 
-		private int AdjustIndex(int index, Action<int, T, T, ObservableUpdateType> action)
+		private void Notify(int index, T previousValue, T value, ObservableUpdateType updateType, ref NotifyErrors errors)
 		{
-			if (index < _updateActions.Count && _updateActions[index] == action)
+			using (var updates = _updateActions.TakeSnapshot())
 			{
-				return index;
+				updates.Notify(index, previousValue, value, updateType, ref errors);
 			}
 
-			for (var i = index - 1; i > -1; i--)
-			{
-				if (_updateActions[i] == action)
-				{
-					return i;
-				}
-			}
-
-			return index + 1;
+			_dependencyActions.NotifyAll(ref errors);
 		}
 
 

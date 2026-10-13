@@ -44,13 +44,26 @@ namespace Geuneda.DataExtensions
 		{
 			if (_disposed) return;
 
+			_disposed = true;
+
+			// 한 Observable 의 구독자 예외로 뒤쪽 Observable 이 배치 상태에 남지 않도록
+			// 모두 재개한 뒤 예외를 다시 던집니다
+			var errors = new NotifyErrors();
+
 			foreach (var observable in _observables)
 			{
-				observable.ResumeNotifications();
+				try
+				{
+					observable.ResumeNotifications();
+				}
+				catch (Exception exception)
+				{
+					errors.Add(exception);
+				}
 			}
 
 			_observables.Clear();
-			_disposed = true;
+			errors.ThrowIfAny();
 		}
 	}
 }
