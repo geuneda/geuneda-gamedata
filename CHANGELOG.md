@@ -4,7 +4,7 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.1.0] - 2026-10-13
 
 **Fixes**:
 - `ObservableList.RemoveAt`/`Remove`와 `ObservableDictionary.Remove` 통지 중 구독자가 자기 구독을 해제하면, 마지막 구독자에서는 `ArgumentOutOfRangeException`이 나고 중간 구독자에서는 다음 구독자가 두 번 호출되던 문제 수정
