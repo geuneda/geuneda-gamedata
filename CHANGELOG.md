@@ -4,6 +4,20 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-10-14
+
+**New**:
+- 보안 값 `SecureInt`, `SecureLong`, `SecureFloat`, `SecureDouble`, `SecureFloatP` 추가. 메모리 편집 도구의 값 검색·변조를 어렵게 하고 변조를 감지합니다
+  - 값을 실행마다 새로 만드는 세션 키와 nonce 로 섞어 저장하고 32비트 검사값을 함께 둡니다. 쓸 때마다 새 nonce 로 다시 인코딩합니다. 크기는 16바이트, 세션 키를 만든 뒤 정상 읽기·쓰기에는 할당이 없습니다(변조를 알릴 때는 핸들러 목록을 복사)
+  - 원래 타입과 암시적으로 변환되며 `++`/`--`, `IEquatable<T>`(인코딩이 아니라 값 비교), `IComparable<T>`, `IFormattable` 을 지원합니다
+  - 읽을 때 변조를 감지하면 `SecureValueMonitor.TamperDetected`(static 이벤트, 세션 시작 때 구독 초기화)로 알리고 예외 없이 복원한 값을 돌려줍니다. 핸들러 예외는 로그 후 다음 핸들러로 넘어가고, 핸들러 안의 감지는 다시 알리지 않습니다
+  - Newtonsoft JSON 에서 같은 이름의 `int`/`long`/`float`/`double` 필드와 같은 평문 숫자 형식으로 읽고 씁니다(`SecureFloatP` 는 float 숫자). nullable(`SecureInt?` 등)의 `null` 도 왕복합니다. 변환기는 internal 이고 타입 속성으로 적용됩니다. Unity 직렬화는 지원하지 않습니다
+  - 가벼운 난독화이며 검사값은 MAC 이 아닙니다. 알려진 값 하나로 위조할 수 있는 점, 모든 필드를 0 으로 지우는 변조, nonce 순환, 여러 스레드의 동시 쓰기·읽기는 README 의 한계 절을 참고하세요
+
+**Fixes**:
+- `floatP.Equals` 가 NaN 과 가수가 0 이 아닌 유한수를 같다고 판정하던 문제 수정(`NaN.Equals(1.5)` 는 true, 반대 방향은 false 였음). NaN 은 NaN 하고만 같습니다. 이 때문에 `MathfloatP.RawDistance(NaN, 유한수)` 가 0 이던 것도 `long.MaxValue` 가 됩니다
+- `floatP.CompareTo` 가 NaN 의 부호에 따라 유한수보다 크거나 작게 정렬되던 문제 수정. `float.CompareTo` 와 같이 NaN 은 부호와 관계없이 모든 값보다 작고 NaN 끼리는 같습니다. 비교 연산자(`<` 등)의 결과는 바뀌지 않습니다
+
 ## [1.1.0] - 2026-10-13
 
 **Fixes**:

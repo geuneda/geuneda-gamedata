@@ -630,7 +630,7 @@ namespace Geuneda.DataExtensions
 				else
 				{
 					// NaN은 `Equals`에서 동일합니다(== 연산자와는 반대)
-					return other.RawMantissa != 0;
+					return other.IsNaN();
 				}
 			}
 		}
@@ -693,9 +693,15 @@ namespace Geuneda.DataExtensions
 
 		public int CompareTo(floatP other)
 		{
-			if (IsNaN() && other.IsNaN())
+			// float.CompareTo 와 같이 NaN 은 부호와 관계없이 모든 값보다 작고, NaN 끼리는 같습니다
+			if (IsNaN())
 			{
-				return 0;
+				return other.IsNaN() ? 0 : -1;
+			}
+
+			if (other.IsNaN())
+			{
+				return 1;
 			}
 
 			uint sign1 = (uint)((int)RawValue >> 31);

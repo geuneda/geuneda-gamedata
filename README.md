@@ -1,6 +1,6 @@
 # Geuneda Game Data
 
-Unity 게임용 데이터 기반 패키지입니다. Observable 반응형 데이터 타입, 타입 안전 설정 저장소(`ConfigsProvider`), 결정론적 부동소수점(`floatP`), JSON/Unity 직렬화 헬퍼를 제공합니다.
+Unity 게임용 데이터 기반 패키지입니다. Observable 반응형 데이터 타입, 타입 안전 설정 저장소(`ConfigsProvider`), 결정론적 부동소수점(`floatP`), 메모리 변조를 감지하는 보안 값(`SecureInt` 등), JSON/Unity 직렬화 헬퍼를 제공합니다.
 
 - 패키지명: `com.geuneda.gamedata`
 - 네임스페이스: `Geuneda.DataExtensions` (에디터 API는 `GeunedaEditor.GameData`)
@@ -178,6 +178,48 @@ floatP sum = a + 2;                      // int 에서 암시적 변환 후 연�
 floatP root = MathfloatP.Sqrt(sum);
 float result = root;                     // float 로 암시적 변환
 ```
+
+### 보안 값
+
+`SecureInt`, `SecureLong`, `SecureFloat`, `SecureDouble`, `SecureFloatP` 는 메모리 편집 도구(GameGuardian, Cheat Engine 등)가 값을 찾아 바꾸는 것을 어렵게 하고, 바꾸면 감지합니다. 오프라인 재화나 전투 수치처럼 클라이언트가 들고 있는 값에 씁니다.
+
+```csharp
+public class Wallet
+{
+    public SecureInt Gold;                  // JSON 세이브에서는 {"Gold":100} 처럼 int 필드와 같은 형식
+}
+
+var wallet = new Wallet();
+wallet.Gold = 100;                          // int 에서 암시적 변환
+wallet.Gold += 50;                          // 산술, 비교, ++ 도 int 처럼
+int gold = wallet.Gold;                     // 읽을 때 변조 검사
+
+SecureFloatP hp = (floatP)10;
+hp -= (floatP)2.5f;                         // floatP 와 섞은 연산은 그대로
+floatP half = hp.Value * 2;                 // SecureFloatP 끼리, 정수 리터럴과의 연산은 Value 로 꺼내서
+
+SecureValueMonitor.TamperDetected += OnTamper;   // 감지 알림 (static 이벤트)
+
+void OnTamper(Type valueType)
+{
+    SecureValueMonitor.TamperDetected -= OnTamper;   // 감지된 읽기마다 발생하므로 처음 한 번만 처리
+    // 로그를 보내고, 감지 시점을 숨기려면 몇 초 무작위로 기다린 뒤 대응(종료, 서버 신고 등)
+}
+```
+
+- **저장 방식:** 값을 세션 키와 nonce 로 섞어 저장하고 32비트 검사값을 함께 둡니다. 쓸 때마다 새 nonce 로 다시 인코딩하므로 같은 값이어도 메모리 모양이 매번 바뀝니다. 세션 키는 실행마다 암호학 난수로 한 번 만듭니다. 크기는 타입마다 16바이트이고, 세션 키를 만든 뒤의 정상 읽기·쓰기에는 할당이 없습니다(변조를 알릴 때는 핸들러 목록을 복사합니다).
+- **감지:** 검사값이 맞지 않으면 `SecureValueMonitor.TamperDetected` 를 부르고, 예외 없이 복원한 값을 그대로 돌려줍니다. 대응은 게임이 정합니다. 이벤트는 값을 읽은 스레드에서 바로 불리며, 핸들러 예외는 로그로 남기고 다음 핸들러로 넘어갑니다. 핸들러 안에서 다시 감지되는 읽기는 알리지 않습니다. 세션 시작 때 구독을 모두 지웁니다(도메인 리로드를 끈 Play Mode 포함).
+- **비교:** `Equals`, `GetHashCode`, `CompareTo` 는 인코딩이 아니라 값을 비교하므로 `Dictionary` 키, `HashSet`, 정렬, `ObservableField<SecureInt>` 에 그대로 쓸 수 있습니다.
+- **JSON:** Newtonsoft 로 같은 이름의 `int`/`long`/`float`/`double` 필드와 같은 형식(평문 숫자)으로 읽고 씁니다. 기존 세이브의 필드 타입을 바꿔도 호환됩니다. `SecureInt?` 같은 nullable 은 `null` 도 그대로 왕복하고, nullable 이 아닌 타입에 `null` 이 오면 원래 타입처럼 `JsonSerializationException` 입니다. `SecureFloatP` 는 float 숫자로 씁니다. float 필드처럼 NaN 의 payload 는 남지 않고, Unity(Mono)에서는 -0 이 0 으로 읽힙니다. 그 밖의 값은 비트 그대로 돌아옵니다.
+
+한계도 알고 써야 합니다.
+
+- 가벼운 난독화이고 검사값은 MAC 이 아닙니다. 막는 것은 메모리 검색 도구로 평문 값을 찾아 바꾸는 단순 변조와 그 감지까지입니다. 알고리즘을 아는 공격자는 화면에 보이는 값 하나와 그 값의 메모리(16바이트)만 있으면 세션 키를 찾지 않고도 검사값을 맞춘 위조 값을 만들 수 있고, 같은 정보로 세션 키도 복원됩니다. IL2CPP 메타데이터를 덤프하면 세션 키가 있는 정적 필드 위치도 알 수 있습니다. 재화 지급처럼 중요한 판정은 서버가 검증해야 합니다.
+- 모든 필드를 0 으로 지우는 변조는 `default`(값 0)와 구별되지 않아 감지하지 못합니다.
+- nonce 는 32비트 카운터 하나를 모든 보안 값이 함께 씁니다. 프로세스 전체 쓰기가 2^32-1 회를 넘으면 nonce 가 처음부터 다시 쓰여, 같은 값을 같은 nonce 로 쓰면 메모리 모양도 같아집니다(60fps 로 매 프레임 값 1,000개를 쓰면 약 20시간).
+- 한 필드를 여러 스레드가 동시에 쓰고 읽으면 16바이트 복사가 원자적이지 않아 정상 값이 변조로 읽힐 수 있습니다. 스레드 사이에 공유하려면 잠금으로 보호합니다.
+- Unity 직렬화(`[SerializeField]`, 인스펙터, `JsonUtility`)는 지원하지 않습니다. 이 경로로 저장한 값은 사라집니다.
+- 세이브 파일과 네트워크 메시지는 평문입니다. 저장 데이터 변조 방지는 이 기능의 범위가 아닙니다.
 
 ### 유효성 검사
 

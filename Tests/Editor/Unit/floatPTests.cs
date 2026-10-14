@@ -130,5 +130,36 @@ namespace Geuneda.DataExtensions.Tests
 			Assert.IsTrue((floatP.PositiveInfinity * floatP.PositiveInfinity).IsPositiveInfinity());
 			Assert.IsTrue((floatP.PositiveInfinity / floatP.One).IsPositiveInfinity());
 		}
+
+		[Test]
+		public void NaN_EqualsOnlyNaNInBothDirections()
+		{
+			var positiveNaN = floatP.FromRaw(0x7FC00000);
+			var finite = (floatP)1.5f;
+
+			Assert.That(floatP.NaN.Equals(finite), Is.False);
+			Assert.That(finite.Equals(floatP.NaN), Is.False);
+			Assert.That(floatP.NaN.Equals(floatP.PositiveInfinity), Is.False);
+			Assert.That(floatP.NaN.Equals(positiveNaN), Is.True);
+			Assert.That(floatP.NaN.GetHashCode(), Is.EqualTo(positiveNaN.GetHashCode()));
+		}
+
+		[Test]
+		public void NaN_OrdersBelowEveryValueRegardlessOfSign()
+		{
+			var positiveNaN = floatP.FromRaw(0x7FC00000);
+			var negativeNaN = floatP.FromRaw(0xFFC00000);
+
+			Assert.That(positiveNaN.CompareTo(floatP.Zero), Is.EqualTo(-1));
+			Assert.That(negativeNaN.CompareTo(floatP.NegativeInfinity), Is.EqualTo(-1));
+			Assert.That(floatP.PositiveInfinity.CompareTo(positiveNaN), Is.EqualTo(1));
+			Assert.That(positiveNaN.CompareTo(negativeNaN), Is.EqualTo(0));
+		}
+
+		[Test]
+		public void RawDistance_NaNAndFinite_IsMaxValue()
+		{
+			Assert.That(MathfloatP.RawDistance(floatP.NaN, (floatP)1.5f), Is.EqualTo(long.MaxValue));
+		}
 	}
 }
