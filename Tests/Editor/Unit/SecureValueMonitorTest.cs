@@ -60,6 +60,7 @@ namespace Geuneda.DataExtensions.Tests
 			var calls = 0;
 			Subscribe(_ => throw new InvalidOperationException("handler failed"));
 			Subscribe(_ => calls++);
+			LogAssert.Expect(LogType.Error, new Regex(@"\[Geuneda\.GameData\] A TamperDetected handler threw"));
 			LogAssert.Expect(LogType.Exception, new Regex("handler failed"));
 
 			var value = Tampered(8).Value;

@@ -67,7 +67,7 @@ namespace Geuneda.DataExtensions.Tests
 			field.SetValue(_enumSelector, "InvalidValue");
 
 			// 유효하지 않은 선택을 가져올 때 오류 로그를 예상합니다
-			LogAssert.Expect(LogType.Error, "Could not load enum for string: InvalidValue");
+			LogAssert.Expect(LogType.Error, "[Geuneda.GameData] Could not load enum for string: InvalidValue");
 
 			// 선택이 유효하지 않을 때 EnumSelector는 첫 번째 열거형 값을 반환합니다
 			Assert.AreEqual(EnumExample.Value1, _enumSelector.GetSelection());
@@ -81,7 +81,7 @@ namespace Geuneda.DataExtensions.Tests
 			field.SetValue(_enumSelector, "NonExistentValue");
 
 			// GetSelectedIndex에서의 오류 로그를 예상합니다
-			LogAssert.Expect(LogType.Error, "Could not load enum for string: NonExistentValue");
+			LogAssert.Expect(LogType.Error, "[Geuneda.GameData] Could not load enum for string: NonExistentValue");
 
 			Assert.IsFalse(_enumSelector.HasValidSelection());
 		}
@@ -94,7 +94,7 @@ namespace Geuneda.DataExtensions.Tests
 			field.SetValue(_enumSelector, "");
 
 			// GetSelectedIndex에서의 오류 로그를 예상합니다
-			LogAssert.Expect(LogType.Error, "Could not load enum for string: ");
+			LogAssert.Expect(LogType.Error, "[Geuneda.GameData] Could not load enum for string: ");
 
 			Assert.IsFalse(_enumSelector.HasValidSelection());
 		}

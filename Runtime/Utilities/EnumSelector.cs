@@ -68,7 +68,7 @@ namespace Geuneda.DataExtensions
 				return Array.IndexOf(EnumValues, value);
 			}
 
-			Debug.LogError($"Could not load enum for string: {_selection}");
+			GameDataLog.Logger.Error($"Could not load enum for string: {_selection}");
 
 			return -1;
 		}

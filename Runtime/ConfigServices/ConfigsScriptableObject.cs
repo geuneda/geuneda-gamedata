@@ -44,7 +44,7 @@ namespace Geuneda.DataExtensions
 			{
 				if (!dictionary.TryAdd(config.Key, config.Value))
 				{
-					Debug.LogError($"Duplicate key '{config.Key}' found in {GetType().Name}. Skipping.");
+					GameDataLog.Logger.Error($"Duplicate key '{config.Key}' found in {GetType().Name}. Skipping.");
 				}
 			}
 

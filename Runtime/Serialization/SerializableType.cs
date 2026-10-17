@@ -131,7 +131,7 @@ namespace Geuneda.DataExtensions
 			}
 			catch (Exception e)
 			{
-				Debug.LogException(e);
+				GameDataLog.Logger.Error(e, $"Could not restore the serialized type '{_className}, {_assemblyName}'");
 			}
 		}
 	}

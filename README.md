@@ -8,12 +8,13 @@ Unity 게임용 데이터 기반 패키지입니다. Observable 반응형 데이
 
 ## 설치
 
-이 패키지는 `com.cysharp.unitask` 에 의존하는데, UniTask 는 Unity 기본 레지스트리에 없으므로 먼저 설치해야 합니다. `Packages/manifest.json` 에 다음을 추가합니다.
+이 패키지는 `com.geuneda.core` 와 `com.cysharp.unitask` 에 의존합니다. 둘 다 Unity 기본 레지스트리에 없어 자동으로 설치되지 않으므로 `Packages/manifest.json` 에 함께 추가합니다.
 
 ```json
 {
   "dependencies": {
     "com.cysharp.unitask": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
+    "com.geuneda.core": "https://github.com/geuneda/geuneda-core.git",
     "com.geuneda.gamedata": "https://github.com/geuneda/geuneda-gamedata.git"
   }
 }

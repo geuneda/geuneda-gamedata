@@ -2,13 +2,14 @@
   "name": "com.geuneda.gamedata",
   "displayName": "Geuneda Game Data Extensions",
   "author": "geuneda",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "unity": "6000.0",
   "license": "MIT",
   "description": "Core data utilities and configuration management package for Unity games. Includes Observable data types (field, list, dictionary), deterministic floating point (floatP), tamper-detecting secure values, serialization helpers, type-safe config store, versioning, and backend sync support.",
   "type": "library",
   "hideInEditor": false,
   "dependencies": {
+    "com.geuneda.core": "0.4.0",
     "com.unity.nuget.newtonsoft-json": "3.2.1",
     "com.cysharp.unitask": "2.5.10",
     "com.unity.ugui": "2.0.0"

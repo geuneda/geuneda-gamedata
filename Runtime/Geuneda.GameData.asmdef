@@ -2,6 +2,7 @@
     "name": "Geuneda.GameData",
     "rootNamespace": "",
     "references": [
+        "Geuneda.Core",
         "UniTask"
     ],
     "includePlatforms": [],

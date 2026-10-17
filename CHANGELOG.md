@@ -4,6 +4,13 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2026-10-17
+
+**Changed** (호환되지 않음):
+- `com.geuneda.core` 0.4.0 에 의존합니다. git URL 로 설치한 프로젝트는 `Packages/manifest.json` 에 `"com.geuneda.core": "https://github.com/geuneda/geuneda-core.git"` 를 추가해야 합니다. core 를 넣지 않을 기존 프로젝트는 `#v1.2.0` 에 고정하세요.
+- 런타임 로그를 core 의 `ModuleLogger`(모듈 `Geuneda.GameData`)로 옮겼습니다. 메시지 앞에 `[Geuneda.GameData]` 가 붙습니다(`ConfigsScriptableObject` 중복 키, `EnumSelector` 잘못된 값, `SerializableType` 복원 실패, `SecureValueMonitor` 핸들러 예외). 에디터 인스펙터의 로그는 그대로입니다.
+- 예외만 남기던 곳은 무엇이 실패했는지 적은 Error 줄을 먼저 남기고 예외를 남깁니다. `LogAssert.Expect(LogType.Exception, ...)` 로 이 로그를 기대하던 테스트는 그 앞에 `LogType.Error` 기대를 추가해야 합니다. 해당 위치: `SerializableType` 복원 실패, `SecureValueMonitor.TamperDetected` 핸들러 예외.
+
 ## [1.2.0] - 2026-10-14
 
 **New**:

@@ -46,7 +46,7 @@ namespace Geuneda.DataExtensions
 					catch (Exception e)
 					{
 						// 값을 읽는 코드 흐름을 끊지 않도록 핸들러 예외는 로그만 남깁니다
-						Debug.LogException(e);
+						GameDataLog.Logger.Error(e, $"A {nameof(TamperDetected)} handler threw");
 					}
 				}
 			}

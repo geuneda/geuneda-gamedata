@@ -41,7 +41,7 @@ namespace Geuneda.DataExtensions.Tests.PlayMode.Integration
 				new Pair<int, string>(1, "Second")
 			};
 
-			LogAssert.Expect(LogType.Error, "Duplicate key '1' found in MockHeroConfigSO. Skipping.");
+			LogAssert.Expect(LogType.Error, "[Geuneda.GameData] Duplicate key '1' found in MockHeroConfigSO. Skipping.");
 			((ISerializationCallbackReceiver)so).OnAfterDeserialize();
 
 			Assert.AreEqual(1, so.ConfigsDictionary.Count);
